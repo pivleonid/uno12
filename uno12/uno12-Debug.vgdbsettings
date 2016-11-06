@@ -12,6 +12,7 @@
   <Build xsi:type="com.visualgdb.build.embedded">
     <MakeFilePathRelativeToSourceDir>Makefile</MakeFilePathRelativeToSourceDir>
     <MakeConfigurationName>Debug</MakeConfigurationName>
+    <AdditionalMakeArguments />
     <MakeCommandTemplate>
       <SkipWhenRunningCommandList>false</SkipWhenRunningCommandList>
       <Command>cmd.exe</Command>
@@ -70,7 +71,7 @@
       <Entries>
         <KeyValue>
           <Key>com.sysprogs.jlink.root</Key>
-          <Value>C:\Program Files (x86)\SEGGER\JLink_V610i\</Value>
+          <Value>C:\Program Files (x86)\SEGGER\JLink_V610i</Value>
         </KeyValue>
         <KeyValue>
           <Key>com.sysprogs.jlink.connection</Key>
@@ -145,8 +146,12 @@
     <ShowMessageAfterExecuting>true</ShowMessageAfterExecuting>
   </CustomShortcuts>
   <UserDefinedVariables />
+  <ImportedPropertySheets />
   <CodeSense>
     <Enabled>Unknown</Enabled>
+    <CFLAGS />
+    <CXXFLAGS />
+    <ExternalSourceFileList />
     <ExtraSettings>
       <HideErrorsInSystemHeaders>true</HideErrorsInSystemHeaders>
     </ExtraSettings>
