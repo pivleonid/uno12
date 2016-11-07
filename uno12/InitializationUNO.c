@@ -1,7 +1,9 @@
 
-#include "stdint.h"
+
 #include "stm32f4xx_hal.h"
 #include "InitializationUNO.h"
+#include "stm32f4xx_hal_spi.h"
+
 float fr_out = 5000; //частота в МГц  5 ГГц
 extern uint16_t db;
 uint8_t n_pow;
@@ -14,7 +16,7 @@ SPI_HandleTypeDef hspi5; // первый синтезатор--//
 SPI_HandleTypeDef hspi6; // второй синтезатор--//
 SPI_HandleTypeDef hspix;
 GPIO_InitTypeDef GPIO_InitStruct; 
-GPIO_TypeDef* GPIOX;
+GPIO_TypeDef* GPIO_X;
 uint16_t GPIO_PIN;
 
 //extern void Error_Handler(void); // обработчик находится в  main функции
@@ -22,90 +24,104 @@ uint16_t GPIO_PIN;
 //#define ERR (-1)
 //Настройки SPi с тактированием и настройкой пинов\\
 
-void SPI5_Init_UNO(void)
-{
+#define StrobUno_ON HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_SET );
+#define StrobUno_OFF HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_RESET );
 
-	hspi5.Instance = SPI5;
-	hspi5.Init.Mode = SPI_MODE_MASTER;
-	hspi5.Init.Direction = SPI_DIRECTION_2LINES;
-	hspi5.Init.DataSize = SPI_DATASIZE_8BIT;
-	hspi5.Init.CLKPolarity = SPI_POLARITY_LOW;
-	hspi5.Init.CLKPhase = SPI_PHASE_1EDGE;
-	hspi5.Init.NSS = SPI_NSS_SOFT;
-	hspi5.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-	hspi5.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	hspi5.Init.TIMode = SPI_TIMODE_DISABLE;
-	hspi5.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	hspi5.Init.CRCPolynomial = 10;
-	
-	__HAL_RCC_SPI5_CLK_ENABLE();
-	GPIO_InitStruct.Pin = GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9;
-	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-	GPIO_InitStruct.Alternate = GPIO_AF5_SPI5;
-	HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-}
-void SPI6_Init_UNO(void)
-{
-	hspi6.Instance = SPI6;
-	hspi6.Init.Mode = SPI_MODE_MASTER;
-	hspi6.Init.Direction = SPI_DIRECTION_2LINES;
-	hspi6.Init.DataSize = SPI_DATASIZE_8BIT;
-	hspi6.Init.CLKPolarity = SPI_POLARITY_LOW;
-	hspi6.Init.CLKPhase = SPI_PHASE_1EDGE;
-	hspi6.Init.NSS = SPI_NSS_SOFT;
-	hspi6.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-	hspi6.Init.FirstBit = SPI_FIRSTBIT_MSB;
-	hspi6.Init.TIMode = SPI_TIMODE_DISABLE;
-	hspi6.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-	hspi6.Init.CRCPolynomial = 10;
-  
-	__HAL_RCC_SPI6_CLK_ENABLE();
-	GPIO_InitStruct.Pin = GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14;
-	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-	GPIO_InitStruct.Alternate = GPIO_AF5_SPI6;
-	HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-}
-
-
-
-
-#define StrobUno_ON HAL_GPIO_WritePin( GPIOX, GPIO_PIN, GPIO_PIN_SET );
-#define StrobUno_OFF HAL_GPIO_WritePin( GPIOX, GPIO_PIN, GPIO_PIN_RESET );
 //uno_index = 0 или 1
 void uno_open(uint8_t uno_index)
 {
 	//выбор синтезатора\\
 	if (uno_index == 0)
 	{
+		
 		__HAL_RCC_GPIOF_CLK_ENABLE();
+		__HAL_RCC_SPI5_CLK_ENABLE();
+		HAL_GPIO_WritePin(GPIOF, GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_6, RESET);
+		//--------------------------//
+		hspi5.Instance = SPI5;
+		hspi5.Init.Mode = SPI_MODE_MASTER;
+		hspi5.Init.Direction = SPI_DIRECTION_2LINES;
+		hspi5.Init.DataSize = SPI_DATASIZE_8BIT;
+		hspi5.Init.CLKPolarity = SPI_POLARITY_LOW;
+		hspi5.Init.CLKPhase = SPI_PHASE_1EDGE;
+		hspi5.Init.NSS = SPI_NSS_SOFT;
+		hspi5.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+		hspi5.Init.FirstBit = SPI_FIRSTBIT_MSB;
+		hspi5.Init.TIMode = SPI_TIMODE_DISABLE;
+		hspi5.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+		hspi5.Init.CRCPolynomial = 10;
+		if (HAL_SPI_Init(&hspi5) != HAL_OK)
+		{
+			//Error_Handler();
+		}
+		GPIO_InitStruct.Pin = GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF5_SPI5;
+		HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+		//--------------------------//
 		hspix = hspi5;
-		GPIOX = GPIOF;
+		GPIO_X = GPIOF;
 		GPIO_PIN = GPIO_PIN_6;
-		SPI5_Init_UNO();
+		
+		//--------------------------//
 		GPIO_InitStruct.Pin = GPIO_PIN_6;
 		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 		HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+		StrobUno_ON
 	}
 	if(uno_index == 1)
 	{
 		__HAL_RCC_GPIOG_CLK_ENABLE();
+		__HAL_RCC_SPI6_CLK_ENABLE();
+		HAL_GPIO_WritePin(GPIOG, GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15, RESET);
+		//-------------------------//
+		hspi6.Instance = SPI6;
+		hspi6.Init.Mode = SPI_MODE_MASTER;
+		hspi6.Init.Direction = SPI_DIRECTION_2LINES;
+		hspi6.Init.DataSize = SPI_DATASIZE_8BIT;
+		hspi6.Init.CLKPolarity = SPI_POLARITY_LOW;
+		hspi6.Init.CLKPhase = SPI_PHASE_1EDGE;
+		hspi6.Init.NSS = SPI_NSS_SOFT;
+		hspi6.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+		hspi6.Init.FirstBit = SPI_FIRSTBIT_MSB;
+		hspi6.Init.TIMode = SPI_TIMODE_DISABLE;
+		hspi6.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+		hspi6.Init.CRCPolynomial = 10;
+		HAL_SPI_Init(&hspi6);
+//		if (HAL_SPI_Init(&hspi6) != HAL_OK) //посмотреть как будет вызываться эта функция. Будет ли она вообще вызываться
+//		{
+//			Error_Handler();
+//		}
+//	  
+		GPIO_InitStruct.Pin = GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+		GPIO_InitStruct.Alternate = GPIO_AF5_SPI6;
+		HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+		//-------------------------//
 		hspix = hspi6;
-		GPIOX = GPIOG;
+		GPIO_X = GPIOG;
 		GPIO_PIN = GPIO_PIN_15;
-		SPI6_Init_UNO();
+		//-------------------------//
 		GPIO_InitStruct.Pin = GPIO_PIN_15;
 		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 		HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-	}
+		//-------------------------//
+		StrobUno_ON
+
 		
+		
+	}
+	
+//#define StrobUno_ON HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_SET );
+//#define StrobUno_OFF HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_RESET );	
 	uint8_t n_pow = 0;
 	uint8_t n_pow_1 = 0;
 	uint8_t n_pow_2 = 0;
@@ -538,13 +554,13 @@ void uno_close (uint8_t uno_index)
 		if (uno_index == 0)
 	{
 		hspix = hspi5;
-		GPIOX = GPIOF;
+		GPIO_X = GPIOF;
 		GPIO_PIN = GPIO_PIN_6;
 	}
 	if(uno_index == 1)
 	{
 		hspix = hspi6;
-		GPIOX = GPIOG;
+		GPIO_X = GPIOG;
 		GPIO_PIN = GPIO_PIN_15;
 		
 	}
@@ -601,13 +617,13 @@ void uno_write (uint8_t uno_index, float freq, uint16_t gain)
 	if (uno_index == 0)
 	{
 		hspix = hspi5;
-		GPIOX = GPIOF;
+		GPIO_X = GPIOF;
 		GPIO_PIN = GPIO_PIN_6;
 	}
 	if(uno_index == 1)
 	{
 		hspix = hspi6;
-		GPIOX = GPIOG;
+		GPIO_X = GPIOG;
 		GPIO_PIN = GPIO_PIN_15;
 	}
 	n_pow = Funk_n_pow( fr_out );
