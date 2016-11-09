@@ -1178,11 +1178,11 @@
 // --- Include directories begin --- //
 //..
 //.
-//$(LOCALAPPDATA)\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc
-//$(LOCALAPPDATA)\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc/Legacy
-//$(LOCALAPPDATA)\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include
-//$(LOCALAPPDATA)\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include/t
-//$(LOCALAPPDATA)\VisualGDB\EmbeddedBSPs\arm-eabi\com.sysprogs.arm.stm32/STM32F4xxxx/CMSIS_HAL/Include
+//$(ProjectDir)/BSP/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc
+//$(ProjectDir)/BSP/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc/Legacy
+//$(ProjectDir)/BSP/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include
+//$(ProjectDir)/BSP/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include/t
+//$(ProjectDir)/BSP/STM32F4xxxx/CMSIS_HAL/Include
 //d:\leo_work\lib_visualgdb\bin\../lib/gcc/arm-eabi/6.2.0/../../../../arm-eabi/include/c++/6.2.0
 //d:\leo_work\lib_visualgdb\bin\../lib/gcc/arm-eabi/6.2.0/../../../../arm-eabi/include/c++/6.2.0/arm-eabi/thumb/cortex_m4
 //d:\leo_work\lib_visualgdb\bin\../lib/gcc/arm-eabi/6.2.0/../../../../arm-eabi/include/c++/6.2.0/backward

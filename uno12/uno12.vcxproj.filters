@@ -553,6 +553,9 @@
     <ClInclude Include="BSP\STM32F4xxxx\CMSIS_HAL\RTOS\Template\cmsis_os.h">
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
+    <ClInclude Include="BSP\STM32F4xxxx\CMSIS_HAL\Device\ST\STM32F4xx\Include\stm32f427xx.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />

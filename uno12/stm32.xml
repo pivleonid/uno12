@@ -2,10 +2,13 @@
 <EmbeddedProfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
   <BspID>com.visualgdb.bsp.in-place</BspID>
-  <BspVersion>4.0</BspVersion>
+  <BspVersion>1.0</BspVersion>
   <McuID>STM32F427ZG</McuID>
   <BSPSubdirectory>BSP</BSPSubdirectory>
-  <MCUDefinitionFile>stm32f427xx.xml</MCUDefinitionFile>
+  <MCUDefinitionFile>STM32F4xxxx\DeviceDefinitions\stm32f427xx.xml</MCUDefinitionFile>
+  <MCUProperties>
+    <Entries />
+  </MCUProperties>
   <BSPSourceFolderName>Device-specific files</BSPSourceFolderName>
   <InPlaceMCU>
     <ID>STM32F427ZG</ID>
@@ -24,13 +27,16 @@
         <string>$$SYS:BSP_ROOT$$/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include</string>
         <string>$$SYS:BSP_ROOT$$/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include/t</string>
         <string>$$SYS:BSP_ROOT$$/STM32F4xxxx/CMSIS_HAL/Include</string>
+        <string>$$SYS:BSP_ROOT$$/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include</string>
       </IncludeDirectories>
       <AdditionalLibraries>
         <string>compactcpp</string>
       </AdditionalLibraries>
-      <LDFLAGS> </LDFLAGS>
+      <CFLAGS />
+      <CXXFLAGS />
+      <LDFLAGS />
       <ASFLAGS>-mfpu=fpv4-sp-d16</ASFLAGS>
-      <LinkerScript>$$SYS:BSP_ROOT$$/STM32F427ZG_flash.lds</LinkerScript>
+      <LinkerScript>D:/Leo_work/myExample/Moduls/uno/not_cube_sintezators/uno12/uno12/BSP/STM32F427ZG_flash.lds</LinkerScript>
       <COMMONFLAGS>-mcpu=cortex-m4 -mthumb -mfloat-abi=soft</COMMONFLAGS>
       <EnableLinkerGroups>true</EnableLinkerGroups>
     </CompilationFlags>
@@ -325,7 +331,7 @@
     <RAMSize>262144</RAMSize>
     <FLASHBase>134217728</FLASHBase>
     <RAMBase>536870912</RAMBase>
-    <MCUDefinitionFile>STM32F4xxxx/DeviceDefinitions/stm32f427xx.xml</MCUDefinitionFile>
+    <MCUDefinitionFile>STM32F4xxxx\DeviceDefinitions\stm32f427xx.xml</MCUDefinitionFile>
     <AdditionalSourcesRequiredForTesting>false</AdditionalSourcesRequiredForTesting>
   </InPlaceMCU>
   <MCUMakFile>stm32.mak</MCUMakFile>

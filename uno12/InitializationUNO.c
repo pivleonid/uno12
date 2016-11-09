@@ -2,15 +2,25 @@
 
 #include "stm32f4xx_hal.h"
 #include "InitializationUNO.h"
-#include "stm32f4xx_hal_spi.h"
+//#include "stm32f4xx_hal_spi.h"
+#include "stm32f427xx.h"
 
-//float fr_out = 5000; //частота в МГц  5 ГГц
-//extern uint16_t db;
-uint8_t n_pow;
-//float fr_vco2;  
-//int K;
-//float fr_dds;
-//float ftw;
+#define StrobUno_ON HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_SET );
+#define StrobUno_OFF HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_RESET );
+
+#define UNO_OK (0)
+#define ERR_UNO_Pow (-1)
+#define ERR_UNO_PWR_Down (-2)
+
+
+
+//Статичные функции\\
+uint8_t func_power(float fr_out);
+static float Funk_fr_vco2(uint8_t n_pow, float fr_out);
+static uint8_t Search_K(float);
+
+
+int outputState;
 
 SPI_HandleTypeDef hspi5; // первый синтезатор--//
 SPI_HandleTypeDef hspi6; // второй синтезатор--//
@@ -19,14 +29,10 @@ GPIO_InitTypeDef GPIO_InitStruct;
 GPIO_TypeDef* GPIO_X;
 uint16_t GPIO_PIN;
 
-#define UNO_OK (0)
-#define ERR_UNO_Pow (-1)
-#define ERR_UNO_PWR_Down (-2)
-int outputState;
+
 //Настройки SPi с тактированием и настройкой пинов\\
 
-#define StrobUno_ON HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_SET );
-#define StrobUno_OFF HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_RESET );
+
 
 //uno_index = 0 или 1
 int uno_open(uint8_t uno_index)
@@ -634,6 +640,8 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 {
 	float fr_out = freq;
 	uint8_t dB = gain;
+	uint8_t n_pow;
+
 	if (uno_index == 0)
 	{
 		hspix = hspi5;
@@ -655,7 +663,7 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 	else if (fr_out > 189.6875) n_pow = 5;
 	else  n_pow = 6;
 
-	 //n_pow =	 Funk_n_pow(fr_out);
+	//n_pow =	 func_power(fr_out);
 	float fr_vco2 =  Funk_fr_vco2(n_pow, fr_out);  
 	uint8_t K = Search_K(fr_vco2);
 	float fr_dds = 1200 - fr_vco2 / K;
@@ -717,26 +725,26 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 
 }
 
-static uint8_t Funk_n_pow(float fr_out)
- { 
- //uint8_t n_pow;
- //поиск n_pow показатель степени делител§; fr_out частота на выходе uno
-	if (fr_out > 6070) n_pow = 0;
-	 else if (fr_out > 3035) n_pow = 1;
-	 else if (fr_out > 1517.5) n_pow = 2;
-	 else if (fr_out > 758.75) n_pow = 3;
-	 else if (fr_out > 379.375) n_pow = 4;
-	 else if (fr_out > 189.6875) n_pow = 5;
-	 else  n_pow = 6;
-	 return n_pow;
-}
+//uint8_t func_power(float fr_out)
+// { 
+// uint8_t n_pow;
+// //поиск n_pow показатель степени делител§; fr_out частота на выходе uno
+//	if (fr_out > 6070) n_pow = 0;
+//	 else if (fr_out > 3035) n_pow = 1;
+//	 else if (fr_out > 1517.5) n_pow = 2;
+//	 else if (fr_out > 758.75) n_pow = 3;
+//	 else if (fr_out > 379.375) n_pow = 4;
+//	 else if (fr_out > 189.6875) n_pow = 5;
+//	 else  n_pow = 6;
+//	 return n_pow;
+//}
  
 	        //  float fr_vco2 //
 static float Funk_fr_vco2(uint8_t n_pow, float fr_out)
 	{
     
 	 float fr_vco2 = fr_out * powf( 2, n_pow );
-	return fr_vco2;
+	 return fr_vco2;
 	}
     
 	            //int  k//

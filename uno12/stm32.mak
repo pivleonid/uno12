@@ -17,7 +17,7 @@ OBJCOPY := $(TOOLCHAIN_ROOT)/bin/arm-eabi-objcopy.exe
 
 #Additional flags
 PREPROCESSOR_MACROS += ARM_MATH_CM4 STM32F427ZG stm32_flash_layout STM32F427xx
-INCLUDE_DIRS += . $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc/Legacy $(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include $(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include/t $(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Include
+INCLUDE_DIRS += . $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc $(BSP_ROOT)/STM32F4xxxx/STM32F4xx_HAL_Driver/Inc/Legacy $(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include $(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include/t $(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Include $(BSP_ROOT)/STM32F4xxxx/CMSIS_HAL/Device/ST/STM32F4xx/Include
 LIBRARY_DIRS += 
 LIBRARY_NAMES += compactcpp
 ADDITIONAL_LINKER_INPUTS += 
@@ -27,7 +27,7 @@ LINUX_PACKAGES +=
 CFLAGS += 
 CXXFLAGS += 
 ASFLAGS += -mfpu=fpv4-sp-d16
-LDFLAGS +=  
+LDFLAGS += 
 COMMONFLAGS += -mcpu=cortex-m4 -mthumb -mfloat-abi=soft
-LINKER_SCRIPT := $(BSP_ROOT)/STM32F427ZG_flash.lds
+LINKER_SCRIPT := D:/Leo_work/myExample/Moduls/uno/not_cube_sintezators/uno12/uno12/BSP/STM32F427ZG_flash.lds
 

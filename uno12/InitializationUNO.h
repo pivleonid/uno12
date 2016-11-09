@@ -15,10 +15,7 @@ int uno_close(uint8_t uno_index);
    outputStete == -2 модуль не выключился */
 int uno_write(uint8_t uno_index, float freq, uint8_t gain);
 //	UNO_OK == 0 успешное переключение
-//Статичные функции\\
-static uint8_t Funk_n_pow(float fr_out);
-static float Funk_fr_vco2(uint8_t n_pow, float fr_out);
-static uint8_t Search_K(float );
+
 
 #ifdef __cplusplus
 }
