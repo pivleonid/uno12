@@ -2,9 +2,9 @@
 #include "stdint.h"
 #include "InitializationUNO.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
 
 
 	void SystemClock_Config(void);
@@ -27,11 +27,11 @@ extern "C" {
 		for (;;)
 		{
 
-//			for (int n = 2000; n < 5000; n += 10)
-//			{
-//				uno_write(0, n, 0x3F);	
-//				HAL_Delay(100);
-//			}
+			for (int n = 2000; n < 5000; n += 100)
+			{
+				uno_write(0, n, 0x3F);	
+				HAL_Delay(100);
+			}
 			
 			//uno_open(0);
 		
@@ -121,7 +121,8 @@ extern "C" {
 		/* USER CODE END Error_Handler */ 
 	}
 
-
-#ifdef __cplusplus
-}
-#endif
+//
+//#ifdef __cplusplus
+//}
+//#endif
+//

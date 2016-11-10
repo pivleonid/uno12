@@ -1,8 +1,7 @@
 
 
-#include "stm32f4xx_hal.h"
 #include "InitializationUNO.h"
-//#include "stm32f4xx_hal_spi.h"
+#include "stm32f4xx_hal.h"
 #include "stm32f427xx.h"
 
 #define StrobUno_ON HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_SET );
@@ -12,15 +11,80 @@
 #define ERR_UNO_Pow (-1)
 #define ERR_UNO_PWR_Down (-2)
 
-
+int outputState; // переменна€ выходного состо€ни€
 
 //—татичные функции\\
-uint8_t func_power(float fr_out);
-static float Funk_fr_vco2(uint8_t n_pow, float fr_out);
-static uint8_t Search_K(float);
+
+static uint8_t func_n_pow(float fr_out)
+{ 
+	uint8_t n_pow;
+	//поиск n_pow показатель степени делителІ; fr_out частота на выходе uno
+	if (fr_out > 6070) n_pow = 0;
+	else if (fr_out > 3035) n_pow = 1;
+	else if (fr_out > 1517.5) n_pow = 2;
+	else if (fr_out > 758.75) n_pow = 3;
+	else if (fr_out > 379.375) n_pow = 4;
+	else if (fr_out > 189.6875) n_pow = 5;
+	else  n_pow = 6;
+	return n_pow;
+}
+static uint8_t Search_K(float fr_vco2)
+{
+	uint8_t K;
+	if (fr_vco2 < 7020) K = 6; 
+	else if (fr_vco2 < 8190) {
+		K = 7;
+		if ((fr_vco2 >= 7068) && (fr_vco2 <= 7080)) K = 6;
+		if ((fr_vco2 >= 8030) && (fr_vco2 <= 8062)) K = 8;    
+	}
+	else if (fr_vco2 < 9360) {
+		K = 8;
+		if ((fr_vco2 >= 9172) && (fr_vco2 <= 9175)) K = 9;
+		if ((fr_vco2 >= 9181) && (fr_vco2 <= 9184)) K = 9;
+		if ((fr_vco2 >= 9190) && (fr_vco2 <= 9220)) K = 9;
+	}
+	else if (fr_vco2 < 10530) {
+		K = 9;
+		if ((fr_vco2 >= 9390) && (fr_vco2 <= 9393)) K = 8;
+		if ((fr_vco2 >= 9435) && (fr_vco2 <= 9464)) K = 8;
+		if ((fr_vco2 >= 10315) && (fr_vco2 <= 10360)) K = 10;
+		if ((fr_vco2 >= 10366) && (fr_vco2 <= 10370)) K = 10;
+	}
+	else if (fr_vco2 < 11700) {
+		K = 10;
+		if ((fr_vco2 >= 11019) && (fr_vco2 <= 11022)) K = 11;
+		if ((fr_vco2 >= 11038) && (fr_vco2 <= 11042)) K = 11;
+		if ((fr_vco2 >= 11057) && (fr_vco2 <= 11060)) K = 11;
+		if ((fr_vco2 >= 11465) && (fr_vco2 <= 11469)) K = 11;
+		if ((fr_vco2 >= 11476) && (fr_vco2 <= 11480)) K = 11;
+		if ((fr_vco2 >= 11485) && (fr_vco2 <= 11512)) K = 11;
+		if ((fr_vco2 >= 11519) && (fr_vco2 <= 11521)) K = 11;
+		if ((fr_vco2 >= 11528) && (fr_vco2 <= 11531)) K = 11;
+		if ((fr_vco2 >= 11545) && (fr_vco2 <= 11549)) K = 11;
+		if ((fr_vco2 >= 11650) && (fr_vco2 <= 11687)) K = 11;
+	}
+	else if (fr_vco2 < 12870) {
+		K = 11;
+		if ((fr_vco2 >= 12050) && (fr_vco2 <= 12096)) K = 12;
+		if ((fr_vco2 >= 12098) && (fr_vco2 <= 12124)) K = 12;
+		if ((fr_vco2 >= 12142) && (fr_vco2 <= 12187)) K = 12;
+		if ((fr_vco2 >= 12372) && (fr_vco2 <= 12378)) K = 12;
+		if ((fr_vco2 >= 12584) && (fr_vco2 <= 12588)) K = 12;
+		if ((fr_vco2 >= 12612) && (fr_vco2 <= 12615)) K = 12;
+		if ((fr_vco2 >= 12635) && (fr_vco2 <= 12665)) K = 12;
+		if ((fr_vco2 >= 12670) && (fr_vco2 <= 12684)) K = 12;
+		if ((fr_vco2 >= 12700) && (fr_vco2 <= 12703)) K = 12;
+		if ((fr_vco2 >= 12812) && (fr_vco2 <= 12856)) K = 12;
+	}
+	else {
+		K = 12;
+		if ((fr_vco2 >= 12958)&&(fr_vco2 <= 12856)) K = 11;
+	}
+        
+	return K;
+}
 
 
-int outputState;
 
 SPI_HandleTypeDef hspi5; // первый синтезатор--//
 SPI_HandleTypeDef hspi6; // второй синтезатор--//
@@ -655,16 +719,8 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 		GPIO_PIN = GPIO_PIN_15;
 	}
 
-	if (fr_out > 6070) n_pow = 0;
-	else if (fr_out > 3035) n_pow = 1;
-	else if (fr_out > 1517.5) n_pow = 2;
-	else if (fr_out > 758.75) n_pow = 3;
-	else if (fr_out > 379.375) n_pow = 4;
-	else if (fr_out > 189.6875) n_pow = 5;
-	else  n_pow = 6;
-
-	//n_pow =	 func_power(fr_out);
-	float fr_vco2 =  Funk_fr_vco2(n_pow, fr_out);  
+	n_pow =	 func_n_pow(fr_out);
+	float fr_vco2 = fr_out * powf(2, n_pow);  
 	uint8_t K = Search_K(fr_vco2);
 	float fr_dds = 1200 - fr_vco2 / K;
 	float ftw = roundf(fr_dds*powf(2, 32) / 2400);
@@ -704,7 +760,7 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		StrobUno_ON
 
-			//------------------конец усилени€-------------------------//
+		//------------------конец усилени€-------------------------//
 			//HAL_Delay( 10 );
 			//--3--//
 		address = 0x62;
@@ -725,85 +781,10 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 
 }
 
-//uint8_t func_power(float fr_out)
-// { 
-// uint8_t n_pow;
-// //поиск n_pow показатель степени делителІ; fr_out частота на выходе uno
-//	if (fr_out > 6070) n_pow = 0;
-//	 else if (fr_out > 3035) n_pow = 1;
-//	 else if (fr_out > 1517.5) n_pow = 2;
-//	 else if (fr_out > 758.75) n_pow = 3;
-//	 else if (fr_out > 379.375) n_pow = 4;
-//	 else if (fr_out > 189.6875) n_pow = 5;
-//	 else  n_pow = 6;
-//	 return n_pow;
-//}
- 
-	        //  float fr_vco2 //
-static float Funk_fr_vco2(uint8_t n_pow, float fr_out)
-	{
-    
-	 float fr_vco2 = fr_out * powf( 2, n_pow );
-	 return fr_vco2;
-	}
-    
-	            //int  k//
 
-static uint8_t Search_K(float fr_vco2)
-	{
-   uint8_t K;
-	if ( fr_vco2 < 7020 ) K = 6; 
-	else if ( fr_vco2 < 8190 ) {
-		K = 7;
-		if ( (fr_vco2 >= 7068) && (fr_vco2 <= 7080) ) K = 6;
-		if ( (fr_vco2 >= 8030) && (fr_vco2 <= 8062) ) K = 8;    
-		}
-	else if ( fr_vco2 < 9360 ) {
-		K = 8;
-		if ( (fr_vco2 >= 9172) && (fr_vco2 <= 9175) ) K = 9;
-		if ( (fr_vco2 >= 9181) && (fr_vco2 <= 9184) ) K = 9;
-		if ( (fr_vco2 >= 9190) && (fr_vco2 <= 9220) ) K = 9;
-		}
-	else if ( fr_vco2 < 10530 ) {
-		K = 9;
-		if ( (fr_vco2 >= 9390) && (fr_vco2 <= 9393) ) K = 8;
-		if ( (fr_vco2 >= 9435) && (fr_vco2 <= 9464) ) K = 8;
-		if ( (fr_vco2 >= 10315) && (fr_vco2 <= 10360) ) K = 10;
-		if ( (fr_vco2 >= 10366) && (fr_vco2 <= 10370) ) K = 10;
-		}
-	else if ( fr_vco2 < 11700 ) {
-		K = 10;
-		if ( (fr_vco2 >= 11019) && (fr_vco2 <= 11022) ) K = 11;
-		if ( (fr_vco2 >= 11038) && (fr_vco2 <= 11042) ) K = 11;
-		if ( (fr_vco2 >= 11057) && (fr_vco2 <= 11060) ) K = 11;
-		if ( (fr_vco2 >= 11465) && (fr_vco2 <= 11469) ) K = 11;
-		if ( (fr_vco2 >= 11476) && (fr_vco2 <= 11480) ) K = 11;
-		if ( (fr_vco2 >= 11485) && (fr_vco2 <= 11512) ) K = 11;
-		if ( (fr_vco2 >= 11519) && (fr_vco2 <= 11521) ) K = 11;
-		if ( (fr_vco2 >= 11528) && (fr_vco2 <= 11531) ) K = 11;
-		if ( (fr_vco2 >= 11545) && (fr_vco2 <= 11549) ) K = 11;
-		if ( (fr_vco2 >= 11650) && (fr_vco2 <= 11687) ) K = 11;
-		}
-	else if ( fr_vco2 < 12870 ) {
-		K = 11;
-		if ( (fr_vco2 >= 12050) && (fr_vco2 <= 12096) ) K = 12;
-		if ( (fr_vco2 >= 12098) && (fr_vco2 <= 12124) ) K = 12;
-		if ( (fr_vco2 >= 12142) && (fr_vco2 <= 12187) ) K = 12;
-		if ( (fr_vco2 >= 12372) && (fr_vco2 <= 12378) ) K = 12;
-		if ( (fr_vco2 >= 12584) && (fr_vco2 <= 12588) ) K = 12;
-		if ( (fr_vco2 >= 12612) && (fr_vco2 <= 12615) ) K = 12;
-		if ( (fr_vco2 >= 12635) && (fr_vco2 <= 12665) ) K = 12;
-		if ( (fr_vco2 >= 12670) && (fr_vco2 <= 12684) ) K = 12;
-		if ( (fr_vco2 >= 12700) && (fr_vco2 <= 12703) ) K = 12;
-		if ( (fr_vco2 >= 12812) && (fr_vco2 <= 12856) ) K = 12;
-		}
-	else {
-		K = 12;
-		if ( (fr_vco2 >= 12958)&&(fr_vco2 <= 12856) ) K = 11;
-		}
-        
-	return K;
-	}
+
+
+    
 
 
 

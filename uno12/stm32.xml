@@ -335,4 +335,10 @@
     <AdditionalSourcesRequiredForTesting>false</AdditionalSourcesRequiredForTesting>
   </InPlaceMCU>
   <MCUMakFile>stm32.mak</MCUMakFile>
+  <ReferencedFrameworks>
+    <string>com.sysprogs.embedded.semihosting_and_profiler</string>
+  </ReferencedFrameworks>
+  <FrameworkProperties>
+    <Entries />
+  </FrameworkProperties>
 </EmbeddedProfile>
