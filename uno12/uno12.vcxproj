@@ -245,6 +245,7 @@
     <ClInclude Include="stm32f4xx_hal_conf.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="debug.mak" />
     <None Include="Makefile" />
     <None Include="release.mak" />
