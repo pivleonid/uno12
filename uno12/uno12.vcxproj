@@ -38,7 +38,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <NMakeIncludeSearchPath>..;.;BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc;BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc\Legacy;BSP\STM32F4xxxx\CMSIS_HAL\Device\ST\STM32F4xx\Include;BSP\STM32F4xxxx\CMSIS_HAL\Device\ST\STM32F4xx\Include\t;BSP\STM32F4xxxx\CMSIS_HAL\Include;d:\leo_work\lib_visualgdb\arm-eabi\include\c++\6.2.0;d:\leo_work\lib_visualgdb\arm-eabi\include\c++\6.2.0\arm-eabi\thumb\cortex_m4;d:\leo_work\lib_visualgdb\arm-eabi\include\c++\6.2.0\backward;d:\leo_work\lib_visualgdb\lib\gcc\arm-eabi\6.2.0\include;d:\leo_work\lib_visualgdb\lib\gcc\arm-eabi\6.2.0\include-fixed;d:\leo_work\lib_visualgdb\arm-eabi\sys-include;d:\leo_work\lib_visualgdb\arm-eabi\include;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>..;.;BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc;BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc\Legacy;BSP\STM32F4xxxx\CMSIS_HAL\Device\ST\STM32F4xx\Include;BSP\STM32F4xxxx\CMSIS_HAL\Device\ST\STM32F4xx\Include\t;BSP\STM32F4xxxx\CMSIS_HAL\Include;d:\leo_work\lib_visualgdb\arm-eabi\include\c++\6.2.0;d:\leo_work\lib_visualgdb\arm-eabi\include\c++\6.2.0\arm-eabi\thumb\cortex_m4;d:\leo_work\lib_visualgdb\arm-eabi\include\c++\6.2.0\backward;d:\leo_work\lib_visualgdb\lib\gcc\arm-eabi\6.2.0\include;d:\leo_work\lib_visualgdb\lib\gcc\arm-eabi\6.2.0\include-fixed;d:\leo_work\lib_visualgdb\arm-eabi\sys-include;d:\leo_work\lib_visualgdb\arm-eabi\include;BSP\STM32F4xxxx\;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <NMakeForcedIncludes>$(ProjectDir)\gcc_Debug.h;$(VISUALGDB_DIR)\gcc_compat.h;BSP\stm32_compat.h;$(NMakeForcedIncludes)</NMakeForcedIncludes>
     <NMakeBuildCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /build "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeBuildCommandLine>
     <NMakeCleanCommandLine>"$(VISUALGDB_DIR)\VisualGDB.exe" /clean "$(ProjectPath)" "/solution:$(SolutionPath)" "/config:$(Configuration)" "/platform:$(Platform)"</NMakeCleanCommandLine>
@@ -132,7 +132,8 @@
     <ClCompile Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_fsmc.c" />
     <ClCompile Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_sdmmc.c" />
     <ClCompile Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_usb.c" />
-    <ClCompile Include="InitializationUNO.c" />
+    <ClCompile Include="FLASH_512.c" />
+    <ClCompile Include="InitializationUNO_v1.c" />
     <ClCompile Include="moduleUNO.c" />
     <ClCompile Include="system_stm32f4xx.c" />
   </ItemGroup>
@@ -239,7 +240,8 @@
     <ClInclude Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_fsmc.h" />
     <ClInclude Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_sdmmc.h" />
     <ClInclude Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usb.h" />
-    <ClInclude Include="InitializationUNO.h" />
+    <ClInclude Include="FLASH_512.h" />
+    <ClInclude Include="InitializationUNO_v1.h" />
     <ClInclude Include="stm32f4xx_hal_conf.h" />
   </ItemGroup>
   <ItemGroup>

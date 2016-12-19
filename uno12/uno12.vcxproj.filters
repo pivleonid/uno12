@@ -32,9 +32,6 @@
     <ClCompile Include="system_stm32f4xx.c">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="InitializationUNO.c">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="moduleUNO.c">
       <Filter>Source files</Filter>
     </ClCompile>
@@ -242,12 +239,15 @@
     <ClCompile Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_usb.c">
       <Filter>Source files\Device-specific files</Filter>
     </ClCompile>
+    <ClCompile Include="FLASH_512.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="InitializationUNO_v1.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stm32f4xx_hal_conf.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
-    <ClInclude Include="InitializationUNO.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h">
@@ -554,6 +554,12 @@
       <Filter>Header files\Device-specific files</Filter>
     </ClInclude>
     <ClInclude Include="BSP\STM32F4xxxx\CMSIS_HAL\Device\ST\STM32F4xx\Include\stm32f427xx.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="FLASH_512.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="InitializationUNO_v1.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

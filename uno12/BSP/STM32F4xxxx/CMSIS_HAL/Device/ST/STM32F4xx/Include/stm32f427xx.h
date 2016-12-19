@@ -7841,8 +7841,8 @@ USB_OTG_HostChannelTypeDef;
 /********************  Bit definition forUSB_OTG_HCFG register  ********************/
 
 #define USB_OTG_HCFG_FSLSPCS                 0x00000003U            /*!< FS/LS PHY clock select  */
-#define USB_OTG_HCFG_FSLSPCS_0               0x00000001U            /*!<Bit 0 */
-#define USB_OTG_HCFG_FSLSPCS_1               0x00000002U            /*!<Bit 1 */
+#define USB_OTG_HCFG_FSLSPChip_Select_Down               0x00000001U            /*!<Bit 0 */
+#define USB_OTG_HCFG_FSLSPChip_Select_Up                0x00000002U            /*!<Bit 1 */
 #define USB_OTG_HCFG_FSLSS                   0x00000004U            /*!< FS- and LS-only support */
 
 /********************  Bit definition forUSB_OTG_DCFG register  ********************/

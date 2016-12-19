@@ -4,8 +4,8 @@
 #include "stm32f4xx_hal.h"
 #include "stm32f427xx.h"
 
-#define StrobUno_ON HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_SET );
-#define StrobUno_OFF HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_RESET );
+#define Chip_Select_Up  HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_SET );
+#define Chip_Select_Down HAL_GPIO_WritePin( GPIO_X, GPIO_PIN, GPIO_PIN_RESET );
 
 #define UNO_OK (0)
 #define ERR_UNO_Pow (-1)
@@ -142,7 +142,7 @@ int uno_open(uint8_t uno_index)
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 		HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-		StrobUno_ON
+		Chip_Select_Up 
 	}
 	if(uno_index == 1)
 	{
@@ -185,7 +185,7 @@ int uno_open(uint8_t uno_index)
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 		HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 		//-------------------------//
-		StrobUno_ON
+		Chip_Select_Up 
 
 		
 		
@@ -208,38 +208,38 @@ int uno_open(uint8_t uno_index)
 		//---------------------------------//
 		//1//
 		address = 0x01;
-		StrobUno_OFF 
+		Chip_Select_Down 
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x01; //0x0D
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//2//
 		HAL_Delay(100);
 		//3//
 		address = 0x02;
-		StrobUno_OFF 
+		Chip_Select_Down 
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x07; //0x07-> 111    // 0x06 -> 110  Настройка усилителя
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 	
 		//4//
 		address = 0x03; //задание делителя на выходе
-		StrobUno_OFF 
+		Chip_Select_Down 
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x10); 
 		address = (0x00 | n_pow); //задание делителя на выходе 
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x10);
-		StrobUno_ON
+		Chip_Select_Up 
 		//5//
 		address = (0x04 | hb_gain_1); //задать усиление сигнала
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = (0x00 | hb_gain_2); //3F усиление на  31.5 дБ
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//6//
 		address = 0x60; //address = 0x60038013; //два раза по 16 бит
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x03;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
@@ -247,10 +247,10 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x13;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
-		StrobUno_ON
+		Chip_Select_Up 
 		//7////
 		address = 0x60; //0x60038012;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x03;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
@@ -258,86 +258,86 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x12;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
-		StrobUno_ON
+		Chip_Select_Up 
 		//8//
 		address_32 = (0x60000000 | refpll_r << 2); //загрузка фазового детектора ФАПЧ опорного сигнала    
 		uint8_t Fapch1 = (uint8_t)address_32;  //Fapch1 младший разряд  
 		uint8_t Fapch2 = (uint8_t)(address_32 >> 8);    
 		uint8_t Fapch3 = (uint8_t)(address_32 >> 16);   
 		uint8_t Fapch4 = (uint8_t)(address_32 >> 24);
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &Fapch4, sizeof(Fapch4), 0x1); 
 		HAL_SPI_Transmit(&hspix, &Fapch3, sizeof(Fapch3), 0x1);
 		HAL_SPI_Transmit(&hspix, &Fapch2, sizeof(Fapch2), 0x1);
 		HAL_SPI_Transmit(&hspix, &Fapch1, sizeof(Fapch1), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//9//
 		address_32 = (0x60000001 | refpll_n << 8); //загрузка фазового детектора ФАПЧ опорного сигнала
 		Fapch1 = (uint8_t)address_32;  //Fapch1 младший разряд  
 		Fapch2 = (uint8_t)(address_32 >> 8);    
 		Fapch3 = (uint8_t)(address_32 >> 16);   
 		Fapch4 = (uint8_t)(address_32 >> 24);
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &Fapch4, sizeof(Fapch4), 0x1); 
 		HAL_SPI_Transmit(&hspix, &Fapch3, sizeof(Fapch3), 0x1);
 		HAL_SPI_Transmit(&hspix, &Fapch2, sizeof(Fapch2), 0x1);
 		HAL_SPI_Transmit(&hspix, &Fapch1, sizeof(Fapch1), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//10//включение  DDS
 		address = 0x05; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x01;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//11//
 		address = 0x15; //применение данных регистра DDSCTL
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//12//
 		HAL_Delay(100);
 		//13//сброс DDS
 		address = 0x05; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x03;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//14//
 		address = 0x15; //применение данных регистра DDSCTL
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//15//
 		HAL_Delay(10);
 		//16//
 		address = 0x05; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x01;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//17//
 		address = 0x15; //применение данных регистра DDSCTL
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//18//
 		HAL_Delay(10);
 		//19//
 		address = 0x05; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x05;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//20//
 		//21//
 		//22//
@@ -345,7 +345,7 @@ int uno_open(uint8_t uno_index)
 		//24//
 		//25//          0x100000010102; // CFR1 разрешение глубокого выключения
 		address = 10;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -357,45 +357,45 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 02;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
     
 		//26//
 		address = 0x11; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//27//
 		address = 0x05; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//28//
 		address = 0x15; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//29//
 		HAL_Delay(10);
 		//30//      
 		Fapch2 = 0x05;
 		Fapch1 = 0x01;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &Fapch2, sizeof(Fapch2), 0x1); 
 		HAL_SPI_Transmit(&hspix, &Fapch1, sizeof(Fapch1), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//31//
 		address = 0x15; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//32//
 		HAL_Delay(100);
 		//33//      Проверка на режим вычисления частоты
@@ -403,7 +403,7 @@ int uno_open(uint8_t uno_index)
 		//        {
 		        //0x100100890B00
 		        //	address = 0x10;
-		        //	StrobUno_OFF  
+		        //	Chip_Select_Down  
 		        //	HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0x1 ); 
 		        //	address = 0x01;
 		        //	HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0x1 );
@@ -415,13 +415,13 @@ int uno_open(uint8_t uno_index)
 		        //	HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0x1 );
 		        //	address = 0x00;
 		        //	HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0x1 );
-		        //	StrobUno_ON
+		        //	Chip_Select_Up 
 		        	//   //     }
 		        	//   // else if ( T == quickFreq )
 		        	//    //    {
 		        	       // 0x10010080B000
 		address = 0x10;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x01;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -433,17 +433,17 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//34//
 		address = 0x11; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//35//      0x100200000000
 		address = 0x10;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x02;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -455,17 +455,17 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//36//     
 		address = 0x11; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON  
+		Chip_Select_Up   
 		//37//      0x100301052120
 		address = 0x10;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x03;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -477,19 +477,19 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0x20;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//38//     
 		address = 0x11; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//39//
 		HAL_Delay(100);
 		//40//      0x100300052120
 		address = 0x10;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x03;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -501,17 +501,17 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0x20;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//41//     
 		address = 0x11; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//42//      0x100C0FFF0000  (profile 0)
 		address = 0x10;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x0C;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -523,10 +523,10 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//43//      0x100E0FFF0000  (profile 1)
 		//    address = 0x10;
-		//    StrobUno_OFF  
+		//    Chip_Select_Down  
 		//    HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0x1 ); 
 		//    address = 0x0E;
 		//    HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0x1 );
@@ -538,21 +538,21 @@ int uno_open(uint8_t uno_index)
 		//    HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0x1 );
 		//    address = 0x00;
 		//    HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0x1 );
-		//    StrobUno_ON
+		//    Chip_Select_Up 
 		                    //-------------------------//
 		                    //----Profile (2-7)--------//
 		                    //-------------------------//
     
 		//50//
 		address = 0x11; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//51//      0x10040BA2E8BA
 		address = 0x10;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x04;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -564,10 +564,10 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0xBA;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//52//      0x1006C66F5E22
 		address = 0x10;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x06;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -579,10 +579,10 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0x22;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//53//      0x10054364C5BB
 		address = 0x10;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x05;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -594,17 +594,17 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0xBB;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//54//
 		address = 0x11; 
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//55//      0x620000000B
 		address = 0x62;
-		StrobUno_OFF  
+		Chip_Select_Down  
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x00;
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -614,16 +614,16 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0x0C;//B
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-	StrobUno_ON
+	Chip_Select_Up 
 	
 //return (OK);
 //----------Обработка ошибок--------//
 	uint8_t uno_answer;
 	address = 0x81;
-	StrobUno_OFF 
+	Chip_Select_Down 
 	HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 	HAL_SPI_Receive(&hspix, &uno_answer, sizeof(address), 0x1);
-	StrobUno_ON
+	Chip_Select_Up 
 	if(uno_answer != 0x81)
 	return ERR_UNO_Pow;
 	return UNO_OK;
@@ -646,18 +646,18 @@ int uno_close (uint8_t uno_index)
 		
 	}
 	uint8_t address = 0x01;
-	StrobUno_OFF 
+	Chip_Select_Down 
 	HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0xFF ); 
 	address = 0x00;
 	HAL_SPI_Transmit( &hspix, &address, sizeof( address ), 0xFF );
-	StrobUno_ON
+	Chip_Select_Up 
 	//----------Обработка ошибок--------//
 	uint8_t uno_answer;
 	address = 0x81;
-	StrobUno_OFF 
+	Chip_Select_Down 
 	HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 	HAL_SPI_Receive(&hspix, &uno_answer, sizeof(address), 0x1);
-	StrobUno_ON
+	Chip_Select_Up 
 	if(uno_answer != 0) // модуль выкл
 	outputState = ERR_UNO_PWR_Down;
 	outputState = UNO_OK;
@@ -733,7 +733,7 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 	//--Устанавливаем значения в синтезатор--//
 	//--1--//
 	uint8_t address = 0x10;
-	StrobUno_OFF
+	Chip_Select_Down
 	{
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = 0x0B; 
@@ -742,29 +742,29 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 		HAL_SPI_Transmit(&hspix, &ftw3, sizeof(address), 0x1);
 		HAL_SPI_Transmit(&hspix, &ftw2, sizeof(address), 0x1);
 		HAL_SPI_Transmit(&hspix, &ftw1, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
     
 		//HAL_Delay( 10 );
 		//--2--//
 		address = 0x03;
-		StrobUno_OFF; 
+		Chip_Select_Down; 
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = (0x00 | n_pow); // вроде все верно 
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 		//-------------------игра с усилением----------------------//
 		address = 0x04;
-		StrobUno_OFF
+		Chip_Select_Down
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1); 
 		address = dB;         //3F max
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
-		StrobUno_ON
+		Chip_Select_Up 
 
 		//------------------конец усиления-------------------------//
 			//HAL_Delay( 10 );
 			//--3--//
 		address = 0x62;
-		StrobUno_OFF
+		Chip_Select_Down
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 		address = 0x00; 
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
@@ -776,7 +776,7 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 		address = K; //(uint8_t)K; // вроде все верно 
 		HAL_SPI_Transmit(&hspix, &address, sizeof(address), 0x1);
 	}
-	StrobUno_ON
+	Chip_Select_Up 
 	return UNO_OK;
 
 }
