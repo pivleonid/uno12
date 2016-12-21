@@ -315,15 +315,15 @@ int uno_open(uint8_t uno_index)
 	SPI_UNO_Transmit( initial_mass_4,     2);
 	
 	
-	///*20-24 пункт в настройках*/
-	//uint8_t adder_0[2] = { 0x15, 0 };
-	//SPI_UNO_Transmit(adder_0, 2);
-	//HAL_Delay(10);
-	//uint8_t adder_1[2] = { 0x05, 0x01 };
-	//SPI_UNO_Transmit(adder_1, 2);
-	//uint8_t adder_2[2] = { 0x15, 0x00 };
-	//SPI_UNO_Transmit(adder_2, 2);
-	//HAL_Delay(10);
+	/*20-24 пункт в настройках*/
+	uint8_t adder_0[2] = { 0x15, 0 };
+	SPI_UNO_Transmit(adder_0, 2);
+	HAL_Delay(10);
+	uint8_t adder_1[2] = { 0x05, 0x01 };
+	SPI_UNO_Transmit(adder_1, 2);
+	uint8_t adder_2[2] = { 0x15, 0x00 };
+	SPI_UNO_Transmit(adder_2, 2);
+	HAL_Delay(10);
 	
 	SPI_UNO_Transmit( &initial_mass_4[2],  6);
 	SPI_UNO_Transmit( &initial_mass_4[8],  2);
@@ -629,7 +629,7 @@ int uno_set_profile(uint8_t uno_index, float freq,  uint8_t dds_profile)
 	uint8_t data[6] = { 0x10, dds_adr, (uint8_t)(ftw_1 >> 24), (uint8_t)(ftw_1 >> 16),
 											(uint8_t)(ftw_1 >> 8), (uint8_t)ftw_1 };
 	uint8_t data_1[2] = { 0x03, (0x00 | n_pow) };
-	uint8_t data_2[2] = { 0x05, 0x01 | (dds_profile << 3) };
+	uint8_t data_2[2] = { 0x05, (0x01 | (dds_profile << 3)) };
 	uint8_t data_3[5] = { 0x62,0,0,0, K };
 	SPI_UNO_Transmit(data, 6);
 	SPI_UNO_Transmit(data_1, 2);
@@ -648,12 +648,21 @@ int uno_set_profile(uint8_t uno_index, float freq,  uint8_t dds_profile)
 \sa
 */
 /*=============================================================================================================*/
-int uno_read_profile(uint8_t dds_profile)
+int uno_read_profile(uint8_t dds_profile,  float freq )
 {
-
-	uint8_t data[2] = { 0x05, ( 0x01 | (dds_profile << 3) ) };
+	float fr_out = freq;
+	uint8_t n_pow;
+	n_pow = func_n_pow(fr_out);
+	float fr_vco2 = fr_out * powf(2, n_pow);
+	uint8_t K = Search_K(fr_vco2);
+	
+	uint8_t data_2[2] = { 0x03, (0x00 | n_pow) };
+	uint8_t data[2] = { 0x05, (0x01 | (dds_profile << 3)) };
+	uint8_t data_3[5] = { 0x62,0,0,0, K };
+	
+	SPI_UNO_Transmit(data_2, 2);
 	SPI_UNO_Transmit(data, 2);
-	HAL_Delay(10);
+	SPI_UNO_Transmit(data_3, 5);
 }
 
 

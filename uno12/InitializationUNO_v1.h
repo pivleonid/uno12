@@ -52,7 +52,7 @@ int uno_gain(
 			uint8_t gain       /*!< [in] усиление сигнала от 0 до 0x3F */
 			);
 int uno_set_profile(uint8_t uno_index, float freq,  uint8_t dds_profile);
-int uno_read_profile(uint8_t dds_profile);
+int uno_read_profile(uint8_t dds_profile, float freq);
 
 #ifdef __cplusplus
 }
