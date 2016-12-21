@@ -32,11 +32,11 @@ extern "C" {
 		for (;;)
 		{
 			
-			uno_read_profile(0, 4000);
+			uno_read_profile(0,0, 4000);
 			HAL_Delay(1000);
-			uno_read_profile(1, 5000);
+			uno_read_profile(0,1, 5000);
 			HAL_Delay(1000);
-			uno_read_profile(2, 6000);
+			uno_read_profile(0,2, 6000);
 			HAL_Delay(1000);
 		}
 	}

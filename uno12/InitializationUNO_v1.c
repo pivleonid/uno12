@@ -11,6 +11,9 @@
 #include "stm32f427xx.h"
 
 /*defines===========================================================================================================*/
+
+#define Chip_Select_Up HAL_GPIO_WritePin(GPIO_X, GPIO_PIN, GPIO_PIN_SET);
+#define Chip_Select_Down HAL_GPIO_WritePin(GPIO_X, GPIO_PIN, GPIO_PIN_RESET);
 /* Дефайны ошибок */
 #define UNO_OK (0)
 #define ERR_UNO_Pow (-1)
@@ -30,6 +33,8 @@ GPIO_TypeDef* GPIO_X;
 uint16_t GPIO_PIN;
 
 /*prototypes========================================================================================================*/
+static void UNOindex(uint8_t uno_index);
+static int SPI_UNO_Transmit(uint8_t* data, uint16_t size);
 static void SPI_5_open(void);
 static void SPI_6_open(void);
 static void Initial_Chip_Select_SPI_5(void);
@@ -37,10 +42,6 @@ static void Initial_Chip_Select_SPI_6(void);
 
 static uint8_t func_n_pow(float fr_out);
 static uint8_t Search_K(float fr_vco2);
-
-
-#define Chip_Select_Up HAL_GPIO_WritePin(GPIO_X, GPIO_PIN, GPIO_PIN_SET);
-#define Chip_Select_Down HAL_GPIO_WritePin(GPIO_X, GPIO_PIN, GPIO_PIN_RESET);
  
 
 /*variables=========================================================================================================*/
@@ -104,7 +105,33 @@ const uint8_t initial_mass_7[83] = {
 /* выключение синтезатора*/
 const uint8_t uno_off[2] = { 0x01, 0x00 };
 
+
 /*code==============================================================================================================*/
+
+/*=============================================================================================================*/
+/*!  \brief
+Функция настройки нужного модуля SPI
+\return void
+\retval
+\sa
+*/
+/*=============================================================================================================*/
+static void UNOindex(uint8_t uno_index)
+{
+	if (uno_index == 0)
+	{
+		hspix = hspi5;
+		GPIO_X = GPIOF;
+		GPIO_PIN = GPIO_PIN_6;
+	}
+	if (uno_index == 1)
+	{
+		hspix = hspi6;
+		GPIO_X = GPIOG;
+		GPIO_PIN = GPIO_PIN_15;
+	}
+	return UNO_OK;
+}
 /*=============================================================================================================*/
 /*!  \brief 
 
@@ -277,22 +304,7 @@ static int SPI_UNO_Transmit(  uint8_t* data, uint16_t size) {
 int uno_open(uint8_t uno_index)
 {
 	/*выбор синтезатора*/
-	if (uno_index == 0)
-	{
-		SPI_5_open();
-		hspix = hspi5;
-		GPIO_X = GPIOF;
-		GPIO_PIN = GPIO_PIN_6;
-		Initial_Chip_Select_SPI_5();
-	}
-	if(uno_index == 1)
-	{
-		SPI_6_open();
-		hspix = hspi6;
-		GPIO_X = GPIOG;
-		GPIO_PIN = GPIO_PIN_15;
-		Initial_Chip_Select_SPI_6();
-	}
+	UNOindex(uno_index);
 
 	SPI_UNO_Transmit(initial_mass_0, 2);
     HAL_Delay(100);
@@ -380,18 +392,7 @@ int uno_open(uint8_t uno_index)
 /*=============================================================================================================*/
 int uno_close (uint8_t uno_index)
 {
-	if (uno_index == 0)
-	{
-		hspix = hspi5;
-		GPIO_X = GPIOF;
-		GPIO_PIN = GPIO_PIN_6;
-	}
-	if(uno_index == 1)
-	{
-		hspix = hspi6;
-		GPIO_X = GPIOG;
-		GPIO_PIN = GPIO_PIN_15;
-	}
+	UNOindex(uno_index);
 	SPI_UNO_Transmit(uno_off, 2);
 	/*Обработчик ошибок*/
 	Chip_Select_Down 
@@ -523,19 +524,7 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 	float fr_out = freq;
 	uint8_t dB = gain;
 	uint8_t n_pow;
-
-	if (uno_index == 0)
-	{
-		hspix = hspi5;
-		GPIO_X = GPIOF;
-		GPIO_PIN = GPIO_PIN_6;
-	}
-	if(uno_index == 1)
-	{
-		hspix = hspi6;
-		GPIO_X = GPIOG;
-		GPIO_PIN = GPIO_PIN_15;
-	}
+	UNOindex(uno_index);
 	n_pow =	 func_n_pow(fr_out);
 	float fr_vco2 = fr_out * powf(2, n_pow);  
 	uint8_t K = Search_K(fr_vco2);
@@ -566,20 +555,7 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 /*=============================================================================================================*/
 int uno_gain(uint8_t uno_index, uint8_t gain)
 {
-
-	if (uno_index == 0)
-	{
-		hspix = hspi5;
-		GPIO_X = GPIOF;
-		GPIO_PIN = GPIO_PIN_6;
-	}
-	if (uno_index == 1)
-	{
-		hspix = hspi6;
-		GPIO_X = GPIOG;
-		GPIO_PIN = GPIO_PIN_15;
-	}
-	
+		UNOindex(uno_index);
 		uint8_t data_0[2] = { 0x04, gain }; 
 		uint8_t data_1[2] = { 0x14, 0 };
 		SPI_UNO_Transmit(data_0, 2);
@@ -608,18 +584,7 @@ int uno_set_profile(uint8_t uno_index, float freq,  uint8_t dds_profile)
 	float fr_out = freq;
 	uint8_t n_pow;
 
-	if (uno_index == 0)
-	{
-		hspix = hspi5;
-		GPIO_X = GPIOF;
-		GPIO_PIN = GPIO_PIN_6;
-	}
-	if (uno_index == 1)
-	{
-		hspix = hspi6;
-		GPIO_X = GPIOG;
-		GPIO_PIN = GPIO_PIN_15;
-	}
+	UNOindex(uno_index);
 	n_pow = func_n_pow(fr_out);
 	float fr_vco2 = fr_out * powf(2, n_pow);
 	uint8_t K = Search_K(fr_vco2);
@@ -648,22 +613,43 @@ int uno_set_profile(uint8_t uno_index, float freq,  uint8_t dds_profile)
 \sa
 */
 /*=============================================================================================================*/
-int uno_read_profile(uint8_t dds_profile,  float freq )
+int uno_read_profile(uint8_t uno_index, uint8_t dds_profile,  float freq )
 {
+	UNOindex(uno_index);
 	float fr_out = freq;
 	uint8_t n_pow;
 	n_pow = func_n_pow(fr_out);
 	float fr_vco2 = fr_out * powf(2, n_pow);
 	uint8_t K = Search_K(fr_vco2);
 	
-	uint8_t data_2[2] = { 0x03, (0x00 | n_pow) };
-	uint8_t data[2] = { 0x05, (0x01 | (dds_profile << 3)) };
+	uint8_t data_1[2] = { 0x03, (0x00 | n_pow) };
+	uint8_t data_2[2] = { 0x05, (0x01 | (dds_profile << 3)) };
 	uint8_t data_3[5] = { 0x62,0,0,0, K };
 	
+	SPI_UNO_Transmit(data_1, 2);
 	SPI_UNO_Transmit(data_2, 2);
-	SPI_UNO_Transmit(data, 2);
 	SPI_UNO_Transmit(data_3, 5);
+	return UNO_OK;
 }
 
 
 
+/*=============================================================================================================*/
+/*!  \brief
+Выбор установленного профиля. При неизменных K и n_pow
+
+\return int
+\retval UNO_OK
+\sa
+*/
+/*=============================================================================================================*/
+int uno_read_profile_fast(uint8_t uno_index, uint8_t dds_profile)
+{
+	UNOindex(uno_index);
+	uint8_t data[2] = { 0x05, (0x01 | (dds_profile << 3)) };
+	uint8_t data_1[2] = { 0x15, 0 };
+
+	SPI_UNO_Transmit(data, 2);
+	SPI_UNO_Transmit(data_1, 2);
+	return UNO_OK;
+}

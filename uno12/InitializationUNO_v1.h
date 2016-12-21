@@ -21,6 +21,12 @@ extern "C" {
  * int uno_write( uint8_t uno_index, float freq, uint8_t gain ) -> функция устанавливает частоту 
  * и усиление в выбранный синтезатор.
  * Выходные параметры:	UNO_OK == 0 успешное переключение
+ *
+ *	uno_gain -> функция усиления
+ *	uno_set_profile -> функция установки профиля
+ *	uno_read_profile -> функция чтения профиля
+ *	uno_read_profile_fast -> функция быстрого чтения профиля. Используется для свипирования по частоте в  
+ *	малом частотном диапазоне. Требования- неизменность коэф. K и n_pow!
  */
 
 /*includes==========================================================================================================*/		
@@ -51,8 +57,20 @@ int uno_gain(
 			uint8_t uno_index, /*!< [in] индекс синтезатора 0 или 1 */
 			uint8_t gain       /*!< [in] усиление сигнала от 0 до 0x3F */
 			);
-int uno_set_profile(uint8_t uno_index, float freq,  uint8_t dds_profile);
-int uno_read_profile(uint8_t dds_profile, float freq);
+int uno_set_profile(
+					uint8_t uno_index,	    /*!< [in] индекс синтезатора 0 или 1 */
+					float freq,				/*!< [in] Частота в МГц */
+					uint8_t dds_profile		/*!< [in] номер профиля 0 - 7 */
+					);
+int uno_read_profile(
+					uint8_t uno_index,	    /*!< [in] индекс синтезатора 0 или 1 */
+					uint8_t dds_profile,	/*!< [in] номер профиля */
+					float freq				/*!< [in] частота работы- для корректных установок коэф. */
+					);
+int uno_read_profile_fast(
+						uint8_t uno_index,	    /*!< [in] индекс синтезатора 0 или 1 */
+						uint8_t dds_profile /*!< [in] номер профиля */
+						 );
 
 #ifdef __cplusplus
 }
