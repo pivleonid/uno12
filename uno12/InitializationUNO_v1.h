@@ -49,11 +49,10 @@ int uno_write(
 
 int uno_gain(
 			uint8_t uno_index, /*!< [in] индекс синтезатора 0 или 1 */
-			float freq,		   /*!< [in] частота в МГЦ- не устанавливается на синтезаторе */
 			uint8_t gain       /*!< [in] усиление сигнала от 0 до 0x3F */
 			);
-
-int SPI_UNO_Transmit(uint8_t* data, uint16_t size);
+int uno_set_profile(uint8_t uno_index, float freq,  uint8_t dds_profile);
+int uno_read_profile(uint8_t dds_profile);
 
 #ifdef __cplusplus
 }

@@ -26,19 +26,16 @@ extern "C" {
 		SystemClock_Config();
 
 		
-		uno_open(1);
-
+		uno_open(0);
+		uno_set_profile(0, 5000, 0);
+		uno_set_profile(0, 6000, 1);
 		for (;;)
 		{
-			uno_write(1, 6000, 0);
-			HAL_Delay(1000);
-			uno_write(1, 7000, 0x3F);
-			HAL_Delay(1000);
-			uno_write(1, 6000, 0x3F);
-			HAL_Delay(1000);
-			uno_write(1, 7000, 0);
-			HAL_Delay(1000);
 
+			uno_read_profile(0);
+			HAL_Delay(1000);
+			uno_read_profile(1);
+			HAL_Delay(1000);
 		}
 	}
 
