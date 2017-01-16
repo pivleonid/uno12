@@ -1,47 +1,103 @@
+#define LED_GREEN_ON HAL_GPIO_WritePin(GPIOE, GPIO_PIN_9, GPIO_PIN_SET);
+#define LED_GREEN_OFF HAL_GPIO_WritePin(GPIOE, GPIO_PIN_9, GPIO_PIN_RESET);
 #include "stm32f4xx_hal.h"
 #include "stdint.h"
 
 #include "InitializationUNO_v1.h"
 
 #include "FLASH_512.h"
+#include "string.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 
 			
 
 	void SystemClock_Config(void);
 	void Error_Handler(void);
 
+	GPIO_InitTypeDef Led;
+	 void Initial_Led(void)
+	{
+		 __GPIOE_CLK_ENABLE();
+		Led.Pin = GPIO_PIN_1 | GPIO_PIN_9;
+		Led.Mode = GPIO_MODE_OUTPUT_PP;
+		Led.Pull = GPIO_NOPULL;
+		Led.Speed = GPIO_SPEED_FREQ_LOW;
+		HAL_GPIO_Init(GPIOE, &Led);
+	}
+	
+//#define printf my_printf
 
+	/*
+	данные калибровки	
+	*/
+	 typedef struct Data_preselector
+	 {
+		 uint8_t data_1 : 2;
+		 uint8_t data_2 : 2;
+		 uint8_t data_3 : 5;
+		 uint8_t data_4 : 1;
+	 } Data_preselector_t;
 
 	int main(void)
 	{
-	
+		
+		uint32_t k = sizeof(Data_preselector_t);
+		uint32_t c, i = 0;
+		uint8_t data_write[256];
+		uint8_t  data_read[1000];
+		for (i = 0; i < 256; i++)
+		{
+			data_write[i] = i;
+		}
+		for (i = 0; i < 1000; i++)
+		{
+			data_read[i] = i;
+		}
+		
 
 		HAL_Init();
 		SystemClock_Config();
-		uno_open(0);
-		uno_open(0);
-		uno_set_profile(0, 4000, 0);
-		uno_set_profile(0, 5000, 1);
-		uno_set_profile(0, 6000, 2);
+		Initial_Led();
+
+
+		FLASH_SPI_close();
+		FLASH_SPI_open();
+		
+		while (Flash_ID_Check()) {
+			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
+			
+		};
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+		LED_GREEN_ON
+	
+	
+		Sector_Erase_SE4B(0);
+		
+		Read_DAta_Bytes_READ4B(0xF12C, data_read);
+		for (i = 0; i < 262128; i += 256)
+		{
+			FLASH_Page_Programm_PP(i, data_write);
+			Read_DAta_Bytes_READ4B(i, data_read);
+			if (memcmp(data_read, data_write, 256) != 0)
+				 c = i;
+		}
+
 		for (;;)
 		{
 			
-			uno_read_profile(0,0, 4000);
-			HAL_Delay(1000);
-			uno_read_profile(0,1, 5000);
-			HAL_Delay(1000);
-			uno_read_profile(0,2, 6000);
-			HAL_Delay(1000);
+			while (Flash_ID_Check());
+			Read_DAta_Bytes_READ4B(100, data_read);
+			/*for (i = 0; i < 262128; i += 256)
+			{
+				Read_DAta_Bytes_READ4B(i, data_read);
+			}*/
+			
 		}
+
 	}
-
-
 
 
 
@@ -120,3 +176,12 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+
+
+
+
+
+
+
+

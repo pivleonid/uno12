@@ -42,20 +42,25 @@ static void Initial_Chip_Select_SPI_6(void);
 
 static uint8_t func_n_pow(float fr_out);
 static uint8_t Search_K(float fr_vco2);
- 
+
+/*Заполнение массивов для передачи настройки синтезаторов*/
+static void FillingUnoData_0(uint32_t ftw);
+static void FillingUnoData_1(uint8_t n_pow);
+static void FillingUnoData_2(uint8_t gain);
+static void FillingUnoData_3(uint8_t K); 
 
 /*variables=========================================================================================================*/
 /*----переменная выходного состояния--*/
 int outputState; 
 /*----Обработка ошибок--*/
 uint8_t uno_answer;
-const uint8_t Read_reg_POW = 0x81;
+static const uint8_t Read_reg_POW = 0x81;
 /*константные массивы настройки синтезатора - для записей значений в постоянную память*/
-const uint8_t initial_mass_0[2] = {
+static const uint8_t initial_mass_0[2] = {
 	/*1*/ 0x01, 0x01
 	};
 //2 // HAL_Delay( 100 );
-	const uint8_t initial_mass_1[26] = {
+static	const uint8_t initial_mass_1[26] = {
 	/*3*/ 0x02, 0x07,/*4*/ 0x03, 0x00 ,/*5*/ 0x04, 0x00, /*6*/ 0x60, 0x03, 0x80, 0x13,
 	 /*7*/ 0x60, 0x03, 0x80, 0x12,/*8*/ 0x60, 0x00, 0x00,0x00, /*9*/0x60, 0x00, 0x00,0x01,
 	/*10*/ 0x05, 0x01, /*11*/ 0x15, 0x00
@@ -63,34 +68,34 @@ const uint8_t initial_mass_0[2] = {
 
 //12 //	HAL_Delay( 100 );
 
-const uint8_t initial_mass_2[4] = {
+static const uint8_t initial_mass_2[4] = {
 	/*13*/ 0x05, 0x03, 	/*14*/ 0x15, 0x00
 	};
 //15 //	HAL_Delay( 10 );
 
-const uint8_t initial_mass_3[4] = {
+static const uint8_t initial_mass_3[4] = {
 	/*16*/ 0x05, 0x01, 	/*17*/ 0x15, 0x00
 };
 //18 //	HAL_Delay( 10 );
 
-const uint8_t initial_mass_4[14] = {
+static const uint8_t initial_mass_4[14] = {
 	/*19*/ 0x05, 0x05, /*20-24; 25*/ 0x10, 0x00, 0x00, 0x01, 0x01, 0x02,/*26*/ 0x11, 0x00,
 	/*27*/0x05, 0x00,/*28*/ 0x15, 0x00	};
 //29 //	HAL_Delay( 10 );
 
-const uint8_t initial_mass_5[4] = {
+static const uint8_t initial_mass_5[4] = {
 	/*30*/ 0x05, 0x01, 	/*31*/ 0x15, 0x00
 	};
 //32 //	HAL_Delay( 100 );
 
-const uint8_t initial_mass_6[24] = {
+static const uint8_t initial_mass_6[24] = {
 	/*33*/ 0x10, 0x01, 0x00, 0x80, 0xB0, 0x00,/*34*/ 0x11, 0x00,/*35*/ 0x10, 0x02, 0x00, 
 	0x00,0x00,0x00, /*36*/0x11, 0x00,/*37*/ 0x10, 0x03, 0x01, 0x05, 0x21, 0x20,
 	/*38*/ 0x11, 0x00
 	};
 //39 //	HAL_Delay( 100 );
 
-const uint8_t initial_mass_7[83] = {
+static const uint8_t initial_mass_7[83] = {
 	/*40*/ 0x10, 0x03, 0x00,0x05,0x21,0x20,/*41*/ 0x11, 0x00,/*42 profile 0*/ 0x10, 0x0C,0x0F,0xFF,	0x00,  0x00,
 															/*43 profile 1*/ 0x10, 0x0E, 0x0F, 0xFF, 0x00, 0x00,
 															/*44 profile 2*/ 0x10, 0x10, 0x0F, 0xFF, 0x00, 0x00,
@@ -105,6 +110,10 @@ const uint8_t initial_mass_7[83] = {
 /* выключение синтезатора*/
 const uint8_t uno_off[2] = { 0x01, 0x00 };
 
+uint8_t UnoData_0[6];
+uint8_t UnoData_1[2];
+uint8_t UnoData_2[2];
+uint8_t UnoData_3[5];
 
 /*code==============================================================================================================*/
 
@@ -304,7 +313,22 @@ static int SPI_UNO_Transmit(  uint8_t* data, uint16_t size) {
 int uno_open(uint8_t uno_index)
 {
 	/*выбор синтезатора*/
-	UNOindex(uno_index);
+	if (uno_index == 0)
+	{
+		SPI_5_open();
+		hspix = hspi5;
+		GPIO_X = GPIOF;
+		GPIO_PIN = GPIO_PIN_6;
+		Initial_Chip_Select_SPI_5();
+	}
+	if (uno_index == 1)
+	{
+		SPI_6_open();
+		hspix = hspi6;
+		GPIO_X = GPIOG;
+		GPIO_PIN = GPIO_PIN_15;
+		Initial_Chip_Select_SPI_6();
+	}
 
 	SPI_UNO_Transmit(initial_mass_0, 2);
     HAL_Delay(100);
@@ -328,12 +352,12 @@ int uno_open(uint8_t uno_index)
 	
 	
 	/*20-24 пункт в настройках*/
-	uint8_t adder_0[2] = { 0x15, 0 };
+	static uint8_t adder_0[2] = { 0x15, 0 };
 	SPI_UNO_Transmit(adder_0, 2);
 	HAL_Delay(10);
-	uint8_t adder_1[2] = { 0x05, 0x01 };
+	static uint8_t adder_1[2] = { 0x05, 0x01 };
 	SPI_UNO_Transmit(adder_1, 2);
-	uint8_t adder_2[2] = { 0x15, 0x00 };
+	static uint8_t adder_2[2] = { 0x15, 0x00 };
 	SPI_UNO_Transmit(adder_2, 2);
 	HAL_Delay(10);
 	
@@ -506,8 +530,73 @@ static uint8_t Search_K(float fr_vco2)
         
 	return K;
 }
+//Заполнение массива данными
+static void FillingUnoData_0(uint32_t ftw)
+{
+	UnoData_0[0] = 0x10;
+	UnoData_0[1] = 0x0B;
+	UnoData_0[2] = (uint8_t)(ftw >> 24);
+	UnoData_0[3] = (uint8_t)(ftw >> 16);
+	UnoData_0[4] = (uint8_t)(ftw >> 8);
+	UnoData_0[5] = (uint8_t)(ftw);
+}
+static void FillingUnoData_1(uint8_t n_pow)
+{
+	UnoData_1[0] = 0x03;
+	UnoData_1[1] = (0x00 | n_pow);
+}
+static void FillingUnoData_2(uint8_t gain)
+{
+	UnoData_2[0] = 0x04;
+	UnoData_2[1] = gain;
+}
+static void FillingUnoData_3(uint8_t K)
+{
+	UnoData_3[0] = 0x62;
+	UnoData_3[1] = 0;
+	UnoData_3[2] = 0;
+	UnoData_3[3] = 0;
+	UnoData_3[4] = K;
+}
+/*=============================================================================================================*/
+/*!  \brief
+freq, - желаемая частота на выходе синтезатора
+gain - желаемое усиление или амплитуда на выходе синтезатора
 
+\return int
+\retval UNO_OK
+\sa
+*/
+/*=============================================================================================================*/
+void calculate_uno(float freq, uint8_t gain)
+{
+	uint8_t n_pow = func_n_pow(freq);
+	float fr_vco2 = freq * powf(2, n_pow);
+	uint8_t K = Search_K(fr_vco2);
+	float fr_dds = 1200 - fr_vco2 / K;
+	uint32_t ftw = (uint32_t)(roundf(fr_dds*powf(2, 32) / 2400));
+	FillingUnoData_0(ftw);
+	FillingUnoData_1(n_pow);
+	FillingUnoData_2(gain);
+	FillingUnoData_3(K);
+}
+/*=============================================================================================================*/
+/*!  \brief
+uno_index, - переменная идентификатор конкретного синтезатора 1 или 2
 
+\return int
+\retval UNO_OK
+\sa
+*/
+/*=============================================================================================================*/
+void transmit_uno(uint8_t uno_index, uint8_t* UnoData_0, uint8_t* UnoData_1, uint8_t* UnoData_2, uint8_t* UnoData_3)
+{
+	UNOindex(uno_index);
+	SPI_UNO_Transmit(UnoData_0, 6);
+	SPI_UNO_Transmit(UnoData_1, 2);
+	SPI_UNO_Transmit(UnoData_2, 2);
+	SPI_UNO_Transmit(UnoData_3, 5);
+}
 /*=============================================================================================================*/
 /*!  \brief 
 	uno_index, - переменная идентификатор конкретного синтезатора 1 или 2

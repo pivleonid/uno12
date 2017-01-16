@@ -35,16 +35,14 @@ extern "C" {
 /*types=============================================================================================================*/
 /*
 Организацию памяти смотри в 4 таблице документации MX25L51245G
+file:///D:/Leo_work/%D0%B4%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8F/mx25l51245g_3v_512mb_v0.01.pdf
 */
-
-uint8_t Flash_data_in[256];
-uint8_t Flash_data_out[1024]; //сектор
 
 /*prototypes========================================================================================================*/
 void FLASH_SPI_open(void);
 void FLASH_SPI_close(void);
 
-//----Проверка ID FLASH----------//
+/*----Проверка ID FLASH----------*/
 
 /* Manufactory ID -> С2; Memory type -> 20; Memory density -> 1A */
 void FLASH_RDID(void);
@@ -75,15 +73,26 @@ void FLASH_Write_Status_Configuration_Register_WRSR(
 													uint8_t config_reg  /*!< [in] конфигурационный регистр */
 												   );
 
-//-------Операции Чтения/Записи/Очистки----------//
-// чтение сектора 1024 байт
-void FLASH_Read_DAta_Bytes_READ(uint32_t address);
-// очистка сектора // время операции 43 - 200 мс
-void FLASH_Sector_Erase_SE(uint8_t address_MSB, uint8_t address, uint8_t address_LSB);
-// запись страницы -> передать массив 
-void FLASH_Page_Programm_PP(uint32_t address);
+/*------------------Чтение n символов---------------------------------*/
+void Read_DAta_Bytes_READ(
+						uint32_t address,         /*!< [in] адрес в памяти */
+						uint8_t Flash_data_out[], /*!< [in] Flash_data_out[n] */
+						int n                     /*!< [in] индекс массива */
+						  );       
+/*-----------------------Чтение странички. 256 байт---------------------*/
+void Read_DAta_Bytes_READ4B(
+	    					uint32_t address,         /*!< [in] адрес в памяти */
+							uint8_t Flash_data_out[] /*!< [in] Flash_data_out[n] */
+							);
+/*--- очистка сектора = 16 страниц время операции 43 - 200 мс----------*/
+void Sector_Erase_SE4B(uint32_t SectorAddr);
+/*Запись в память FLASH*/
+void FLASH_Page_Programm_PP(
+							uint32_t address,			/*!< [in] Запись по сектору */
+							uint8_t flash_data_in[256]  /*!< [in] 256 байт данных */
+							);
 
-
+void Chip_Erase_CE(void);
 
 
 

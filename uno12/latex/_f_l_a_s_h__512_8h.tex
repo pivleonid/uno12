@@ -1,0 +1,87 @@
+\hypertarget{_f_l_a_s_h__512_8h}{}\section{F\+L\+A\+S\+H\+\_\+512.\+h File Reference}
+\label{_f_l_a_s_h__512_8h}\index{F\+L\+A\+S\+H\+\_\+512.\+h@{F\+L\+A\+S\+H\+\_\+512.\+h}}
+
+
+Это заголовочный файл \hyperlink{_f_l_a_s_h__512_8h}{F\+L\+A\+S\+H\+\_\+512.\+h} микросхемы mx25l51245g\+\_\+3v\+\_\+512mb Файл содержит в себе прототипы функций инициализации, настройки соответствующего модуля S\+PI, Чтение ID идентификаторов, статусных регистров, операции чтения/записи и очистки памяти.  
+
+
+{\ttfamily \#include \char`\"{}math.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stdint.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_abdbcd83c42ec2cd355925369b1c45fbd}{}\label{_f_l_a_s_h__512_8h_abdbcd83c42ec2cd355925369b1c45fbd} 
+void {\bfseries F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+open} (void)
+\item 
+void \hyperlink{_f_l_a_s_h__512_8h_a03b3b654b9a8ee0ea6fd0abf2ed413fc}{F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+close} (void)
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_ad331f3e1cf3119b9c6078336c279fca3}{}\label{_f_l_a_s_h__512_8h_ad331f3e1cf3119b9c6078336c279fca3} 
+void {\bfseries F\+L\+A\+S\+H\+\_\+\+R\+D\+ID} (void)
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_a9d36851fb17414d807b7a2545746ac13}{}\label{_f_l_a_s_h__512_8h_a9d36851fb17414d807b7a2545746ac13} 
+void {\bfseries F\+L\+A\+S\+H\+\_\+\+R\+ES} (void)
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_acb130daa873e725fc1724d9302a656cd}{}\label{_f_l_a_s_h__512_8h_acb130daa873e725fc1724d9302a656cd} 
+void {\bfseries F\+L\+A\+S\+H\+\_\+\+R\+E\+MS} (void)
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_ad789e1af83412beaacee75afc33adaaf}{}\label{_f_l_a_s_h__512_8h_ad789e1af83412beaacee75afc33adaaf} 
+uint8\+\_\+t {\bfseries F\+L\+A\+S\+H\+\_\+\+Read\+\_\+\+Status\+\_\+\+Register\+\_\+\+R\+D\+SR} (void)
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_a0dd657b874c4a63f56c07b8c7a44d8db}{}\label{_f_l_a_s_h__512_8h_a0dd657b874c4a63f56c07b8c7a44d8db} 
+uint8\+\_\+t {\bfseries F\+L\+A\+S\+H\+\_\+\+Read\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+R\+D\+CR} (void)
+\item 
+void \hyperlink{_f_l_a_s_h__512_8h_a4fb6cff74edc9b6953e7973244b49006}{F\+L\+A\+S\+H\+\_\+\+Write\+\_\+\+Status\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+W\+R\+SR} (uint8\+\_\+t status\+\_\+reg, uint8\+\_\+t config\+\_\+reg)
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_a2a43c493d7b7abec670a0d1479246834}{}\label{_f_l_a_s_h__512_8h_a2a43c493d7b7abec670a0d1479246834} 
+void {\bfseries F\+L\+A\+S\+H\+\_\+\+Read\+\_\+\+D\+Ata\+\_\+\+Bytes\+\_\+\+R\+E\+AD} (uint32\+\_\+t address)
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_aa9d4af039ac2c4311a4f7c5b691eefcb}{}\label{_f_l_a_s_h__512_8h_aa9d4af039ac2c4311a4f7c5b691eefcb} 
+void {\bfseries F\+L\+A\+S\+H\+\_\+\+Sector\+\_\+\+Erase\+\_\+\+SE} (uint8\+\_\+t address\+\_\+\+M\+SB, uint8\+\_\+t address, uint8\+\_\+t address\+\_\+\+L\+SB)
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_abeed87315b1dc87ad88784ebdcebf0cc}{}\label{_f_l_a_s_h__512_8h_abeed87315b1dc87ad88784ebdcebf0cc} 
+void {\bfseries F\+L\+A\+S\+H\+\_\+\+Page\+\_\+\+Programm\+\_\+\+PP} (uint32\+\_\+t address)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_a3b1bf4c52ad3b556c5ebc6088b91297b}{}\label{_f_l_a_s_h__512_8h_a3b1bf4c52ad3b556c5ebc6088b91297b} 
+uint8\+\_\+t {\bfseries Flash\+\_\+data\+\_\+in} \mbox{[}256\mbox{]}
+\item 
+\hypertarget{_f_l_a_s_h__512_8h_a5cd406bbe49ae4000f5bb06a62565e76}{}\label{_f_l_a_s_h__512_8h_a5cd406bbe49ae4000f5bb06a62565e76} 
+uint8\+\_\+t {\bfseries Flash\+\_\+data\+\_\+out} \mbox{[}1024\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Это заголовочный файл \hyperlink{_f_l_a_s_h__512_8h}{F\+L\+A\+S\+H\+\_\+512.\+h} микросхемы mx25l51245g\+\_\+3v\+\_\+512mb Файл содержит в себе прототипы функций инициализации, настройки соответствующего модуля S\+PI, Чтение ID идентификаторов, статусных регистров, операции чтения/записи и очистки памяти. 
+
+void F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+open(void);void \hyperlink{_f_l_a_s_h__512_8h_a03b3b654b9a8ee0ea6fd0abf2ed413fc}{F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+close(void)}; -\/$>$ настройка и деинициализация S\+PI модуля соответственно
+
+void F\+L\+A\+S\+H\+\_\+\+R\+D\+I\+D(void); void F\+L\+A\+S\+H\+\_\+\+R\+E\+S(void); void F\+L\+A\+S\+H\+\_\+\+R\+E\+M\+S(void); -\/$>$ эти функции используются для проверки ID флэшки.
+
+uint8\+\_\+t F\+L\+A\+S\+H\+\_\+\+Read\+\_\+\+Status\+\_\+\+Register\+\_\+\+R\+D\+S\+R(void);
+
+uint8\+\_\+t F\+L\+A\+S\+H\+\_\+\+Read\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+R\+D\+C\+R(void);
+
+F\+L\+A\+S\+H\+\_\+\+Write\+\_\+\+Status\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+W\+R\+SR 
+
+\subsection{Function Documentation}
+\hypertarget{_f_l_a_s_h__512_8h_a03b3b654b9a8ee0ea6fd0abf2ed413fc}{}\label{_f_l_a_s_h__512_8h_a03b3b654b9a8ee0ea6fd0abf2ed413fc} 
+\index{F\+L\+A\+S\+H\+\_\+512.\+h@{F\+L\+A\+S\+H\+\_\+512.\+h}!F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+close@{F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+close}}
+\index{F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+close@{F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+close}!F\+L\+A\+S\+H\+\_\+512.\+h@{F\+L\+A\+S\+H\+\_\+512.\+h}}
+\subsubsection{\texorpdfstring{F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+close()}{FLASH\_SPI\_close()}}
+{\footnotesize\ttfamily void F\+L\+A\+S\+H\+\_\+\+S\+P\+I\+\_\+close (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+S\+P\+I5 G\+P\+IO Configuration P\+F7 -\/-\/-\/---$>$ S\+P\+I5\+\_\+\+S\+CK P\+F8 -\/-\/-\/---$>$ S\+P\+I5\+\_\+\+M\+I\+SO P\+F9 -\/-\/-\/---$>$ S\+P\+I5\+\_\+\+M\+O\+SI\hypertarget{_f_l_a_s_h__512_8h_a4fb6cff74edc9b6953e7973244b49006}{}\label{_f_l_a_s_h__512_8h_a4fb6cff74edc9b6953e7973244b49006} 
+\index{F\+L\+A\+S\+H\+\_\+512.\+h@{F\+L\+A\+S\+H\+\_\+512.\+h}!F\+L\+A\+S\+H\+\_\+\+Write\+\_\+\+Status\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+W\+R\+SR@{F\+L\+A\+S\+H\+\_\+\+Write\+\_\+\+Status\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+W\+R\+SR}}
+\index{F\+L\+A\+S\+H\+\_\+\+Write\+\_\+\+Status\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+W\+R\+SR@{F\+L\+A\+S\+H\+\_\+\+Write\+\_\+\+Status\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+W\+R\+SR}!F\+L\+A\+S\+H\+\_\+512.\+h@{F\+L\+A\+S\+H\+\_\+512.\+h}}
+\subsubsection{\texorpdfstring{F\+L\+A\+S\+H\+\_\+\+Write\+\_\+\+Status\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+W\+R\+S\+R()}{FLASH\_Write\_Status\_Configuration\_Register\_WRSR()}}
+{\footnotesize\ttfamily void F\+L\+A\+S\+H\+\_\+\+Write\+\_\+\+Status\+\_\+\+Configuration\+\_\+\+Register\+\_\+\+W\+R\+SR (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{status\+\_\+reg,  }\item[{uint8\+\_\+t}]{config\+\_\+reg }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em status\+\_\+reg} & статусный регист \\
+\hline
+\mbox{\tt in}  & {\em config\+\_\+reg} & конфигурационный регистр \\
+\hline
+\end{DoxyParams}

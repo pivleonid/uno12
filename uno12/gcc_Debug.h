@@ -406,6 +406,7 @@
 #endif
 //VS2005-2012 treats all files as C++, while VS2013+ can treat C files correctly.
 #if defined(_MSC_VER) && (_MSC_VER < 1800 || defined(__cplusplus))
+#undef __cplusplus
 #define __cplusplus 201402L
 #endif
 #ifndef __cpp_ref_qualifiers

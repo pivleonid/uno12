@@ -1,0 +1,349 @@
+\hypertarget{_initialization_u_n_o__v1_8c}{}\section{Initialization\+U\+N\+O\+\_\+v1.\+c File Reference}
+\label{_initialization_u_n_o__v1_8c}\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+
+
+Файл для работы с синтезатором U\+N\+O-\/10M.  
+
+
+{\ttfamily \#include \char`\"{}Initialization\+U\+N\+O\+\_\+v1.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f4xx\+\_\+hal.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}stm32f427xx.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_acd4729b1d088bb132bfa4e53421b8cd2}{}\label{_initialization_u_n_o__v1_8c_acd4729b1d088bb132bfa4e53421b8cd2} 
+\#define {\bfseries Chip\+\_\+\+Select\+\_\+\+Up}~H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+Write\+Pin(G\+P\+I\+O\+\_\+X, G\+P\+I\+O\+\_\+\+P\+IN, G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+S\+ET);
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_ab2af635de4273240d27155b5512d94d7}{}\label{_initialization_u_n_o__v1_8c_ab2af635de4273240d27155b5512d94d7} 
+\#define {\bfseries Chip\+\_\+\+Select\+\_\+\+Down}~H\+A\+L\+\_\+\+G\+P\+I\+O\+\_\+\+Write\+Pin(G\+P\+I\+O\+\_\+X, G\+P\+I\+O\+\_\+\+P\+IN, G\+P\+I\+O\+\_\+\+P\+I\+N\+\_\+\+R\+E\+S\+ET);
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a5670ee11c8c746338d537ca84bfe49e8}{}\label{_initialization_u_n_o__v1_8c_a5670ee11c8c746338d537ca84bfe49e8} 
+\#define {\bfseries U\+N\+O\+\_\+\+OK}~(0)
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a21c5c1e577500a906a398ec0d9a58ad1}{}\label{_initialization_u_n_o__v1_8c_a21c5c1e577500a906a398ec0d9a58ad1} 
+\#define {\bfseries E\+R\+R\+\_\+\+U\+N\+O\+\_\+\+Pow}~(-\/1)
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a0690ccff2e83a9419c7ff8b56bda3d3c}{}\label{_initialization_u_n_o__v1_8c_a0690ccff2e83a9419c7ff8b56bda3d3c} 
+\#define {\bfseries E\+R\+R\+\_\+\+U\+N\+O\+\_\+\+P\+W\+R\+\_\+\+Down}~(-\/2)
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a699f8a72bd5a22c527dfd90f75c60c9d}{}\label{_initialization_u_n_o__v1_8c_a699f8a72bd5a22c527dfd90f75c60c9d} 
+\#define {\bfseries E\+R\+R\+\_\+\+D\+A\+T\+A\+\_\+\+N\+U\+LL}~(-\/3)
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a82b2f7b0744acec1b1087f0fb0f1d43d}{}\label{_initialization_u_n_o__v1_8c_a82b2f7b0744acec1b1087f0fb0f1d43d} 
+\#define {\bfseries E\+R\+R\+\_\+\+S\+P\+I\+\_\+\+B\+U\+SY}~(-\/4)
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a2af51ce4e2e676ef4ce063700c76f20e}{}\label{_initialization_u_n_o__v1_8c_a2af51ce4e2e676ef4ce063700c76f20e} 
+\#define {\bfseries E\+R\+R\+\_\+\+S\+P\+I\+\_\+\+T\+I\+M\+E\+O\+UT}~(-\/5)
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_aba51915c87d64af47fb1cc59348961c9}{}\label{_initialization_u_n_o__v1_8c_aba51915c87d64af47fb1cc59348961c9} 
+\#define {\bfseries OK}~(0)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{_initialization_u_n_o__v1_8c_aee453fc6d9c98164ad7fdbb9208dc5f7}{uno\+\_\+open} (uint8\+\_\+t uno\+\_\+index)
+\item 
+int \hyperlink{_initialization_u_n_o__v1_8c_adc232a9b1434261cb02c61ab5b88eace}{uno\+\_\+close} (uint8\+\_\+t uno\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Функция выключения синтезатора и соответствующего модуля S\+PI. \end{DoxyCompactList}\item 
+void \hyperlink{_initialization_u_n_o__v1_8c_a44dc4caf157b9e7b047b623177f44924}{calculate\+\_\+uno} (float freq, uint8\+\_\+t gain)
+\begin{DoxyCompactList}\small\item\em freq, -\/ желаемая частота на выходе синтезатора gain -\/ желаемое усиление или амплитуда на выходе синтезатора \end{DoxyCompactList}\item 
+void \hyperlink{_initialization_u_n_o__v1_8c_a4aa45f1b45a79b5ed82198208dedd664}{transmit\+\_\+uno} (uint8\+\_\+t uno\+\_\+index, uint8\+\_\+t $\ast$Uno\+Data\+\_\+0, uint8\+\_\+t $\ast$Uno\+Data\+\_\+1, uint8\+\_\+t $\ast$Uno\+Data\+\_\+2, uint8\+\_\+t $\ast$Uno\+Data\+\_\+3)
+\begin{DoxyCompactList}\small\item\em uno\+\_\+index, -\/ переменная идентификатор конкретного синтезатора 1 или 2 \end{DoxyCompactList}\item 
+int \hyperlink{_initialization_u_n_o__v1_8c_a33a69c938db47b237eefe5bdfa2665cf}{uno\+\_\+write} (uint8\+\_\+t uno\+\_\+index, float freq, uint8\+\_\+t gain)
+\begin{DoxyCompactList}\small\item\em uno\+\_\+index, -\/ переменная идентификатор конкретного синтезатора 1 или 2 freq, -\/ желаемая частота на выходе синтезатора gain -\/ желаемое усиление или амплитуда на выходе синтезатора \end{DoxyCompactList}\item 
+int \hyperlink{_initialization_u_n_o__v1_8c_af4ba0fa562ccef80904360990e9ccef3}{uno\+\_\+gain} (uint8\+\_\+t uno\+\_\+index, uint8\+\_\+t gain)
+\begin{DoxyCompactList}\small\item\em Усиление синтезатора. \end{DoxyCompactList}\item 
+int \hyperlink{_initialization_u_n_o__v1_8c_aacbed4aef4830cc33c1fcbd0523e0b9f}{uno\+\_\+set\+\_\+profile} (uint8\+\_\+t uno\+\_\+index, float freq, uint8\+\_\+t dds\+\_\+profile)
+\begin{DoxyCompactList}\small\item\em uno\+\_\+index, -\/ переменная идентификатор конкретного синтезатора 1 или 2 freq, -\/ желаемая частота на выходе синтезатора gain -\/ желаемое усиление или амплитуда на выходе синтезатора \end{DoxyCompactList}\item 
+int \hyperlink{_initialization_u_n_o__v1_8c_ad9b551c2956c3dbb3e25f5afa877e15f}{uno\+\_\+read\+\_\+profile} (uint8\+\_\+t uno\+\_\+index, uint8\+\_\+t dds\+\_\+profile, float freq)
+\begin{DoxyCompactList}\small\item\em Выбор установленного профиля \end{DoxyCompactList}\item 
+int \hyperlink{_initialization_u_n_o__v1_8c_a3bbdf706da736be26609387eee0fac9f}{uno\+\_\+read\+\_\+profile\+\_\+fast} (uint8\+\_\+t uno\+\_\+index, uint8\+\_\+t dds\+\_\+profile)
+\begin{DoxyCompactList}\small\item\em Выбор установленного профиля. При неизменных K и n\+\_\+pow. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_afdea13a2cdf1c24e3a0edfc65c30b474}{}\label{_initialization_u_n_o__v1_8c_afdea13a2cdf1c24e3a0edfc65c30b474} 
+S\+P\+I\+\_\+\+Handle\+Type\+Def {\bfseries hspi5}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_acf0d6cbfc04520dc96de56ff3a6ee787}{}\label{_initialization_u_n_o__v1_8c_acf0d6cbfc04520dc96de56ff3a6ee787} 
+S\+P\+I\+\_\+\+Handle\+Type\+Def {\bfseries hspi6}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_ac13f5a09ce35366836e7aef4a31a17c2}{}\label{_initialization_u_n_o__v1_8c_ac13f5a09ce35366836e7aef4a31a17c2} 
+S\+P\+I\+\_\+\+Handle\+Type\+Def {\bfseries hspix}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a591ddc56da281d4cfd518f035c174289}{}\label{_initialization_u_n_o__v1_8c_a591ddc56da281d4cfd518f035c174289} 
+G\+P\+I\+O\+\_\+\+Init\+Type\+Def {\bfseries G\+P\+I\+O\+\_\+\+Init\+Struct}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a8bc12d0732c168f011c19f1b58147257}{}\label{_initialization_u_n_o__v1_8c_a8bc12d0732c168f011c19f1b58147257} 
+G\+P\+I\+O\+\_\+\+Type\+Def $\ast$ {\bfseries G\+P\+I\+O\+\_\+X}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_ac65ebedd163dbc2d826719b7a9bbdc89}{}\label{_initialization_u_n_o__v1_8c_ac65ebedd163dbc2d826719b7a9bbdc89} 
+uint16\+\_\+t {\bfseries G\+P\+I\+O\+\_\+\+P\+IN}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a73547f393ccb0c9a50f9741700b9344a}{}\label{_initialization_u_n_o__v1_8c_a73547f393ccb0c9a50f9741700b9344a} 
+int {\bfseries output\+State}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_aa1397bcec9efcb5ede7a0ebf55a458c0}{}\label{_initialization_u_n_o__v1_8c_aa1397bcec9efcb5ede7a0ebf55a458c0} 
+uint8\+\_\+t {\bfseries uno\+\_\+answer}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a6672c999571cdd9488198d4fcf967543}{}\label{_initialization_u_n_o__v1_8c_a6672c999571cdd9488198d4fcf967543} 
+const uint8\+\_\+t {\bfseries uno\+\_\+off} \mbox{[}2\mbox{]} = \{ 0x01, 0x00 \}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a09348be92d8c7488a2b4fdbd96422264}{}\label{_initialization_u_n_o__v1_8c_a09348be92d8c7488a2b4fdbd96422264} 
+uint8\+\_\+t {\bfseries Uno\+Data\+\_\+0} \mbox{[}6\mbox{]}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_af04ef7a43616ce5bdcc424a6c588470f}{}\label{_initialization_u_n_o__v1_8c_af04ef7a43616ce5bdcc424a6c588470f} 
+uint8\+\_\+t {\bfseries Uno\+Data\+\_\+1} \mbox{[}2\mbox{]}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_add8fd33ad10e88b763b2fe2ef18d586a}{}\label{_initialization_u_n_o__v1_8c_add8fd33ad10e88b763b2fe2ef18d586a} 
+uint8\+\_\+t {\bfseries Uno\+Data\+\_\+2} \mbox{[}2\mbox{]}
+\item 
+\hypertarget{_initialization_u_n_o__v1_8c_a593b5947cc90570110caf3560d77784b}{}\label{_initialization_u_n_o__v1_8c_a593b5947cc90570110caf3560d77784b} 
+uint8\+\_\+t {\bfseries Uno\+Data\+\_\+3} \mbox{[}5\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Файл для работы с синтезатором U\+N\+O-\/10M. 
+
+
+
+\subsection{Function Documentation}
+\hypertarget{_initialization_u_n_o__v1_8c_a44dc4caf157b9e7b047b623177f44924}{}\label{_initialization_u_n_o__v1_8c_a44dc4caf157b9e7b047b623177f44924} 
+\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}!calculate\+\_\+uno@{calculate\+\_\+uno}}
+\index{calculate\+\_\+uno@{calculate\+\_\+uno}!Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+\subsubsection{\texorpdfstring{calculate\+\_\+uno()}{calculate\_uno()}}
+{\footnotesize\ttfamily void calculate\+\_\+uno (\begin{DoxyParamCaption}\item[{float}]{freq,  }\item[{uint8\+\_\+t}]{gain }\end{DoxyParamCaption})}
+
+
+
+freq, -\/ желаемая частота на выходе синтезатора gain -\/ желаемое усиление или амплитуда на выходе синтезатора 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em U\+N\+O\+\_\+\+OK} & \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+\hypertarget{_initialization_u_n_o__v1_8c_a4aa45f1b45a79b5ed82198208dedd664}{}\label{_initialization_u_n_o__v1_8c_a4aa45f1b45a79b5ed82198208dedd664} 
+\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}!transmit\+\_\+uno@{transmit\+\_\+uno}}
+\index{transmit\+\_\+uno@{transmit\+\_\+uno}!Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+\subsubsection{\texorpdfstring{transmit\+\_\+uno()}{transmit\_uno()}}
+{\footnotesize\ttfamily void transmit\+\_\+uno (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{uno\+\_\+index,  }\item[{uint8\+\_\+t $\ast$}]{Uno\+Data\+\_\+0,  }\item[{uint8\+\_\+t $\ast$}]{Uno\+Data\+\_\+1,  }\item[{uint8\+\_\+t $\ast$}]{Uno\+Data\+\_\+2,  }\item[{uint8\+\_\+t $\ast$}]{Uno\+Data\+\_\+3 }\end{DoxyParamCaption})}
+
+
+
+uno\+\_\+index, -\/ переменная идентификатор конкретного синтезатора 1 или 2 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em U\+N\+O\+\_\+\+OK} & \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+\hypertarget{_initialization_u_n_o__v1_8c_adc232a9b1434261cb02c61ab5b88eace}{}\label{_initialization_u_n_o__v1_8c_adc232a9b1434261cb02c61ab5b88eace} 
+\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}!uno\+\_\+close@{uno\+\_\+close}}
+\index{uno\+\_\+close@{uno\+\_\+close}!Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+\subsubsection{\texorpdfstring{uno\+\_\+close()}{uno\_close()}}
+{\footnotesize\ttfamily int uno\+\_\+close (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{uno\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Функция выключения синтезатора и соответствующего модуля S\+PI. 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em E\+R\+R\+\_\+\+U\+N\+O\+\_\+\+P\+W\+R\+\_\+\+Down} & = -\/2 (синтезатор не выключился), U\+N\+O\+\_\+\+OK = 0 \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+S\+P\+I5 G\+P\+IO Configuration P\+F7 ------$>$ S\+P\+I5\+\_\+\+S\+CK P\+F8 ------$>$ S\+P\+I5\+\_\+\+M\+I\+SO P\+F9 ------$>$ S\+P\+I5\+\_\+\+M\+O\+SI
+
+S\+P\+I6 G\+P\+IO Configuration P\+G12 -\/-\/-\/---$>$ S\+P\+I6\+\_\+\+M\+I\+SO P\+G13 -\/-\/-\/---$>$ S\+P\+I6\+\_\+\+S\+CK P\+G14 -\/-\/-\/---$>$ S\+P\+I6\+\_\+\+M\+O\+SI
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em uno\+\_\+index} & индекс синтезатора 0 или 1 \\
+\hline
+\end{DoxyParams}
+\hypertarget{_initialization_u_n_o__v1_8c_af4ba0fa562ccef80904360990e9ccef3}{}\label{_initialization_u_n_o__v1_8c_af4ba0fa562ccef80904360990e9ccef3} 
+\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}!uno\+\_\+gain@{uno\+\_\+gain}}
+\index{uno\+\_\+gain@{uno\+\_\+gain}!Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+\subsubsection{\texorpdfstring{uno\+\_\+gain()}{uno\_gain()}}
+{\footnotesize\ttfamily int uno\+\_\+gain (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{uno\+\_\+index,  }\item[{uint8\+\_\+t}]{gain }\end{DoxyParamCaption})}
+
+
+
+Усиление синтезатора. 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em U\+N\+O\+\_\+\+OK} & \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em uno\+\_\+index} & индекс синтезатора 0 или 1 \\
+\hline
+\mbox{\tt in}  & {\em gain} & усиление сигнала от 0 до 0x3F \\
+\hline
+\end{DoxyParams}
+\hypertarget{_initialization_u_n_o__v1_8c_aee453fc6d9c98164ad7fdbb9208dc5f7}{}\label{_initialization_u_n_o__v1_8c_aee453fc6d9c98164ad7fdbb9208dc5f7} 
+\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}!uno\+\_\+open@{uno\+\_\+open}}
+\index{uno\+\_\+open@{uno\+\_\+open}!Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+\subsubsection{\texorpdfstring{uno\+\_\+open()}{uno\_open()}}
+{\footnotesize\ttfamily int uno\+\_\+open (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{uno\+\_\+index }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em E\+R\+R\+\_\+\+U\+N\+O\+\_\+\+Pow} & = -\/1 синтезатор не включен; U\+N\+O\+\_\+\+OK = 0; \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em uno\+\_\+index} & индекс синтезатора 0 или 1 \\
+\hline
+\end{DoxyParams}
+\hypertarget{_initialization_u_n_o__v1_8c_ad9b551c2956c3dbb3e25f5afa877e15f}{}\label{_initialization_u_n_o__v1_8c_ad9b551c2956c3dbb3e25f5afa877e15f} 
+\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}!uno\+\_\+read\+\_\+profile@{uno\+\_\+read\+\_\+profile}}
+\index{uno\+\_\+read\+\_\+profile@{uno\+\_\+read\+\_\+profile}!Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+\subsubsection{\texorpdfstring{uno\+\_\+read\+\_\+profile()}{uno\_read\_profile()}}
+{\footnotesize\ttfamily int uno\+\_\+read\+\_\+profile (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{uno\+\_\+index,  }\item[{uint8\+\_\+t}]{dds\+\_\+profile,  }\item[{float}]{freq }\end{DoxyParamCaption})}
+
+
+
+Выбор установленного профиля 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em U\+N\+O\+\_\+\+OK} & \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em uno\+\_\+index} & индекс синтезатора 0 или 1 \\
+\hline
+\mbox{\tt in}  & {\em dds\+\_\+profile} & номер профиля \\
+\hline
+\mbox{\tt in}  & {\em freq} & частота работы-\/ для корректных установок коэф. \\
+\hline
+\end{DoxyParams}
+\hypertarget{_initialization_u_n_o__v1_8c_a3bbdf706da736be26609387eee0fac9f}{}\label{_initialization_u_n_o__v1_8c_a3bbdf706da736be26609387eee0fac9f} 
+\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}!uno\+\_\+read\+\_\+profile\+\_\+fast@{uno\+\_\+read\+\_\+profile\+\_\+fast}}
+\index{uno\+\_\+read\+\_\+profile\+\_\+fast@{uno\+\_\+read\+\_\+profile\+\_\+fast}!Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+\subsubsection{\texorpdfstring{uno\+\_\+read\+\_\+profile\+\_\+fast()}{uno\_read\_profile\_fast()}}
+{\footnotesize\ttfamily int uno\+\_\+read\+\_\+profile\+\_\+fast (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{uno\+\_\+index,  }\item[{uint8\+\_\+t}]{dds\+\_\+profile }\end{DoxyParamCaption})}
+
+
+
+Выбор установленного профиля. При неизменных K и n\+\_\+pow. 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em U\+N\+O\+\_\+\+OK} & \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em uno\+\_\+index} & индекс синтезатора 0 или 1 \\
+\hline
+\mbox{\tt in}  & {\em dds\+\_\+profile} & номер профиля \\
+\hline
+\end{DoxyParams}
+\hypertarget{_initialization_u_n_o__v1_8c_aacbed4aef4830cc33c1fcbd0523e0b9f}{}\label{_initialization_u_n_o__v1_8c_aacbed4aef4830cc33c1fcbd0523e0b9f} 
+\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}!uno\+\_\+set\+\_\+profile@{uno\+\_\+set\+\_\+profile}}
+\index{uno\+\_\+set\+\_\+profile@{uno\+\_\+set\+\_\+profile}!Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+\subsubsection{\texorpdfstring{uno\+\_\+set\+\_\+profile()}{uno\_set\_profile()}}
+{\footnotesize\ttfamily int uno\+\_\+set\+\_\+profile (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{uno\+\_\+index,  }\item[{float}]{freq,  }\item[{uint8\+\_\+t}]{dds\+\_\+profile }\end{DoxyParamCaption})}
+
+
+
+uno\+\_\+index, -\/ переменная идентификатор конкретного синтезатора 1 или 2 freq, -\/ желаемая частота на выходе синтезатора gain -\/ желаемое усиление или амплитуда на выходе синтезатора 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em U\+N\+O\+\_\+\+OK} & \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em uno\+\_\+index} & индекс синтезатора 0 или 1 \\
+\hline
+\mbox{\tt in}  & {\em freq} & Частота в МГц \\
+\hline
+\mbox{\tt in}  & {\em dds\+\_\+profile} & номер профиля 0 -\/ 7 \\
+\hline
+\end{DoxyParams}
+\hypertarget{_initialization_u_n_o__v1_8c_a33a69c938db47b237eefe5bdfa2665cf}{}\label{_initialization_u_n_o__v1_8c_a33a69c938db47b237eefe5bdfa2665cf} 
+\index{Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}!uno\+\_\+write@{uno\+\_\+write}}
+\index{uno\+\_\+write@{uno\+\_\+write}!Initialization\+U\+N\+O\+\_\+v1.\+c@{Initialization\+U\+N\+O\+\_\+v1.\+c}}
+\subsubsection{\texorpdfstring{uno\+\_\+write()}{uno\_write()}}
+{\footnotesize\ttfamily int uno\+\_\+write (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{uno\+\_\+index,  }\item[{float}]{freq,  }\item[{uint8\+\_\+t}]{gain }\end{DoxyParamCaption})}
+
+
+
+uno\+\_\+index, -\/ переменная идентификатор конкретного синтезатора 1 или 2 freq, -\/ желаемая частота на выходе синтезатора gain -\/ желаемое усиление или амплитуда на выходе синтезатора 
+
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+\begin{DoxyRetVals}{Return values}
+{\em U\+N\+O\+\_\+\+OK} & \\
+\hline
+\end{DoxyRetVals}
+\begin{DoxySeeAlso}{See also}
+
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\tt in}  & {\em uno\+\_\+index} & индекс синтезатора 0 или 1 \\
+\hline
+\mbox{\tt in}  & {\em freq} & частота от 1 ГГц до 13 ГГц. Устанавливается в МГц \\
+\hline
+\mbox{\tt in}  & {\em gain} & усиление сигнала от 0 до 0x3F \\
+\hline
+\end{DoxyParams}

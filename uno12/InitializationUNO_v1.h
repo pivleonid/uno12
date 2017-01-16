@@ -27,6 +27,9 @@ extern "C" {
  *	uno_read_profile -> функция чтения профиля
  *	uno_read_profile_fast -> функция быстрого чтения профиля. Используется для свипирования по частоте в  
  *	малом частотном диапазоне. Требования- неизменность коэф. K и n_pow!
+ *
+ * calculate_uno -> Предварительное вычисления параметров для синтезатора с записью в массивы UnoData_0 ... UnoData_3
+ * transmit_uno  -> Настройка синтезатора по параметрам предварительной настройки UnoData_0 ... UnoData_3
  */
 
 /*includes==========================================================================================================*/		
@@ -71,6 +74,9 @@ int uno_read_profile_fast(
 						uint8_t uno_index,	    /*!< [in] индекс синтезатора 0 или 1 */
 						uint8_t dds_profile /*!< [in] номер профиля */
 						 );
+
+void transmit_uno(uint8_t uno_index, uint8_t* UnoData_0, uint8_t* UnoData_1, uint8_t* UnoData_2, uint8_t* UnoData_3);
+void calculate_uno(float freq, uint8_t gain);
 
 #ifdef __cplusplus
 }
