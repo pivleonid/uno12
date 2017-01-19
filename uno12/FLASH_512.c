@@ -279,7 +279,7 @@ void Chip_Erase_CE(void)
 // проверить регистры + учесть время на запись = 0.6 - 3 мс
 void FLASH_Page_Programm_PP(uint32_t address, uint8_t flash_data_in[256])
 {
-	Write_Enable_WREN();
+//	Write_Enable_WREN();
 	uint8_t adder = 0x12;
 	uint8_t data_adder[5];
 	data_adder[0] = adder;
@@ -292,7 +292,7 @@ void FLASH_Page_Programm_PP(uint32_t address, uint8_t flash_data_in[256])
 	HAL_SPI_Transmit(&hspi5, data_adder, 5, 1);
 	HAL_SPI_Transmit(&hspi5, flash_data_in, 256, 1);
 	Chip_Select_Up
-	Check_write_FLASH();
+	//Check_write_FLASH();
 	HAL_Delay(4);
 }
 /*

@@ -33,31 +33,79 @@ extern "C" {
 	/*
 	данные калибровки	
 	*/
-	 typedef struct Data_preselector
+
+#pragma pack(push, 1)
+	 struct  _PRES_KEY
 	 {
-		 uint8_t data_1 : 2;
-		 uint8_t data_2 : 2;
-		 uint8_t data_3 : 5;
-		 uint8_t data_4 : 1;
-	 } Data_preselector_t;
+		 uint8_t     freq[5];
+		 int8_t      temp;
+		 uint8_t		LNA;
+	 };
+#pragma pack(pop)
+	 
+#pragma pack(push ,1)
+	 struct  _PRES_BODY
+	 {
+		 uint8_t     inter_step[2];
+		 uint8_t     dac01[3];
+		 uint8_t     dac23[3];
+		 uint8_t     dac45[3];
+		 uint8_t     dac67[3];
+		 uint8_t     digital_att;
+	 };
+#pragma pack(pop)
+#pragma pack(push ,1)
+	 typedef struct  _PRES_PACK
+	 {
+		 struct  _PRES_KEY	key;
+		 struct  _PRES_BODY	body;
+	 }preselector_pack_t;
+
+	 preselector_pack_t pact_t[11];
+
+#define presel_container_not_full	 -1
+#define presel_container_full	     -2
+
+	 uint8_t data_in[22] = {0, 1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21}; //тестовые входные данные
+
+   //заполнение контейнера и его  отправка
+int save_page_data(uint8_t *data_in)
+{
+	/*статическая переменная сохраняет свое значение между вызовами,
+	а инициализация происходит только один раз */
+	static uint8_t i = 0;
+	if (i > 10) 
+	{
+		static uint32_t adder_locate;//max = 0x3FFFF00
+		static uint16_t sector;		  //max = 0x3FFF
+		i = 0;
+		if (adder_locate % 4096 == 0)
+			sector++;
+		if (sector > 16383)
+		{
+			sector = 0;
+			return (presel_container_full);
+		}
+		uint8_t a[256];
+		for (i = 242; i < 256; i++)
+//			pact_t[i] = 0;
+		memcpy(a, pact_t,256);
+		FLASH_Page_Programm_PP(adder_locate, a); //запись во флэш
+		adder_locate += 256;
+		return (sector);
+	}
+	else
+	{
+		memcpy(&pact_t[i], data_in, 22 );
+		//pres_pack. = (preselector_pack_t*)data_in; //запись значений в массив структур
+		//как заполнить недостающие данные нулями???
+		i++;
+		return (presel_container_not_full);
+	}
+}
 
 	int main(void)
 	{
-		
-		uint32_t k = sizeof(Data_preselector_t);
-		uint32_t c, i = 0;
-		uint8_t data_write[256];
-		uint8_t  data_read[1000];
-		for (i = 0; i < 256; i++)
-		{
-			data_write[i] = i;
-		}
-		for (i = 0; i < 1000; i++)
-		{
-			data_read[i] = i;
-		}
-		
-
 		HAL_Init();
 		SystemClock_Config();
 		Initial_Led();
@@ -66,35 +114,17 @@ extern "C" {
 		FLASH_SPI_close();
 		FLASH_SPI_open();
 		
-		while (Flash_ID_Check()) {
+		/*while (Flash_ID_Check()) {
 			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
 			
 		};
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);*/
 		LED_GREEN_ON
-	
-	
-		Sector_Erase_SE4B(0);
-		
-		Read_DAta_Bytes_READ4B(0xF12C, data_read);
-		for (i = 0; i < 262128; i += 256)
-		{
-			FLASH_Page_Programm_PP(i, data_write);
-			Read_DAta_Bytes_READ4B(i, data_read);
-			if (memcmp(data_read, data_write, 256) != 0)
-				 c = i;
-		}
 
 		for (;;)
 		{
-			
-			while (Flash_ID_Check());
-			Read_DAta_Bytes_READ4B(100, data_read);
-			/*for (i = 0; i < 262128; i += 256)
-			{
-				Read_DAta_Bytes_READ4B(i, data_read);
-			}*/
-			
+			//save_page_data_1(data_in);
+			save_page_data(data_in);
 		}
 
 	}
@@ -178,9 +208,59 @@ extern "C" {
 #endif
 
 
+//через массивы
+////--------------------------------------
+//typedef struct _Flash_Presel {
+//	uint8_t     freq[5];
+//	uint8_t      temp;
+//	uint8_t		LNA;
+//	uint8_t     inter_step[2];
+//	uint8_t     dac01[3];
+//	uint8_t     dac23[3];
+//	uint8_t     dac45[3];
+//	uint8_t     dac67[3];
+//	uint8_t     digital_att;
+//}_Flash_Presel_t;
+
+//_Flash_Presel_t _Flash_Presel_t_mas[11];
 
 
 
+//int save_page_data_1(uint8_t *data_in)
+//{
+//	/*статическая переменная сохраняет свое значение между вызовами,
+//	а инициализация происходит только один раз */
+
+//	static uint8_t i = 0;
+
+//	if (i > 12)
+//	{
+//		static uint32_t adder_locate;//max = 0x3FFFF00
+//		static uint16_t sector;		  //max = 0x3FFF
+//		i = 0;
+//		if (adder_locate % 4096 == 0)
+//			sector++;
+//		if (sector > 16383)
+//		{
+//			sector = 0;
+//			return (presel_container_full);
+//		}
+//		FLASH_Page_Programm_PP(adder_locate, _Flash_Presel_t_mas); //запись во флэш
+//		adder_locate += 256;
+//		return (sector);
+//	}
+//	else
+//	{
+//		memcpy(&_Flash_Presel_t_mas[i], data_in, 22);
+//		//_Flash_Presel_t_mas[i].freq[0] = data_in;
+//		//pres_pack. = (preselector_pack_t*)data_in; //запись значений в массив структур
+//		//как заполнить недостающие данные нулями???
+//		i++;
+//		return (presel_container_not_full);
+//	}
+//}
+
+////------------------------
 
 
 
