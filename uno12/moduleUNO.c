@@ -5,9 +5,9 @@
 
 #include "InitializationUNO_v1.h"
 
-#include "FLASH_512.h"
+//#include "FLASH_512.h"
 #include "string.h"
-
+#include "Flash_Handler.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,103 +28,37 @@ extern "C" {
 		HAL_GPIO_Init(GPIOE, &Led);
 	}
 	
-//#define printf my_printf
 
-	/*
-	данные калибровки	
-	*/
-
-#pragma pack(push, 1)
-	 struct  _PRES_KEY
-	 {
-		 uint8_t     freq[5];
-		 int8_t      temp;
-		 uint8_t		LNA;
-	 };
-#pragma pack(pop)
-	 
-#pragma pack(push ,1)
-	 struct  _PRES_BODY
-	 {
-		 uint8_t     inter_step[2];
-		 uint8_t     dac01[3];
-		 uint8_t     dac23[3];
-		 uint8_t     dac45[3];
-		 uint8_t     dac67[3];
-		 uint8_t     digital_att;
-	 };
-#pragma pack(pop)
-#pragma pack(push ,1)
-	 typedef struct  _PRES_PACK
-	 {
-		 struct  _PRES_KEY	key;
-		 struct  _PRES_BODY	body;
-	 }preselector_pack_t;
-
-	 preselector_pack_t pact_t[11];
-
-#define presel_container_not_full	 -1
-#define presel_container_full	     -2
-
-	 uint8_t data_in[22] = {0, 1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21}; //тестовые входные данные
-
-   //заполнение контейнера и его  отправка
-int save_page_data(uint8_t *data_in)
-{
-	/*статическая переменная сохраняет свое значение между вызовами,
-	а инициализация происходит только один раз */
-	static uint8_t i = 0;
-	if (i > 10) 
-	{
-		static uint32_t adder_locate;//max = 0x3FFFF00
-		static uint16_t sector;		  //max = 0x3FFF
-		i = 0;
-		if (adder_locate % 4096 == 0)
-			sector++;
-		if (sector > 16383)
-		{
-			sector = 0;
-			return (presel_container_full);
-		}
-		uint8_t a[256];
-		for (i = 242; i < 256; i++)
-//			pact_t[i] = 0;
-		memcpy(a, pact_t,256);
-		FLASH_Page_Programm_PP(adder_locate, a); //запись во флэш
-		adder_locate += 256;
-		return (sector);
-	}
-	else
-	{
-		memcpy(&pact_t[i], data_in, 22 );
-		//pres_pack. = (preselector_pack_t*)data_in; //запись значений в массив структур
-		//как заполнить недостающие данные нулями???
-		i++;
-		return (presel_container_not_full);
-	}
-}
 
 	int main(void)
 	{
 		HAL_Init();
 		SystemClock_Config();
-		Initial_Led();
+		uno_open(0);
+	//	Initial_Led();
 
 
-		FLASH_SPI_close();
-		FLASH_SPI_open();
-		
+		//FLASH_SPI_close();
+		//FLASH_SPI_open();
+		//uint8_t data_in[22] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
+		//int i = 0;
+
+		//for(i = 0 ; i < 12; i++)
+		//save_page_data_keyBody(data_in);
+
 		/*while (Flash_ID_Check()) {
 			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
 			
 		};
 		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);*/
-		LED_GREEN_ON
-
+		//LED_GREEN_ON
+		usual_freq(1000, 0);
+		usual_freq(1500, 0);
+	
 		for (;;)
 		{
 			//save_page_data_1(data_in);
-			save_page_data(data_in);
+			//save_page_data(data_in);
 		}
 
 	}
@@ -208,7 +142,7 @@ int save_page_data(uint8_t *data_in)
 #endif
 
 
-//через массивы
+//С‡РµСЂРµР· РјР°СЃСЃРёРІС‹
 ////--------------------------------------
 //typedef struct _Flash_Presel {
 //	uint8_t     freq[5];
@@ -228,8 +162,8 @@ int save_page_data(uint8_t *data_in)
 
 //int save_page_data_1(uint8_t *data_in)
 //{
-//	/*статическая переменная сохраняет свое значение между вызовами,
-//	а инициализация происходит только один раз */
+//	/*СЃС‚Р°С‚РёС‡РµСЃРєР°СЏ РїРµСЂРµРјРµРЅРЅР°СЏ СЃРѕС…СЂР°РЅСЏРµС‚ СЃРІРѕРµ Р·РЅР°С‡РµРЅРёРµ РјРµР¶РґСѓ РІС‹Р·РѕРІР°РјРё,
+//	Р° РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїСЂРѕРёСЃС…РѕРґРёС‚ С‚РѕР»СЊРєРѕ РѕРґРёРЅ СЂР°Р· */
 
 //	static uint8_t i = 0;
 
@@ -245,7 +179,7 @@ int save_page_data(uint8_t *data_in)
 //			sector = 0;
 //			return (presel_container_full);
 //		}
-//		FLASH_Page_Programm_PP(adder_locate, _Flash_Presel_t_mas); //запись во флэш
+//		FLASH_Page_Programm_PP(adder_locate, _Flash_Presel_t_mas); //Р·Р°РїРёСЃСЊ РІРѕ С„Р»СЌС€
 //		adder_locate += 256;
 //		return (sector);
 //	}
@@ -253,8 +187,8 @@ int save_page_data(uint8_t *data_in)
 //	{
 //		memcpy(&_Flash_Presel_t_mas[i], data_in, 22);
 //		//_Flash_Presel_t_mas[i].freq[0] = data_in;
-//		//pres_pack. = (preselector_pack_t*)data_in; //запись значений в массив структур
-//		//как заполнить недостающие данные нулями???
+//		//pres_pack. = (preselector_pack_t*)data_in; //Р·Р°РїРёСЃСЊ Р·РЅР°С‡РµРЅРёР№ РІ РјР°СЃСЃРёРІ СЃС‚СЂСѓРєС‚СѓСЂ
+//		//РєР°Рє Р·Р°РїРѕР»РЅРёС‚СЊ РЅРµРґРѕСЃС‚Р°СЋС‰РёРµ РґР°РЅРЅС‹Рµ РЅСѓР»СЏРјРё???
 //		i++;
 //		return (presel_container_not_full);
 //	}

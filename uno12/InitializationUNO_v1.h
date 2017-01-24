@@ -78,6 +78,7 @@ int uno_read_profile_fast(
 void transmit_uno(uint8_t uno_index, uint8_t* UnoData_0, uint8_t* UnoData_1, uint8_t* UnoData_2, uint8_t* UnoData_3);
 void calculate_uno(float freq, uint8_t gain);
 
+void usual_freq(float freq, uint8_t gain);
 #ifdef __cplusplus
 }
 #endif

@@ -133,6 +133,7 @@
     <ClCompile Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_sdmmc.c" />
     <ClCompile Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Src\stm32f4xx_ll_usb.c" />
     <ClCompile Include="FLASH_512.c" />
+    <ClCompile Include="Flash_Handler.c" />
     <ClCompile Include="InitializationUNO_v1.c" />
     <ClCompile Include="moduleUNO.c" />
     <ClCompile Include="system_stm32f4xx.c" />
@@ -241,6 +242,7 @@
     <ClInclude Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_sdmmc.h" />
     <ClInclude Include="BSP\STM32F4xxxx\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usb.h" />
     <ClInclude Include="FLASH_512.h" />
+    <ClInclude Include="Flash_Handler.h" />
     <ClInclude Include="InitializationUNO_v1.h" />
     <ClInclude Include="stm32f4xx_hal_conf.h" />
   </ItemGroup>

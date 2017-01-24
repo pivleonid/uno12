@@ -1,5 +1,5 @@
 /*!  \file 	InitializationUNO_v1.c
- *   \brief   ‘‡ÈÎ ‰Îˇ ‡·ÓÚ˚ Ò ÒËÌÚÂÁ‡ÚÓÓÏ UNO-10M
+ *   \brief   –§–∞–π–ª –¥–ª—è —Ä–∞–±–æ—Ç—ã —Å —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–æ–º UNO-10M
  *   \details  
  *             
  */
@@ -14,7 +14,7 @@
 
 #define Chip_Select_Up HAL_GPIO_WritePin(GPIO_X, GPIO_PIN, GPIO_PIN_SET);
 #define Chip_Select_Down HAL_GPIO_WritePin(GPIO_X, GPIO_PIN, GPIO_PIN_RESET);
-/* ƒÂÙ‡ÈÌ˚ Ó¯Ë·ÓÍ */
+/* –î–µ—Ñ–∞–π–Ω—ã –æ—à–∏–±–æ–∫ */
 #define UNO_OK (0)
 #define ERR_UNO_Pow (-1)
 #define ERR_UNO_PWR_Down (-2)
@@ -25,8 +25,8 @@
 #define OK (0)
 
 /*types=============================================================================================================*/
-SPI_HandleTypeDef hspi5; /* ÔÂ‚˚È ÒËÌÚÂÁ‡ÚÓ   */
-SPI_HandleTypeDef hspi6; /* ‚ÚÓÓÈ ÒËÌÚÂÁ‡ÚÓ   */
+SPI_HandleTypeDef hspi5; /* –ø–µ—Ä–≤—ã–π —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä   */
+SPI_HandleTypeDef hspi6; /* –≤—Ç–æ—Ä–æ–π —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä   */
 SPI_HandleTypeDef hspix;
 GPIO_InitTypeDef GPIO_InitStruct; 
 GPIO_TypeDef* GPIO_X;
@@ -43,19 +43,19 @@ static void Initial_Chip_Select_SPI_6(void);
 static uint8_t func_n_pow(float fr_out);
 static uint8_t Search_K(float fr_vco2);
 
-/*«‡ÔÓÎÌÂÌËÂ Ï‡ÒÒË‚Ó‚ ‰Îˇ ÔÂÂ‰‡˜Ë Ì‡ÒÚÓÈÍË ÒËÌÚÂÁ‡ÚÓÓ‚*/
+/*–ó–∞–ø–æ–ª–Ω–µ–Ω–∏–µ –º–∞—Å—Å–∏–≤–æ–≤ –¥–ª—è –ø–µ—Ä–µ–¥–∞—á–∏ –Ω–∞—Å—Ç—Ä–æ–π–∫–∏ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–æ–≤*/
 static void FillingUnoData_0(uint32_t ftw);
 static void FillingUnoData_1(uint8_t n_pow);
 static void FillingUnoData_2(uint8_t gain);
 static void FillingUnoData_3(uint8_t K); 
 
 /*variables=========================================================================================================*/
-/*----ÔÂÂÏÂÌÌ‡ˇ ‚˚ıÓ‰ÌÓ„Ó ÒÓÒÚÓˇÌËˇ--*/
+/*----–ø–µ—Ä–µ–º–µ–Ω–Ω–∞—è –≤—ã—Ö–æ–¥–Ω–æ–≥–æ —Å–æ—Å—Ç–æ—è–Ω–∏—è--*/
 int outputState; 
-/*----Œ·‡·ÓÚÍ‡ Ó¯Ë·ÓÍ--*/
+/*----–û–±—Ä–∞–±–æ—Ç–∫–∞ –æ—à–∏–±–æ–∫--*/
 uint8_t uno_answer;
 static const uint8_t Read_reg_POW = 0x81;
-/*ÍÓÌÒÚ‡ÌÚÌ˚Â Ï‡ÒÒË‚˚ Ì‡ÒÚÓÈÍË ÒËÌÚÂÁ‡ÚÓ‡ - ‰Îˇ Á‡ÔËÒÂÈ ÁÌ‡˜ÂÌËÈ ‚ ÔÓÒÚÓˇÌÌÛ˛ Ô‡ÏˇÚ¸*/
+/*–∫–æ–Ω—Å—Ç–∞–Ω—Ç–Ω—ã–µ –º–∞—Å—Å–∏–≤—ã –Ω–∞—Å—Ç—Ä–æ–π–∫–∏ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞ - –¥–ª—è –∑–∞–ø–∏—Å–µ–π –∑–Ω–∞—á–µ–Ω–∏–π –≤ –ø–æ—Å—Ç–æ—è–Ω–Ω—É—é –ø–∞–º—è—Ç—å*/
 static const uint8_t initial_mass_0[2] = {
 	/*1*/ 0x01, 0x01
 	};
@@ -89,25 +89,18 @@ static const uint8_t initial_mass_5[4] = {
 //32 //	HAL_Delay( 100 );
 
 static const uint8_t initial_mass_6[24] = {
-	/*33*/ 0x10, 0x01, 0x00, 0x80, 0xB0, 0x00,/*34*/ 0x11, 0x00,/*35*/ 0x10, 0x02, 0x00, 
+	/*33*/ 0x10, 0x01, 0x00, 0x89, 0x0B, 0x00,/*34*/ 0x11, 0x00,/*35*/ 0x10, 0x02, 0x00, 
 	0x00,0x00,0x00, /*36*/0x11, 0x00,/*37*/ 0x10, 0x03, 0x01, 0x05, 0x21, 0x20,
 	/*38*/ 0x11, 0x00
 	};
 //39 //	HAL_Delay( 100 );
 
-static const uint8_t initial_mass_7[83] = {
-	/*40*/ 0x10, 0x03, 0x00,0x05,0x21,0x20,/*41*/ 0x11, 0x00,/*42 profile 0*/ 0x10, 0x0C,0x0F,0xFF,	0x00,  0x00,
-															/*43 profile 1*/ 0x10, 0x0E, 0x0F, 0xFF, 0x00, 0x00,
-															/*44 profile 2*/ 0x10, 0x10, 0x0F, 0xFF, 0x00, 0x00,
-															/*45 profile 3*/ 0x10, 0x12, 0x0F, 0xFF, 0x00, 0x00, 
-															/*46 profile 4*/ 0x10, 0x14, 0x0F, 0xFF, 0x00, 0x00,
-															/*47 profile 5*/ 0x10, 0x16, 0x0F, 0xFF, 0x00, 0x00, 
-															/*48 profile 6*/ 0x10, 0x18, 0x0F, 0xFF, 0x00, 0x00,
-															/*49 profile 7*/ 0x10, 0x1A, 0x0F, 0xFF, 0x00, 0x00,
+static const uint8_t initial_mass_7[41] = {
+	/*40*/ 0x10, 0x03, 0x00,0x05,0x21,0x20,/*41*/ 0x11, 0x00,/*42 -49 profile 0*/ 0x10, 0x0C,0x0F,0xFF,	0x00,  0x00,
 	/*50*/0x11, 0x00,/*51*/ 0x10, 0x04, 0x0B, 0xA2, 0xE8,0xBA,	/*52*/0x10,0x06, 0xC6,0x6F, 0x5E,0x22,
 	/*53*/0x10, 0x05, 0x43,0x64,0xC5,0xBB,/*54*/ 0x11, 0x00,/*55*/ 0x62, 0x00,0x00,0x00,0x0B
 	};	
-/* ‚˚ÍÎ˛˜ÂÌËÂ ÒËÌÚÂÁ‡ÚÓ‡*/
+/* –≤—ã–∫–ª—é—á–µ–Ω–∏–µ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞*/
 const uint8_t uno_off[2] = { 0x01, 0x00 };
 
 uint8_t UnoData_0[6];
@@ -119,7 +112,7 @@ uint8_t UnoData_3[5];
 
 /*=============================================================================================================*/
 /*!  \brief
-‘ÛÌÍˆËˇ Ì‡ÒÚÓÈÍË ÌÛÊÌÓ„Ó ÏÓ‰ÛÎˇ SPI
+–§—É–Ω–∫—Ü–∏—è –Ω–∞—Å—Ç—Ä–æ–π–∫–∏ –Ω—É–∂–Ω–æ–≥–æ –º–æ–¥—É–ª—è SPI
 \return void
 \retval
 \sa
@@ -245,9 +238,9 @@ static void Initial_Chip_Select_SPI_6(void)
 }
 /*=============================================================================================================*/
 /*!  \brief
-œÂÂÔËÒ‡ÌÌ‡ˇ ÙÛÌÍˆËˇ ÔÂÂ‰‡˜Ë ÔÓ SPI. 
-¬ıÓ‰Ì˚Â Ô‡‡ÏÂÚ˚: ƒ‡ÌÌ˚Â, ‡ÁÏÂ.
-¬ÓÁ‚‡˘‡ÂÚ ÒÎÂ‰Û˛˘ËÂ ÍÓÏ‡Ì‰˚:
+–ü–µ—Ä–µ–ø–∏—Å–∞–Ω–Ω–∞—è —Ñ—É–Ω–∫—Ü–∏—è –ø–µ—Ä–µ–¥–∞—á–∏ –ø–æ SPI. 
+–í—Ö–æ–¥–Ω—ã–µ –ø–∞—Ä–∞–º–µ—Ç—Ä—ã: –î–∞–Ω–Ω—ã–µ, —Ä–∞–∑–º–µ—Ä.
+–í–æ–∑–≤—Ä–∞—â–∞–µ—Ç —Å–ª–µ–¥—É—é—â–∏–µ –∫–æ–º–∞–Ω–¥—ã:
 OK = 0
 ERR_DATA_NULL = -3
 ERR_SPI_BUSY = -4
@@ -269,13 +262,13 @@ static int SPI_UNO_Transmit(  uint8_t* data, uint16_t size) {
 	/* Configure communication */
 	hspix.State      = HAL_SPI_STATE_BUSY_TX;   
 	hspix.ErrorCode  = HAL_SPI_ERROR_NONE;  
-	  /*Init field not used in handle to zero */
+	/*Init field not used in handle to zero */
 	hspix.pRxBuffPtr  = (uint8_t *)NULL;
 	hspix.RxXferSize  = 0U;
 	hspix.RxXferCount = 0U;
 	hspix.TxISR       = NULL;
 	hspix.RxISR       = NULL;    
-	/* ÔÂÂ‰‡ÂÏ ·‡ÈÚ˚ ‰‡ÌÌ˚ı */
+	/* –ø–µ—Ä–µ–¥–∞–µ–º –±–∞–π—Ç—ã –¥–∞–Ω–Ω—ã—Ö */
 	hspix.pTxBuffPtr = data;
 	hspix.TxXferSize = 8;
 	hspix.TxXferCount = size;							/* SPI Tx Transfer Counter */
@@ -296,7 +289,7 @@ static int SPI_UNO_Transmit(  uint8_t* data, uint16_t size) {
 	hspix.State = HAL_SPI_STATE_READY;
 	/* Process Unlocked */
 	__HAL_UNLOCK(&hspix);
-	/* ÔÓ‰ÌËÏ‡ÂÏ ÒÓÓÚ‚ÂÚÒ‚Û˛˘ËÈ CS */
+	/* –ø–æ–¥–Ω–∏–º–∞–µ–º —Å–æ–æ—Ç–≤–µ—Ç—Å–≤—É—é—â–∏–π CS */
 	Chip_Select_Up
 	return OK;
 }
@@ -306,13 +299,13 @@ static int SPI_UNO_Transmit(  uint8_t* data, uint16_t size) {
 /*!  \brief 
 
      \return int
-     \retval  ERR_UNO_Pow = -1 ÒËÌÚÂÁ‡ÚÓ ÌÂ ‚ÍÎ˛˜ÂÌ; UNO_OK = 0;
+     \retval  ERR_UNO_Pow = -1 —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä –Ω–µ –≤–∫–ª—é—á–µ–Ω; UNO_OK = 0;
 	 \sa 
 */
 /*=============================================================================================================*/
 int uno_open(uint8_t uno_index)
 {
-	/*‚˚·Ó ÒËÌÚÂÁ‡ÚÓ‡*/
+	/*–≤—ã–±–æ—Ä —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞*/
 	if (uno_index == 0)
 	{
 		SPI_5_open();
@@ -351,7 +344,7 @@ int uno_open(uint8_t uno_index)
 	SPI_UNO_Transmit( initial_mass_4,     2);
 	
 	
-	/*20-24 ÔÛÌÍÚ ‚ Ì‡ÒÚÓÈÍ‡ı*/
+	/*20-24 –ø—É–Ω–∫—Ç –≤ –Ω–∞—Å—Ç—Ä–æ–π–∫–∞—Ö*/
 	static uint8_t adder_0[2] = { 0x15, 0 };
 	SPI_UNO_Transmit(adder_0, 2);
 	HAL_Delay(10);
@@ -379,17 +372,13 @@ int uno_open(uint8_t uno_index)
 	SPI_UNO_Transmit( initial_mass_7,      6);
 	SPI_UNO_Transmit( &initial_mass_7[6],  2);
 	SPI_UNO_Transmit( &initial_mass_7[8],  6);
-	SPI_UNO_Transmit( &initial_mass_7[14], 6);
-	SPI_UNO_Transmit( &initial_mass_7[20], 6);
-	SPI_UNO_Transmit( &initial_mass_7[26], 6);
-	SPI_UNO_Transmit( &initial_mass_7[32], 6);
-	SPI_UNO_Transmit( &initial_mass_7[38], 6);
-	SPI_UNO_Transmit( &initial_mass_7[44], 6);
-	SPI_UNO_Transmit( &initial_mass_7[50], 6);
-	/*SPI_UNO_Transmit( &initial_mass_7[56], 2);
-	SPI_UNO_Transmit( &initial_mass_7[58], 6);
-	SPI_UNO_Transmit( &initial_mass_7[64], 6);
-	SPI_UNO_Transmit( &initial_mass_7[70], 6);*/
+	SPI_UNO_Transmit( &initial_mass_7[14], 2);
+	SPI_UNO_Transmit( &initial_mass_7[16], 6);
+	SPI_UNO_Transmit( &initial_mass_7[22], 6);
+	SPI_UNO_Transmit( &initial_mass_7[28], 6);
+	SPI_UNO_Transmit( &initial_mass_7[34], 2);
+	SPI_UNO_Transmit( &initial_mass_7[36], 5);
+
 	uint8_t mass[6] = { 0x10, 0x0B, 0x0B, 0xA2, 0xE8, 0xBA };
 	SPI_UNO_Transmit(mass, 6);
 	SPI_UNO_Transmit( &initial_mass_7[76], 2);
@@ -404,13 +393,13 @@ int uno_open(uint8_t uno_index)
 		return ERR_UNO_Pow;
 		return UNO_OK;
 }
-//--¬˚ÍÎ˛˜ÂÌËÂ ÒËÌÚÂÁ‡ÚÓ‡--//
-/*--uno_index = 0 ËÎË 1--*/
+//--–í—ã–∫–ª—é—á–µ–Ω–∏–µ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞--//
+/*--uno_index = 0 –∏–ª–∏ 1--*/
 /*=============================================================================================================*/
 /*!  \brief 
- * ‘ÛÌÍˆËˇ ‚˚ÍÎ˛˜ÂÌËˇ ÒËÌÚÂÁ‡ÚÓ‡ Ë ÒÓÓÚ‚ÂÚÒÚ‚Û˛˘Â„Ó ÏÓ‰ÛÎˇ SPI	 	
+ * –§—É–Ω–∫—Ü–∏—è –≤—ã–∫–ª—é—á–µ–Ω–∏—è —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞ –∏ —Å–æ–æ—Ç–≤–µ—Ç—Å—Ç–≤—É—é—â–µ–≥–æ –º–æ–¥—É–ª—è SPI	 	
      \return int
-     \retval ERR_UNO_PWR_Down = -2 (ÒËÌÚÂÁ‡ÚÓ ÌÂ ‚˚ÍÎ˛˜ËÎÒˇ),  UNO_OK = 0
+     \retval ERR_UNO_PWR_Down = -2 (—Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä –Ω–µ –≤—ã–∫–ª—é—á–∏–ª—Å—è),  UNO_OK = 0
      \sa 
 */
 /*=============================================================================================================*/
@@ -418,7 +407,7 @@ int uno_close (uint8_t uno_index)
 {
 	UNOindex(uno_index);
 	SPI_UNO_Transmit(uno_off, 2);
-	/*Œ·‡·ÓÚ˜ËÍ Ó¯Ë·ÓÍ*/
+	/*–û–±—Ä–∞–±–æ—Ç—á–∏–∫ –æ—à–∏–±–æ–∫*/
 	Chip_Select_Down 
 	HAL_SPI_Transmit(&hspix, &Read_reg_POW, 1,1);
 	HAL_SPI_Receive(&hspix, &uno_answer, 1, 1);
@@ -426,7 +415,7 @@ int uno_close (uint8_t uno_index)
 	if(uno_answer != 0) 
 	outputState = ERR_UNO_PWR_Down;
 	outputState = UNO_OK;
-	/*-¬˚ÍÎ˛˜ÂÌËÂ SPI ÏÓ‰ÛÎˇ-*/
+	/*-–í—ã–∫–ª—é—á–µ–Ω–∏–µ SPI –º–æ–¥—É–ª—è-*/
 	if (uno_index == 0){
 		GPIO_InitStruct.Pin = GPIO_PIN_6; 
 		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
@@ -448,7 +437,7 @@ int uno_close (uint8_t uno_index)
 }
 /*=============================================================================================================*/
 /*!  \brief 
- * ÒÚ‡ÚË˜ÂÒÍ‡ˇ ‚ÌÛÚÂÌÌˇˇ ÙÛÌÍˆËˇ
+ * —Å—Ç–∞—Ç–∏—á–µ—Å–∫–∞—è –≤–Ω—É—Ç—Ä–µ–Ω–Ω—è—è —Ñ—É–Ω–∫—Ü–∏—è
      \return int
      \retval n_pow
      \sa 
@@ -457,7 +446,7 @@ int uno_close (uint8_t uno_index)
 static uint8_t func_n_pow(float fr_out)
 { 
 	uint8_t n_pow;
-	/*ÔÓËÒÍ n_pow ÔÓÍ‡Á‡ÚÂÎ¸ ÒÚÂÔÂÌË ‰ÂÎËÚÂÎß; fr_out ˜‡ÒÚÓÚ‡ Ì‡ ‚˚ıÓ‰Â uno*/
+	/*–ø–æ–∏—Å–∫ n_pow –ø–æ–∫–∞–∑–∞—Ç–µ–ª—å —Å—Ç–µ–ø–µ–Ω–∏ –¥–µ–ª–∏—Ç–µ–ª¬ß; fr_out —á–∞—Å—Ç–æ—Ç–∞ –Ω–∞ –≤—ã—Ö–æ–¥–µ uno*/
 	if (fr_out > 6070) n_pow = 0;
 	else if (fr_out > 3035) n_pow = 1;
 	else if (fr_out > 1517.5) n_pow = 2;
@@ -469,7 +458,7 @@ static uint8_t func_n_pow(float fr_out)
 }
 /*=============================================================================================================*/
 /*!  \brief 
-  * ÒÚ‡ÚË˜ÂÒÍ‡ˇ ‚ÌÛÚÂÌÌˇˇ ÙÛÌÍˆËˇ, ‚ÓÁ‚‡˘‡ÂÚ ÍÓ˝Ù. ÛÒËÎÂÌËˇ
+  * —Å—Ç–∞—Ç–∏—á–µ—Å–∫–∞—è –≤–Ω—É—Ç—Ä–µ–Ω–Ω—è—è —Ñ—É–Ω–∫—Ü–∏—è, –≤–æ–∑–≤—Ä–∞—â–∞–µ—Ç –∫–æ—ç—Ñ. —É—Å–∏–ª–µ–Ω–∏—è
      \return int
      \retval K
      \sa 
@@ -530,7 +519,7 @@ static uint8_t Search_K(float fr_vco2)
         
 	return K;
 }
-//«‡ÔÓÎÌÂÌËÂ Ï‡ÒÒË‚‡ ‰‡ÌÌ˚ÏË
+//–ó–∞–ø–æ–ª–Ω–µ–Ω–∏–µ –º–∞—Å—Å–∏–≤–∞ –¥–∞–Ω–Ω—ã–º–∏
 static void FillingUnoData_0(uint32_t ftw)
 {
 	UnoData_0[0] = 0x10;
@@ -560,8 +549,8 @@ static void FillingUnoData_3(uint8_t K)
 }
 /*=============================================================================================================*/
 /*!  \brief
-freq, - ÊÂÎ‡ÂÏ‡ˇ ˜‡ÒÚÓÚ‡ Ì‡ ‚˚ıÓ‰Â ÒËÌÚÂÁ‡ÚÓ‡
-gain - ÊÂÎ‡ÂÏÓÂ ÛÒËÎÂÌËÂ ËÎË ‡ÏÔÎËÚÛ‰‡ Ì‡ ‚˚ıÓ‰Â ÒËÌÚÂÁ‡ÚÓ‡
+freq, - –∂–µ–ª–∞–µ–º–∞—è —á–∞—Å—Ç–æ—Ç–∞ –Ω–∞ –≤—ã—Ö–æ–¥–µ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞
+gain - –∂–µ–ª–∞–µ–º–æ–µ —É—Å–∏–ª–µ–Ω–∏–µ –∏–ª–∏ –∞–º–ø–ª–∏—Ç—É–¥–∞ –Ω–∞ –≤—ã—Ö–æ–¥–µ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞
 
 \return int
 \retval UNO_OK
@@ -582,7 +571,7 @@ void calculate_uno(float freq, uint8_t gain)
 }
 /*=============================================================================================================*/
 /*!  \brief
-uno_index, - ÔÂÂÏÂÌÌ‡ˇ Ë‰ÂÌÚËÙËÍ‡ÚÓ ÍÓÌÍÂÚÌÓ„Ó ÒËÌÚÂÁ‡ÚÓ‡ 1 ËÎË 2
+uno_index, - –ø–µ—Ä–µ–º–µ–Ω–Ω–∞—è –∏–¥–µ–Ω—Ç–∏—Ñ–∏–∫–∞—Ç–æ—Ä –∫–æ–Ω–∫—Ä–µ—Ç–Ω–æ–≥–æ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞ 1 –∏–ª–∏ 2
 
 \return int
 \retval UNO_OK
@@ -599,9 +588,9 @@ void transmit_uno(uint8_t uno_index, uint8_t* UnoData_0, uint8_t* UnoData_1, uin
 }
 /*=============================================================================================================*/
 /*!  \brief 
-	uno_index, - ÔÂÂÏÂÌÌ‡ˇ Ë‰ÂÌÚËÙËÍ‡ÚÓ ÍÓÌÍÂÚÌÓ„Ó ÒËÌÚÂÁ‡ÚÓ‡ 1 ËÎË 2
-	freq, - ÊÂÎ‡ÂÏ‡ˇ ˜‡ÒÚÓÚ‡ Ì‡ ‚˚ıÓ‰Â ÒËÌÚÂÁ‡ÚÓ‡
-	gain - ÊÂÎ‡ÂÏÓÂ ÛÒËÎÂÌËÂ ËÎË ‡ÏÔÎËÚÛ‰‡ Ì‡ ‚˚ıÓ‰Â ÒËÌÚÂÁ‡ÚÓ‡
+	uno_index, - –ø–µ—Ä–µ–º–µ–Ω–Ω–∞—è –∏–¥–µ–Ω—Ç–∏—Ñ–∏–∫–∞—Ç–æ—Ä –∫–æ–Ω–∫—Ä–µ—Ç–Ω–æ–≥–æ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞ 1 –∏–ª–∏ 2
+	freq, - –∂–µ–ª–∞–µ–º–∞—è —á–∞—Å—Ç–æ—Ç–∞ –Ω–∞ –≤—ã—Ö–æ–¥–µ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞
+	gain - –∂–µ–ª–∞–µ–º–æ–µ —É—Å–∏–ª–µ–Ω–∏–µ –∏–ª–∏ –∞–º–ø–ª–∏—Ç—É–¥–∞ –Ω–∞ –≤—ã—Ö–æ–¥–µ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞
 
      \return int
      \retval UNO_OK
@@ -627,7 +616,7 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 	uint8_t data_3[5] = { 0x62,0,0,0, K };
 	SPI_UNO_Transmit(data, 6);
 	SPI_UNO_Transmit(data_1, 2);
-	/*”ÒËÎÂÌËÂ*/
+	/*–£—Å–∏–ª–µ–Ω–∏–µ*/
 	SPI_UNO_Transmit(data_2, 2);
 	SPI_UNO_Transmit(data_3, 5);
 	return UNO_OK;
@@ -635,7 +624,7 @@ int uno_write (uint8_t uno_index, float freq, uint8_t gain)
 
 /*=============================================================================================================*/
 /*!  \brief
-		”ÒËÎÂÌËÂ ÒËÌÚÂÁ‡ÚÓ‡. 
+		–£—Å–∏–ª–µ–Ω–∏–µ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞. 
 
 \return int
 \retval UNO_OK
@@ -658,9 +647,9 @@ int uno_gain(uint8_t uno_index, uint8_t gain)
 
 /*=============================================================================================================*/
 /*!  \brief
-uno_index, - ÔÂÂÏÂÌÌ‡ˇ Ë‰ÂÌÚËÙËÍ‡ÚÓ ÍÓÌÍÂÚÌÓ„Ó ÒËÌÚÂÁ‡ÚÓ‡ 1 ËÎË 2
-freq, - ÊÂÎ‡ÂÏ‡ˇ ˜‡ÒÚÓÚ‡ Ì‡ ‚˚ıÓ‰Â ÒËÌÚÂÁ‡ÚÓ‡
-gain - ÊÂÎ‡ÂÏÓÂ ÛÒËÎÂÌËÂ ËÎË ‡ÏÔÎËÚÛ‰‡ Ì‡ ‚˚ıÓ‰Â ÒËÌÚÂÁ‡ÚÓ‡
+uno_index, - –ø–µ—Ä–µ–º–µ–Ω–Ω–∞—è –∏–¥–µ–Ω—Ç–∏—Ñ–∏–∫–∞—Ç–æ—Ä –∫–æ–Ω–∫—Ä–µ—Ç–Ω–æ–≥–æ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞ 1 –∏–ª–∏ 2
+freq, - –∂–µ–ª–∞–µ–º–∞—è —á–∞—Å—Ç–æ—Ç–∞ –Ω–∞ –≤—ã—Ö–æ–¥–µ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞
+gain - –∂–µ–ª–∞–µ–º–æ–µ —É—Å–∏–ª–µ–Ω–∏–µ –∏–ª–∏ –∞–º–ø–ª–∏—Ç—É–¥–∞ –Ω–∞ –≤—ã—Ö–æ–¥–µ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞
 
 \return int
 \retval UNO_OK
@@ -695,7 +684,7 @@ int uno_set_profile(uint8_t uno_index, float freq,  uint8_t dds_profile)
 
 /*=============================================================================================================*/
 /*!  \brief
-¬˚·Ó ÛÒÚ‡ÌÓ‚ÎÂÌÌÓ„Ó ÔÓÙËÎˇ
+–í—ã–±–æ—Ä —É—Å—Ç–∞–Ω–æ–≤–ª–µ–Ω–Ω–æ–≥–æ –ø—Ä–æ—Ñ–∏–ª—è
 
 \return int
 \retval UNO_OK
@@ -725,7 +714,7 @@ int uno_read_profile(uint8_t uno_index, uint8_t dds_profile,  float freq )
 
 /*=============================================================================================================*/
 /*!  \brief
-¬˚·Ó ÛÒÚ‡ÌÓ‚ÎÂÌÌÓ„Ó ÔÓÙËÎˇ. œË ÌÂËÁÏÂÌÌ˚ı K Ë n_pow
+–í—ã–±–æ—Ä —É—Å—Ç–∞–Ω–æ–≤–ª–µ–Ω–Ω–æ–≥–æ –ø—Ä–æ—Ñ–∏–ª—è. –ü—Ä–∏ –Ω–µ–∏–∑–º–µ–Ω–Ω—ã—Ö K –∏ n_pow
 
 \return int
 \retval UNO_OK
@@ -742,3 +731,232 @@ int uno_read_profile_fast(uint8_t uno_index, uint8_t dds_profile)
 	SPI_UNO_Transmit(data_1, 2);
 	return UNO_OK;
 }
+
+/*===========================================–ù–û–†–ú–ê–õ–¨–ù–´–ô –†–ï–ñ–ò–ú==================================================*/
+
+
+/*=============================================================================================================*/
+/*!  \brief
+		–ù–∞–∏–±–æ–ª—å—à–∏–π –æ–±—â–∏–π –¥–µ–ª–∏—Ç–µ–ª—å. –ò—Å–ø–æ–ª—å–∑—É–µ—Ç—Å—è –¥–ª—è –ø–æ–∏—Å–∫–∞ –∫–æ—ç—Ñ. –≤ –Ω–æ—Ä–º–∞–ª—å–Ω–æ–º —Ä–µ–∂–∏–º–µ
+
+\return int
+\retval UNO_OK
+\sa
+*/
+/*=============================================================================================================*/
+uint64_t gcd(uint64_t a, uint64_t b) {
+	uint64_t c;
+	while (b) {
+		c = a % b;
+		a = b;
+		b = c;
+	}
+	return fabs(a);
+}
+/*=============================================================================================================*/
+/*!  \brief
+–ù–æ—Ä–º–∞–ª—å–Ω—ã–π —Ä–µ–∂–∏–º —Ä–∞–±–æ—Ç—ã —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞
+\return int
+\retval UNO_OK
+\sa
+*/
+/*=============================================================================================================*/
+void usual_freq(float freq, uint8_t gain)
+{
+	uint8_t n_pow = func_n_pow(freq);
+	float fr_vco2 = freq * powf(2, n_pow);
+	uint8_t K = Search_K(fr_vco2);
+	uint32_t fr_dds = 1200 - fr_vco2 / K;
+
+	uint32_t dds_a, dds_b;
+	uint64_t a = 24000000000000;
+	uint64_t b = fr_dds *1e10;
+	uint32_t N = a / gcd(a, b);
+	uint32_t M = b / gcd(a, b);
+	uint32_t ftw = (M*(4294967296)) / N;
+	int Y = (2 ^ 32)* M - ftw*N;
+	if (Y == 0)
+	{
+		dds_a = N;
+		dds_b = 0;
+	}
+	else
+	{
+		dds_a = Y / gcd(N, Y);
+		dds_b = N / gcd(N, Y);
+	}
+	uint8_t data_ftw[6]   = { 0x10, 0x04, (uint8_t)(ftw >> 24), (uint8_t)(ftw >> 16),
+						    (uint8_t)(ftw >> 8), (uint8_t)ftw };
+	uint8_t data_dds_b[6] = {0x10,0x05,(uint8_t)(dds_b >> 24), (uint8_t)(dds_b >> 16),
+							(uint8_t)(dds_b >> 8), (uint8_t)dds_b };
+	uint8_t data_dds_a[6] = {0x10, 0x06,(uint8_t)(dds_a >> 24), (uint8_t)(dds_a >> 16),
+							(uint8_t)(dds_a >> 8), (uint8_t)dds_a };
+	uint8_t data_npow[2]  = { 0x03, (0x00 | n_pow) };
+	//uint8_t data_dB[2]    = { 0x04, gain };
+	uint8_t data_K[5]     = { 0x62,0,0,0, K };
+	SPI_UNO_Transmit(data_ftw, 6);
+	SPI_UNO_Transmit(data_dds_b, 6);
+	SPI_UNO_Transmit(data_dds_a, 6);
+	SPI_UNO_Transmit(data_npow, 2);
+	//SPI_UNO_Transmit(data_dB, 2);
+	SPI_UNO_Transmit(data_K, 5);
+}
+
+/*=============================================================================================================*/
+/*!  \brief
+       –ë—ã—Å—Ç—Ä—ã–π —Ä–µ–∂–∏–º —Å –ø—Ä–æ—Ñ–∏–ª—è–º–∏ —á–∞—Å—Ç–æ—Ç—ã
+\return int
+\retval  ERR_UNO_Pow = -1 —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä –Ω–µ –≤–∫–ª—é—á–µ–Ω; UNO_OK = 0;
+\sa
+*/
+/*=============================================================================================================*/
+//int uno_open(uint8_t uno_index)
+//{
+//	/*–≤—ã–±–æ—Ä —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞*/
+//	if (uno_index == 0)
+//	{
+//		SPI_5_open();
+//		hspix = hspi5;
+//		GPIO_X = GPIOF;
+//		GPIO_PIN = GPIO_PIN_6;
+//		Initial_Chip_Select_SPI_5();
+//	}
+//	if (uno_index == 1)
+//	{
+//		SPI_6_open();
+//		hspix = hspi6;
+//		GPIO_X = GPIOG;
+//		GPIO_PIN = GPIO_PIN_15;
+//		Initial_Chip_Select_SPI_6();
+//	}
+//
+//	SPI_UNO_Transmit(initial_mass_0, 2);
+//	HAL_Delay(100);
+//	SPI_UNO_Transmit(initial_mass_1, 2);
+//	SPI_UNO_Transmit(&initial_mass_1[2], 2);
+//	SPI_UNO_Transmit(&initial_mass_1[4], 2);
+//	SPI_UNO_Transmit(&initial_mass_1[6], 4);
+//	SPI_UNO_Transmit(&initial_mass_1[10], 4);
+//	SPI_UNO_Transmit(&initial_mass_1[14], 4);
+//	SPI_UNO_Transmit(&initial_mass_1[18], 4);
+//	SPI_UNO_Transmit(&initial_mass_1[22], 2);
+//	SPI_UNO_Transmit(&initial_mass_1[24], 2);
+//	HAL_Delay(100);
+//	SPI_UNO_Transmit(initial_mass_2, 2);
+//	SPI_UNO_Transmit(&initial_mass_2[2], 2);
+//	HAL_Delay(10);
+//	SPI_UNO_Transmit(initial_mass_3, 2);
+//	SPI_UNO_Transmit(&initial_mass_3[2], 2);
+//	HAL_Delay(10);
+//	SPI_UNO_Transmit(initial_mass_4, 2);
+//
+//
+//	/*20-24 –ø—É–Ω–∫—Ç –≤ –Ω–∞—Å—Ç—Ä–æ–π–∫–∞—Ö*/
+//	static uint8_t adder_0[2] = { 0x15, 0 };
+//	SPI_UNO_Transmit(adder_0, 2);
+//	HAL_Delay(10);
+//	static uint8_t adder_1[2] = { 0x05, 0x01 };
+//	SPI_UNO_Transmit(adder_1, 2);
+//	static uint8_t adder_2[2] = { 0x15, 0x00 };
+//	SPI_UNO_Transmit(adder_2, 2);
+//	HAL_Delay(10);
+//
+//	SPI_UNO_Transmit(&initial_mass_4[2], 6);
+//	SPI_UNO_Transmit(&initial_mass_4[8], 2);
+//	SPI_UNO_Transmit(&initial_mass_4[10], 2);
+//	SPI_UNO_Transmit(&initial_mass_4[12], 2);
+//	HAL_Delay(10);
+//	SPI_UNO_Transmit(initial_mass_5, 2);
+//	SPI_UNO_Transmit(&initial_mass_5[2], 2);
+//	HAL_Delay(100);
+//	SPI_UNO_Transmit(initial_mass_6, 6);
+//	SPI_UNO_Transmit(&initial_mass_6[6], 2);
+//	SPI_UNO_Transmit(&initial_mass_6[8], 6);
+//	SPI_UNO_Transmit(&initial_mass_6[14], 2);
+//	SPI_UNO_Transmit(&initial_mass_6[16], 6);
+//	SPI_UNO_Transmit(&initial_mass_6[22], 2);
+//	HAL_Delay(100);
+//	SPI_UNO_Transmit(initial_mass_7, 6);
+//	SPI_UNO_Transmit(&initial_mass_7[6], 2);
+//	SPI_UNO_Transmit(&initial_mass_7[8], 6);
+//	SPI_UNO_Transmit(&initial_mass_7[14], 6);
+//	SPI_UNO_Transmit(&initial_mass_7[20], 6);
+//	SPI_UNO_Transmit(&initial_mass_7[26], 6);
+//	SPI_UNO_Transmit(&initial_mass_7[32], 6);
+//	SPI_UNO_Transmit(&initial_mass_7[38], 6);
+//	SPI_UNO_Transmit(&initial_mass_7[44], 6);
+//	SPI_UNO_Transmit(&initial_mass_7[50], 6);
+//	/*SPI_UNO_Transmit( &initial_mass_7[56], 2);
+//	SPI_UNO_Transmit( &initial_mass_7[58], 6);
+//	SPI_UNO_Transmit( &initial_mass_7[64], 6);
+//	SPI_UNO_Transmit( &initial_mass_7[70], 6);*/
+//	uint8_t mass[6] = { 0x10, 0x0B, 0x0B, 0xA2, 0xE8, 0xBA };
+//	SPI_UNO_Transmit(mass, 6);
+//	SPI_UNO_Transmit(&initial_mass_7[76], 2);
+//	SPI_UNO_Transmit(&initial_mass_7[78], 5);
+//	HAL_Delay(10);
+//	Chip_Select_Down
+//		HAL_SPI_Transmit(&hspix, &Read_reg_POW, 1, 1);
+//	HAL_SPI_Receive(&hspix, &uno_answer, 1, 1);
+//	Chip_Select_Up
+//		uno_answer *= 0x01;
+//	if (uno_answer != 0x01)
+//		return ERR_UNO_Pow;
+//	return UNO_OK;
+//}
+
+
+
+//
+///*–∫–æ–Ω—Å—Ç–∞–Ω—Ç–Ω—ã–µ –º–∞—Å—Å–∏–≤—ã –Ω–∞—Å—Ç—Ä–æ–π–∫–∏ —Å–∏–Ω—Ç–µ–∑–∞—Ç–æ—Ä–∞ - –¥–ª—è –∑–∞–ø–∏—Å–µ–π –∑–Ω–∞—á–µ–Ω–∏–π –≤ –ø–æ—Å—Ç–æ—è–Ω–Ω—É—é –ø–∞–º—è—Ç—å*/
+//static const uint8_t initial_mass_0[2] = {
+//	/*1*/ 0x01, 0x01
+//};
+////2 // HAL_Delay( 100 );
+//static	const uint8_t initial_mass_1[26] = {
+//	/*3*/ 0x02, 0x07,/*4*/ 0x03, 0x00 ,/*5*/ 0x04, 0x00, /*6*/ 0x60, 0x03, 0x80, 0x13,
+//	/*7*/ 0x60, 0x03, 0x80, 0x12,/*8*/ 0x60, 0x00, 0x00,0x00, /*9*/0x60, 0x00, 0x00,0x01,
+//	/*10*/ 0x05, 0x01, /*11*/ 0x15, 0x00
+//};
+//
+////12 //	HAL_Delay( 100 );
+//
+//static const uint8_t initial_mass_2[4] = {
+//	/*13*/ 0x05, 0x03, 	/*14*/ 0x15, 0x00
+//};
+////15 //	HAL_Delay( 10 );
+//
+//static const uint8_t initial_mass_3[4] = {
+//	/*16*/ 0x05, 0x01, 	/*17*/ 0x15, 0x00
+//};
+////18 //	HAL_Delay( 10 );
+//
+//static const uint8_t initial_mass_4[14] = {
+//	/*19*/ 0x05, 0x05, /*20-24; 25*/ 0x10, 0x00, 0x00, 0x01, 0x01, 0x02,/*26*/ 0x11, 0x00,
+//	/*27*/0x05, 0x00,/*28*/ 0x15, 0x00 };
+////29 //	HAL_Delay( 10 );
+//
+//static const uint8_t initial_mass_5[4] = {
+//	/*30*/ 0x05, 0x01, 	/*31*/ 0x15, 0x00
+//};
+////32 //	HAL_Delay( 100 );
+//
+//static const uint8_t initial_mass_6[24] = {
+//	/*33*/ 0x10, 0x01, 0x00, 0x80, 0xB0, 0x00,/*34*/ 0x11, 0x00,/*35*/ 0x10, 0x02, 0x00,
+//	0x00,0x00,0x00, /*36*/0x11, 0x00,/*37*/ 0x10, 0x03, 0x01, 0x05, 0x21, 0x20,
+//	/*38*/ 0x11, 0x00
+//};
+////39 //	HAL_Delay( 100 );
+//
+//static const uint8_t initial_mass_7[83] = {
+//	/*40*/ 0x10, 0x03, 0x00,0x05,0x21,0x20,/*41*/ 0x11, 0x00,/*42 profile 0*/ 0x10, 0x0C,0x0F,0xFF,	0x00,  0x00,
+//	/*43 profile 1*/ 0x10, 0x0E, 0x0F, 0xFF, 0x00, 0x00,
+//	/*44 profile 2*/ 0x10, 0x10, 0x0F, 0xFF, 0x00, 0x00,
+//	/*45 profile 3*/ 0x10, 0x12, 0x0F, 0xFF, 0x00, 0x00,
+//	/*46 profile 4*/ 0x10, 0x14, 0x0F, 0xFF, 0x00, 0x00,
+//	/*47 profile 5*/ 0x10, 0x16, 0x0F, 0xFF, 0x00, 0x00,
+//	/*48 profile 6*/ 0x10, 0x18, 0x0F, 0xFF, 0x00, 0x00,
+//	/*49 profile 7*/ 0x10, 0x1A, 0x0F, 0xFF, 0x00, 0x00,
+//	/*50*/0x11, 0x00,/*51*/ 0x10, 0x04, 0x0B, 0xA2, 0xE8,0xBA,	/*52*/0x10,0x06, 0xC6,0x6F, 0x5E,0x22,
+//	/*53*/0x10, 0x05, 0x43,0x64,0xC5,0xBB,/*54*/ 0x11, 0x00,/*55*/ 0x62, 0x00,0x00,0x00,0x0B
+//};

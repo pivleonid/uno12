@@ -245,6 +245,9 @@
     <ClCompile Include="InitializationUNO_v1.c">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="Flash_Handler.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stm32f4xx_hal_conf.h">
@@ -560,6 +563,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="InitializationUNO_v1.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Flash_Handler.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

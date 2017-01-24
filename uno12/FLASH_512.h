@@ -82,7 +82,7 @@ void Read_DAta_Bytes_READ(
 /*-----------------------Чтение странички. 256 байт---------------------*/
 void Read_DAta_Bytes_READ4B(
 	    					uint32_t address,         /*!< [in] адрес в памяти */
-							uint8_t Flash_data_out[] /*!< [in] Flash_data_out[n] */
+							uint8_t Flash_data_out[256] /*!< [in] Flash_data_out[n] */
 							);
 /*--- очистка сектора = 16 страниц время операции 43 - 200 мс----------*/
 void Sector_Erase_SE4B(uint32_t SectorAddr);
