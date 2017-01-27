@@ -181,13 +181,7 @@ void FLASH_Write_Status_Configuration_Register_WRSR(uint8_t status_reg, uint8_t 
 void Read_DAta_Bytes_READ(uint32_t address, uint8_t Flash_data_out[], int n )
 {
 	Check_write_FLASH();
-	uint8_t adder = 0x03;
-	uint8_t data[4];
-	data[0] = adder;
-	data[1] = address;
-	data[2] = address >> 8;
-	data[3] = address >> 16;
-	data[4] = address >> 24;
+	uint8_t data[5] = {0x03, address >> 24, address >> 16, address >> 8, address}; /*адрес должен быть трехбайтный, может и так сработает?*/
 	Chip_Select_Down
 	HAL_SPI_Transmit(&hspi5, data, 5, 1);
 	HAL_SPI_Receive(&hspi5, Flash_data_out, n, 1);

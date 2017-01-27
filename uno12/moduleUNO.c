@@ -34,7 +34,14 @@ extern "C" {
 	{
 		HAL_Init();
 		SystemClock_Config();
-		uno_open(0);
+
+		HAL_Delay(1000);
+		while (uno_open(0) != 0)
+		{
+			uno_close(0);
+			uno_open(0);
+		}
+	
 	//	Initial_Led();
 
 
@@ -52,6 +59,8 @@ extern "C" {
 		};
 		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);*/
 		//LED_GREEN_ON
+
+		HAL_Delay(1000);
 		usual_freq(1000, 0);
 		usual_freq(1500, 0);
 	

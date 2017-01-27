@@ -322,7 +322,6 @@ int uno_open(uint8_t uno_index)
 		GPIO_PIN = GPIO_PIN_15;
 		Initial_Chip_Select_SPI_6();
 	}
-
 	SPI_UNO_Transmit(initial_mass_0, 2);
     HAL_Delay(100);
 	SPI_UNO_Transmit( initial_mass_1,     2 );
@@ -388,7 +387,7 @@ int uno_open(uint8_t uno_index)
 		HAL_SPI_Transmit(&hspix, &Read_reg_POW, 1, 1); 
 		HAL_SPI_Receive(&hspix, &uno_answer, 1, 1);
 		Chip_Select_Up 
-		uno_answer *= 0x01; 
+		uno_answer = uno_answer & 0x01;
 		if(uno_answer != 0x01)
 		return ERR_UNO_Pow;
 		return UNO_OK;

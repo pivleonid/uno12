@@ -248,6 +248,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="debug.mak" />
     <None Include="Makefile" />
     <None Include="release.mak" />
