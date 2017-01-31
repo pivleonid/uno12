@@ -10,14 +10,21 @@
 #define presel_container_not_full	 -1
 #define presel_container_full	     -2
 #define error_data					 -3	
+#define sector_full					 0xF0
 #define MaxSectorSize				 16383
 #define SectorDataSize				 4096
+/* 22 * 186 = 4092; max = 4095 => 1 байт = quantity_data_sector; посылка окончания 0x44, 0x44 уместится*/
+#define MaXSectorCommand 186
 #ifndef NULL
 #define NULL  0
 #endif
 /*types=============================================================================================================*/
 /*prototypes========================================================================================================*/
 int16_t save_page_data(uint8_t *data_in);
+
+static void Read_sector_bytes(uint8_t* sector_data, uint16_t sector);
+static uint8_t Sector_is_Full(uint8_t* sector_data);
+static void Sector_write(uint8_t* sector_data, uint8_t* data_in, uint16_t sector);
 /*variables=========================================================================================================*/
 #pragma pack(push, 1)
 typedef struct  _PRES_KEY
@@ -51,14 +58,63 @@ int16_t save_page_data(uint8_t *data_in);
 
 void setdata(uint8_t* data)
 {
-	preselector_pack_t *pres = data;
-	/*проверяем ключ*/
-	memcmp();
-	/*проверяем нет совпадений- заносим новую запись*/
-	/* есть совпадения - переписываем */
+	static uint16_t sector = 0;
+	uint8_t sector_data[SectorDataSize];
+	memset(sector_data, 0, sizeof(sector_data));
+	Read_sector_bytes(sector_data, sector);
+	while (Sector_is_Full(sector_data) == sector_full)
+			Read_sector_bytes(sector_data, ++sector);
+	/*Очистка сектора*/
+	Sector_Erase_SE4B((sector * SectorDataSize));
+	Sector_write(sector_data, data, sector);
+	/*Проверка*/
+	Read_sector_bytes(sector_data, sector);
+	
 }
-/*Поиск индекса с заполнением окончания записи 0х44 0х44 */
-uint8_t* Search_data(uint8_t* sector_data)
+/*Считываем данные с сектора*/
+static void Read_sector_bytes(uint8_t* sector_data, uint16_t sector) 
+{
+	int i;
+	uint16_t sector_data_inc = 0;	/*Для заполнения массива sector data*/
+	uint32_t sector_adder_locate = sector * SectorDataSize;
+	Read_DAta_Bytes_READ4B(sector_adder_locate, sector_data, 4096); 
+}
+/*Ежели сектор пуст sector_data[0] = 0xFF заменяю на нуль;
+  ежели значение больше, чем MaXSectorCommand return(sector_full) = 0xF0*/
+static uint8_t Sector_is_Full(uint8_t* sector_data)
+{
+	/*По умолчанию sector = 0xFF*/
+	if (sector_data[0] == 0xFF)
+		sector_data[0] = 0;
+	if (sector_data[0] > MaXSectorCommand)
+		return sector_full;
+	return sector_data[0];
+}
+/*===---Посекторная запись---===*/
+static void Sector_write(uint8_t* sector_data, uint8_t* data_in, uint16_t sector)
+{
+	int i;
+	uint16_t sector_data_inc = 0;	/*Для заполнения массива sector data*/
+	uint32_t sector_adder_locate = sector * SectorDataSize;
+	/*		количество записей хранится в нулевом байте массива, домножая на 22 получаю индекс конца записи, +1 чтобы не затереть 0 массив		*/
+	uint8_t quantity_data_sector = (sector_data[0] * 22)+1;
+	/*		Заполнение данных		*/
+	memcpy(&sector_data[quantity_data_sector], data_in, 22);
+	sector_data[0] = sector_data[0]+1;
+	/*		Запись данных во флэш	*/
+	sector_adder_locate = sector * SectorDataSize;
+	for (i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
+	{
+		FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
+	}
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////
+/*Поиск индекса с подготовкой для новой записи 0х44 0х44 */
+static uint8_t* New_Search_data(uint8_t* sector_data)
 {
 	// uint8_t* null_p = NULL;
 	for (int i = 0; i < SectorDataSize; i++) {
@@ -72,12 +128,24 @@ uint8_t* Search_data(uint8_t* sector_data)
 	}
 	return NULL;
 }
+/*Поиск индекса с заполнением окончания записи 0х44 0х44 */
+static uint8_t* Search_data(uint8_t* sector_data)
+{
+	// uint8_t* null_p = NULL;
+	for (int i = 0; i < SectorDataSize; i++) {
+		if (sector_data[i] == 0x44)
+			if (sector_data[i + 1] == 0x44)
+				return &sector_data[i];
+	}
+	return NULL;
+}
 //Возвращает номер сектора
-int8_t Sector_num(uint8_t* sector_data, int16_t sector)
+static int8_t Sector_num(uint8_t* sector_data, int16_t sector)
 {
 	for (int i = 0; i < SectorDataSize; i++) {
 		if (sector_data[i] == 0x44)
 			if (sector_data[i + 1] == 0x44)
+				/* Влезут ли новые данные? */
 					if (((i + 23) * sizeof(&sector_data[0])) > sizeof(sector_data)){
 						return ++sector;
 					return sector;
@@ -87,7 +155,7 @@ int8_t Sector_num(uint8_t* sector_data, int16_t sector)
 }
 int16_t save_page_data(uint8_t *data_in)
 {									//adder max = 0x3FFFF00
-	static int16_t sector = 0;	//max       = 0x3FFF
+	static uint16_t sector = 0;	//max       = 0x3FFF
 	int i;
 	uint16_t sector_data_inc; /*Для заполнения массива sector data*/
 	uint8_t sector_data[SectorDataSize];
@@ -115,10 +183,10 @@ int16_t save_page_data(uint8_t *data_in)
 		Sector_Erase_SE4B((sector * SectorDataSize));
 	}
 	/*Проверка данных*/
-	if (Search_data(sector_data) == NULL)
+	if (New_Search_data(sector_data) == NULL)
 		return (error_data);
 	/*Заполнение данных*/
-	memcpy(Search_data(sector_data), data_in, 22);
+	memcpy(New_Search_data(sector_data), data_in, 22);
 	/*Запись данных во флэш*/
 	sector_adder_locate = sector * SectorDataSize;
 	sector_data_inc = 0;
@@ -126,7 +194,34 @@ int16_t save_page_data(uint8_t *data_in)
 		FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]); //запись во флэш
 }
 
+/*====Считывание общего количества данных====*/
+uint8_t GetDataSize(void) 
+{
+	static uint16_t sector = 0;	//max       = 0x3FFF
+	int i;						//счетчик заполнения сектора
+	uint16_t sector_data_inc;	/*Для заполнения массива sector data*/
+	uint8_t sector_data[SectorDataSize];
+	uint8_t 	num_data; //Количество записей в секторе
+	uint32_t sector_adder_locate = sector * SectorDataSize;
+	/*Считываем данные с сектора*/
+	for (i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
+		Read_DAta_Bytes_READ4B(sector_adder_locate, &sector_data[sector_data_inc]);
+	if (Search_data(sector_data) == NULL)
+		return 0; //Записей нет
+	 num_data = (sizeof(Search_data(sector_data))) / 22;
+	//
 
+	while (Search_data(sector_data) != NULL)
+	{
+		sector++;
+		sector_adder_locate = sector * SectorDataSize;
+		for (i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
+			Read_DAta_Bytes_READ4B(sector_adder_locate, &sector_data[sector_data_inc]);
+		num_data = num_data + (sizeof(Search_data(sector_data))) / 22;
+
+	}
+	return num_data;
+}
 
 
 //#pragma pack(push, 1)

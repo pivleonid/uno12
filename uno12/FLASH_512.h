@@ -12,17 +12,17 @@ extern "C" {
  *  модуля SPI, Чтение ID идентификаторов, статусных регистров, операции чтения/записи
  *  и очистки памяти.
  *
- * void FLASH_SPI_open(void);void FLASH_SPI_close(void); -> настройка и деинициализация 
- * SPI модуля соответственно
+ *  void FLASH_SPI_open(void);void FLASH_SPI_close(void); -> настройка и деинициализация 
+ *  SPI модуля соответственно
  *
- * void FLASH_RDID(void); void FLASH_RES(void); void FLASH_REMS(void); -> эти функции
- * используются для проверки ID флэшки.
+ *  void FLASH_RDID(void); void FLASH_RES(void); void FLASH_REMS(void); -> эти функции
+ *  используются для проверки ID флэшки.
  *
- * uint8_t FLASH_Read_Status_Register_RDSR(void);
+ *  uint8_t FLASH_Read_Status_Register_RDSR(void);
  *
- * uint8_t FLASH_Read_Configuration_Register_RDCR(void);
+ *  uint8_t FLASH_Read_Configuration_Register_RDCR(void);
  *
- * FLASH_Write_Status_Configuration_Register_WRSR
+ *  FLASH_Write_Status_Configuration_Register_WRSR
  */
 /*includes==========================================================================================================*/
 #include "math.h"
@@ -72,17 +72,12 @@ void FLASH_Write_Status_Configuration_Register_WRSR(
 													uint8_t status_reg, /*!< [in] статусный регист */
 													uint8_t config_reg  /*!< [in] конфигурационный регистр */
 												   );
-
-/*------------------Чтение n символов - не работает---------------------------------*/
-void Read_DAta_Bytes_READ(
-						uint32_t address,         /*!< [in] адрес в памяти */
-						uint8_t Flash_data_out[], /*!< [in] Flash_data_out[n] */
-						int n                     /*!< [in] индекс массива */
-						  );       
-/*-----------------------Чтение странички. 256 байт---------------------*/
+ 
+/*-----------------------Чтение size байт---------------------*/
 void Read_DAta_Bytes_READ4B(
 	    					uint32_t address,         /*!< [in] адрес в памяти */
-							uint8_t Flash_data_out[256] /*!< [in] Flash_data_out[n] */
+							uint8_t* Flash_data_out, /*!< [in] Flash_data_out[n] */
+							uint16_t size
 							);
 /*--- очистка сектора = 16 страниц время операции 43 - 200 мс----------*/
 void Sector_Erase_SE4B(uint32_t SectorAddr);
@@ -91,7 +86,7 @@ void FLASH_Page_Programm_PP(
 							uint32_t address,			/*!< [in] Запись по сектору */
 							uint8_t flash_data_in[256]  /*!< [in] 256 байт данных */
 							);
-
+/*--- очистка сектора = 16 страниц время операции 43 - 200 мс----------*/
 void Chip_Erase_CE(void);
 
 

@@ -61,7 +61,7 @@ static const uint8_t initial_mass_0[2] = {
 	};
 //2 // HAL_Delay( 100 );
 static	const uint8_t initial_mass_1[26] = {
-	/*3*/ 0x02, 0x07,/*4*/ 0x03, 0x00 ,/*5*/ 0x04, 0x00, /*6*/ 0x60, 0x03, 0x80, 0x13,
+	/*3 0x02 0x07*/ 0x02, 0x06,/*4*/ 0x03, 0x00 ,/*5*/ 0x04, 0x00, /*6*/ 0x60, 0x03, 0x80, 0x13,
 	 /*7*/ 0x60, 0x03, 0x80, 0x12,/*8*/ 0x60, 0x00, 0x00,0x00, /*9*/0x60, 0x00, 0x00,0x01,
 	/*10*/ 0x05, 0x01, /*11*/ 0x15, 0x00
 	};
@@ -743,14 +743,56 @@ int uno_read_profile_fast(uint8_t uno_index, uint8_t dds_profile)
 \sa
 */
 /*=============================================================================================================*/
-uint64_t gcd(uint64_t a, uint64_t b) {
+uint64_t gcd(uint64_t a_gcd, uint64_t b_gcd) {
 	uint64_t c;
-	while (b) {
-		c = a % b;
-		a = b;
-		b = c;
+	while (b_gcd) {
+		c = a_gcd % b_gcd;
+		a_gcd = b_gcd;
+		b_gcd = c;
 	}
-	return fabs(a);
+	return fabs(a_gcd); //fabs(a);
+}
+/*=============================================================================================================*/
+uint64_t gcd_r(uint64_t a, uint64_t b) {
+	uint64_t r = 1;
+	if(a>b)
+	while (r != 0) {
+		r = a/b;
+		r = a- b*r;
+		a = b;
+		b = r;
+	}
+	return a; //fabs(a);
+}
+
+uint32_t Nod_f(uint64_t a, uint64_t b)
+{
+	uint64_t t;
+	if(a<b) 
+	{ t = a; a = b; b = t; }
+	while (b != 0) {
+		t = b;
+		b = a%b;
+		a = t;
+	}
+	return a;
+}
+uint64_t NOD_f1(uint64_t n1, uint64_t n2)
+{
+	uint64_t div;
+	if (n1 == n2)   // если числа равны, НОД найден
+		return n1;
+	uint64_t d = n1 - n2; // Находим разность чисел
+	if (d < 0) // если разность отрицательная,
+	{
+		d = -d;     // меняем знак
+		div = NOD_f1(n1, d); // вызываем функцию NOD() для двух наименьших чисел
+	}
+	else      // если разность n1-n2 положительная
+	{
+		div = NOD_f1(n2, d); // вызываем функцию NOD() для двух наименьших чисел
+	}
+	return div;
 }
 /*=============================================================================================================*/
 /*!  \brief
@@ -762,18 +804,20 @@ uint64_t gcd(uint64_t a, uint64_t b) {
 /*=============================================================================================================*/
 void usual_freq(float freq, uint8_t gain)
 {
+	uint64_t Nod;
 	uint8_t n_pow = func_n_pow(freq);
 	float fr_vco2 = freq * powf(2, n_pow);
 	uint8_t K = Search_K(fr_vco2);
 	uint32_t fr_dds = 1200 - fr_vco2 / K;
 
-	uint32_t dds_a, dds_b;
+	uint64_t dds_a, dds_b;
 	uint64_t a = 24000000000000;
 	uint64_t b = fr_dds *1e10;
-	uint32_t N = a / gcd(a, b);
-	uint32_t M = b / gcd(a, b);
-	uint32_t ftw = (M*(4294967296)) / N;
-	int Y = (2 ^ 32)* M - ftw*N;
+	Nod = NOD_f1(a, b);
+	uint64_t N = a / Nod;
+	uint64_t M = b / Nod;
+	uint64_t ftw = M * 4294967296 / N;
+	uint64_t Y = 4294967296* M - ftw*N;
 	if (Y == 0)
 	{
 		dds_a = N;
@@ -781,9 +825,12 @@ void usual_freq(float freq, uint8_t gain)
 	}
 	else
 	{
-		dds_a = Y / gcd(N, Y);
-		dds_b = N / gcd(N, Y);
+		Nod = NOD_f1(N, Y);
+		dds_a = Y / Nod;
+		dds_b = N / Nod;
 	}
+	float fr_dds_1 =  (ftw + dds_a/dds_b)*2400;
+	fr_dds_1 = fr_dds_1 / 4294967296;
 	uint8_t data_ftw[6]   = { 0x10, 0x04, (uint8_t)(ftw >> 24), (uint8_t)(ftw >> 16),
 						    (uint8_t)(ftw >> 8), (uint8_t)ftw };
 	uint8_t data_dds_b[6] = {0x10,0x05,(uint8_t)(dds_b >> 24), (uint8_t)(dds_b >> 16),
@@ -794,9 +841,13 @@ void usual_freq(float freq, uint8_t gain)
 	//uint8_t data_dB[2]    = { 0x04, gain };
 	uint8_t data_K[5]     = { 0x62,0,0,0, K };
 	SPI_UNO_Transmit(data_ftw, 6);
+	HAL_Delay(1);
 	SPI_UNO_Transmit(data_dds_b, 6);
+	HAL_Delay(1);
 	SPI_UNO_Transmit(data_dds_a, 6);
+	HAL_Delay(1);
 	SPI_UNO_Transmit(data_npow, 2);
+	HAL_Delay(1);
 	//SPI_UNO_Transmit(data_dB, 2);
 	SPI_UNO_Transmit(data_K, 5);
 }

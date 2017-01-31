@@ -5,7 +5,10 @@
 
 #include "InitializationUNO_v1.h"
 
-//#include "FLASH_512.h"
+#include "FLASH_512.h"
+#include "Flash_Handler.h"
+
+
 #include "string.h"
 #include "Flash_Handler.h"
 #ifdef __cplusplus
@@ -35,39 +38,42 @@ extern "C" {
 		HAL_Init();
 		SystemClock_Config();
 
-		HAL_Delay(1000);
-		while (uno_open(0) != 0)
-		{
-			uno_close(0);
-			uno_open(0);
-		}
-	
-	//	Initial_Led();
+		
+		Initial_Led();
 
 
-		//FLASH_SPI_close();
-		//FLASH_SPI_open();
-		//uint8_t data_in[22] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
-		//int i = 0;
+		FLASH_SPI_close();
+		FLASH_SPI_open();
+		
 
-		//for(i = 0 ; i < 12; i++)
-		//save_page_data_keyBody(data_in);
+		while (Flash_ID_Check()) //while (0)  ЛОЖь
+			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);	
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+		LED_GREEN_ON
+			uint8_t data_flash[512];
+		for (int i = 0; i < 512; i++)
+			data_flash[i] = i;
+		uint8_t data_reseive[512];
+		Sector_Erase_SE4B(0);
 
-		/*while (Flash_ID_Check()) {
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);
-			
-		};
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);*/
-		//LED_GREEN_ON
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
+			setdata(data_flash);
 
-		HAL_Delay(1000);
-		usual_freq(1000, 0);
-		usual_freq(1500, 0);
-	
 		for (;;)
 		{
-			//save_page_data_1(data_in);
-			//save_page_data(data_in);
+			 
 		}
 
 	}
