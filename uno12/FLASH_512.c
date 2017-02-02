@@ -117,6 +117,9 @@ void FLASH_SPI_close(void)
 static void Write_Enable_WREN(void)
 {
 	uint8_t adder = 0x06;
+	Chip_Select_Down
+	HAL_SPI_Transmit(&hspi5, &adder, sizeof(adder), 1);
+	Chip_Select_Up
 	while ((FLASH_Read_Status_Register_RDSR() & 0x02) != 0x02); //WEL = 1 выход из while
 	{
 		Chip_Select_Down
@@ -145,18 +148,19 @@ static void Write_Erase_Complete(void) {
 /*=============================================================================================================*/
 void FLASH_Page_Programm_PP(uint32_t address, uint8_t flash_data_in[256])
 {
-	Write_Enable_WREN();
 	uint8_t data_adder[5];
 	data_adder[0] = 0x12;
 	data_adder[1] = address >> 24;
 	data_adder[2] = address >> 16;
 	data_adder[3] = address >> 8;
 	data_adder[4] = address;
+	Write_Enable_WREN();
 	Chip_Select_Down
-		HAL_SPI_Transmit(&hspi5, data_adder, 5, 1);
+	HAL_SPI_Transmit(&hspi5, data_adder, 5, 1);
 	HAL_SPI_Transmit(&hspi5, flash_data_in, 256, 1);
 	Chip_Select_Up
-		Write_Erase_Complete();
+	Write_Erase_Complete();
+	FLASH_Read_Status_Register_RDSR();
 }
 /*=============================================================================================================*/
 /*!  \brief Чтение size байт (max 65535), начиная с указанного адреса address
@@ -201,7 +205,9 @@ void Sector_Erase_SE4B(uint32_t SectorAddr)
 	Chip_Select_Down
 	HAL_SPI_Transmit(&hspi5, data, 5, 1);
 	Chip_Select_Up
+		HAL_Delay(45);
 	Write_Erase_Complete();
+	FLASH_Read_Status_Register_RDSR();
 }
 /*=============================================================================================================*/
 /*!  \brief Очистка блока

@@ -55,7 +55,7 @@ int outputState;
 /*----Обработка ошибок--*/
 uint8_t uno_answer;
 static const uint8_t Read_reg_POW = 0x81;
-/*константные массивы настройки синтезатора - для записей значений в постоянную память*/
+/*Массивы для настройки синтезатора в нормальном режиме*/
 static const uint8_t initial_mass_0[2] = {
 	/*1*/ 0x01, 0x01
 	};
@@ -100,6 +100,59 @@ static const uint8_t initial_mass_7[41] = {
 	/*50*/0x11, 0x00,/*51*/ 0x10, 0x04, 0x0B, 0xA2, 0xE8,0xBA,	/*52*/0x10,0x06, 0xC6,0x6F, 0x5E,0x22,
 	/*53*/0x10, 0x05, 0x43,0x64,0xC5,0xBB,/*54*/ 0x11, 0x00,/*55*/ 0x62, 0x00,0x00,0x00,0x0B
 	};	
+/*===========================================================================================================*/
+/*Массивы для настройки синтезатора в быстром режиме*/
+static const uint8_t initial_mass_fast_0[2] = {
+	/*1*/ 0x01, 0x01
+};
+//2 // HAL_Delay( 100 );
+static	const uint8_t initial_mass_fast_1[26] = {
+	/*3*/ 0x02, 0x07,/*4*/ 0x03, 0x00 ,/*5*/ 0x04, 0x00, /*6*/ 0x60, 0x03, 0x80, 0x13,
+	/*7*/ 0x60, 0x03, 0x80, 0x12,/*8*/ 0x60, 0x00, 0x00,0x00, /*9*/0x60, 0x00, 0x00,0x01,
+	/*10*/ 0x05, 0x01, /*11*/ 0x15, 0x00
+};
+
+//12 //	HAL_Delay( 100 );
+
+static const uint8_t initial_mass_fast_2[4] = {
+	/*13*/ 0x05, 0x03, 	/*14*/ 0x15, 0x00
+};
+//15 //	HAL_Delay( 10 );
+
+static const uint8_t initial_mass_fast_3[4] = {
+	/*16*/ 0x05, 0x01, 	/*17*/ 0x15, 0x00
+};
+//18 //	HAL_Delay( 10 );
+
+static const uint8_t initial_mass_fast_4[14] = {
+	/*19*/ 0x05, 0x05, /*20-24; 25*/ 0x10, 0x00, 0x00, 0x01, 0x01, 0x02,/*26*/ 0x11, 0x00,
+	/*27*/0x05, 0x00,/*28*/ 0x15, 0x00 };
+//29 //	HAL_Delay( 10 );
+
+static const uint8_t initial_mass_fast_5[4] = {
+	/*30*/ 0x05, 0x01, 	/*31*/ 0x15, 0x00
+};
+//32 //	HAL_Delay( 100 );
+
+static const uint8_t initial_mass_fast_6[24] = {
+	/*33*/ 0x10, 0x01, 0x00, 0x80, 0xB0, 0x00,/*34*/ 0x11, 0x00,/*35*/ 0x10, 0x02, 0x00,
+	0x00,0x00,0x00, /*36*/0x11, 0x00,/*37*/ 0x10, 0x03, 0x01, 0x05, 0x21, 0x20,
+	/*38*/ 0x11, 0x00
+};
+//39 //	HAL_Delay( 100 );
+
+static const uint8_t initial_mass_fast_7[83] = {
+	/*40*/ 0x10, 0x03, 0x00,0x05,0x21,0x20,/*41*/ 0x11, 0x00,/*42 profile 0*/ 0x10, 0x0C,0x0F,0xFF,	0x00,  0x00,
+	/*43 profile 1*/ 0x10, 0x0E, 0x0F, 0xFF, 0x00, 0x00,
+	/*44 profile 2*/ 0x10, 0x10, 0x0F, 0xFF, 0x00, 0x00,
+	/*45 profile 3*/ 0x10, 0x12, 0x0F, 0xFF, 0x00, 0x00,
+	/*46 profile 4*/ 0x10, 0x14, 0x0F, 0xFF, 0x00, 0x00,
+	/*47 profile 5*/ 0x10, 0x16, 0x0F, 0xFF, 0x00, 0x00,
+	/*48 profile 6*/ 0x10, 0x18, 0x0F, 0xFF, 0x00, 0x00,
+	/*49 profile 7*/ 0x10, 0x1A, 0x0F, 0xFF, 0x00, 0x00,
+	/*50*/0x11, 0x00,/*51*/ 0x10, 0x04, 0x0B, 0xA2, 0xE8,0xBA,	/*52*/0x10,0x06, 0xC6,0x6F, 0x5E,0x22,
+	/*53*/0x10, 0x05, 0x43,0x64,0xC5,0xBB,/*54*/ 0x11, 0x00,/*55*/ 0x62, 0x00,0x00,0x00,0x0B
+};
 /* выключение синтезатора*/
 const uint8_t uno_off[2] = { 0x01, 0x00 };
 
@@ -303,7 +356,7 @@ static int SPI_UNO_Transmit(  uint8_t* data, uint16_t size) {
 	 \sa 
 */
 /*=============================================================================================================*/
-int uno_open(uint8_t uno_index)
+int uno_open_normal(uint8_t uno_index)
 {
 	/*выбор синтезатора*/
 	if (uno_index == 0)
@@ -392,6 +445,108 @@ int uno_open(uint8_t uno_index)
 		return ERR_UNO_Pow;
 		return UNO_OK;
 }
+/*=============================================================================================================*/
+/*!  \brief
+Быстрый режим с профилями частоты
+\return int
+\retval  ERR_UNO_Pow = -1 синтезатор не включен; UNO_OK = 0;
+\sa
+*/
+/*=============================================================================================================*/
+int uno_open_fast(uint8_t uno_index)
+{
+	/*выбор синтезатора*/
+	if (uno_index == 0)
+	{
+		SPI_5_open();
+		hspix = hspi5;
+		GPIO_X = GPIOF;
+		GPIO_PIN = GPIO_PIN_6;
+		Initial_Chip_Select_SPI_5();
+	}
+	if (uno_index == 1)
+	{
+		SPI_6_open();
+		hspix = hspi6;
+		GPIO_X = GPIOG;
+		GPIO_PIN = GPIO_PIN_15;
+		Initial_Chip_Select_SPI_6();
+	}
+
+	SPI_UNO_Transmit(initial_mass_fast_0, 2);
+	HAL_Delay(100);
+	SPI_UNO_Transmit(initial_mass_fast_1, 2);
+	SPI_UNO_Transmit(&initial_mass_fast_1[2], 2);
+	SPI_UNO_Transmit(&initial_mass_fast_1[4], 2);
+	SPI_UNO_Transmit(&initial_mass_fast_1[6], 4);
+	SPI_UNO_Transmit(&initial_mass_fast_1[10], 4);
+	SPI_UNO_Transmit(&initial_mass_fast_1[14], 4);
+	SPI_UNO_Transmit(&initial_mass_fast_1[18], 4);
+	SPI_UNO_Transmit(&initial_mass_fast_1[22], 2);
+	SPI_UNO_Transmit(&initial_mass_fast_1[24], 2);
+	HAL_Delay(100);
+	SPI_UNO_Transmit(initial_mass_fast_2, 2);
+	SPI_UNO_Transmit(&initial_mass_fast_2[2], 2);
+	HAL_Delay(10);
+	SPI_UNO_Transmit(initial_mass_fast_3, 2);
+	SPI_UNO_Transmit(&initial_mass_fast_3[2], 2);
+	HAL_Delay(10);
+	SPI_UNO_Transmit(initial_mass_fast_4, 2);
+
+
+	/*20-24 пункт в настройках*/
+	static uint8_t adder_0[2] = { 0x15, 0 };
+	SPI_UNO_Transmit(adder_0, 2);
+	HAL_Delay(10);
+	static uint8_t adder_1[2] = { 0x05, 0x01 };
+	SPI_UNO_Transmit(adder_1, 2);
+	static uint8_t adder_2[2] = { 0x15, 0x00 };
+	SPI_UNO_Transmit(adder_2, 2);
+	HAL_Delay(10);
+
+	SPI_UNO_Transmit(&initial_mass_fast_4[2], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_4[8], 2);
+	SPI_UNO_Transmit(&initial_mass_fast_4[10], 2);
+	SPI_UNO_Transmit(&initial_mass_fast_4[12], 2);
+	HAL_Delay(10);
+	SPI_UNO_Transmit(initial_mass_fast_5, 2);
+	SPI_UNO_Transmit(&initial_mass_fast_5[2], 2);
+	HAL_Delay(100);
+	SPI_UNO_Transmit(initial_mass_fast_6, 6);
+	SPI_UNO_Transmit(&initial_mass_fast_6[6], 2);
+	SPI_UNO_Transmit(&initial_mass_fast_6[8], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_6[14], 2);
+	SPI_UNO_Transmit(&initial_mass_fast_6[16], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_6[22], 2);
+	HAL_Delay(100);
+	SPI_UNO_Transmit(initial_mass_fast_7, 6);
+	SPI_UNO_Transmit(&initial_mass_fast_7[6], 2);
+	SPI_UNO_Transmit(&initial_mass_fast_7[8], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_7[14], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_7[20], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_7[26], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_7[32], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_7[38], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_7[44], 6);
+	SPI_UNO_Transmit(&initial_mass_fast_7[50], 6);
+	/*SPI_UNO_Transmit( &initial_mass_7[56], 2);
+	SPI_UNO_Transmit( &initial_mass_7[58], 6);
+	SPI_UNO_Transmit( &initial_mass_7[64], 6);
+	SPI_UNO_Transmit( &initial_mass_7[70], 6);*/
+	uint8_t mass[6] = { 0x10, 0x0B, 0x0B, 0xA2, 0xE8, 0xBA };
+	SPI_UNO_Transmit(mass, 6);
+	SPI_UNO_Transmit(&initial_mass_fast_7[76], 2);
+	SPI_UNO_Transmit(&initial_mass_fast_7[78], 5);
+	HAL_Delay(10);
+	Chip_Select_Down
+		HAL_SPI_Transmit(&hspix, &Read_reg_POW, 1, 1);
+	HAL_SPI_Receive(&hspix, &uno_answer, 1, 1);
+	Chip_Select_Up
+		uno_answer *= 0x01;
+	if (uno_answer != 0x01)
+		return ERR_UNO_Pow;
+	return UNO_OK;
+}
 //--Выключение синтезатора--//
 /*--uno_index = 0 или 1--*/
 /*=============================================================================================================*/
@@ -434,157 +589,7 @@ int uno_close (uint8_t uno_index)
 	}
 	return (outputState);
 }
-/*=============================================================================================================*/
-/*!  \brief 
- * статическая внутренняя функция
-     \return int
-     \retval n_pow
-     \sa 
-*/
-/*=============================================================================================================*/
-static uint8_t func_n_pow(float fr_out)
-{ 
-	uint8_t n_pow;
-	/*поиск n_pow показатель степени делител§; fr_out частота на выходе uno*/
-	if (fr_out > 6070) n_pow = 0;
-	else if (fr_out > 3035) n_pow = 1;
-	else if (fr_out > 1517.5) n_pow = 2;
-	else if (fr_out > 758.75) n_pow = 3;
-	else if (fr_out > 379.375) n_pow = 4;
-	else if (fr_out > 189.6875) n_pow = 5;
-	else  n_pow = 6;
-	return n_pow;
-}
-/*=============================================================================================================*/
-/*!  \brief 
-  * статическая внутренняя функция, возвращает коэф. усиления
-     \return int
-     \retval K
-     \sa 
-*/
-/*=============================================================================================================*/
-static uint8_t Search_K(float fr_vco2)
-{
-	uint8_t K;
-	if (fr_vco2 < 7020) K = 6; 
-	else if (fr_vco2 < 8190) {
-		K = 7;
-		if ((fr_vco2 >= 7068) && (fr_vco2 <= 7080)) K = 6;
-		if ((fr_vco2 >= 8030) && (fr_vco2 <= 8062)) K = 8;    
-	}
-	else if (fr_vco2 < 9360) {
-		K = 8;
-		if ((fr_vco2 >= 9172) && (fr_vco2 <= 9175)) K = 9;
-		if ((fr_vco2 >= 9181) && (fr_vco2 <= 9184)) K = 9;
-		if ((fr_vco2 >= 9190) && (fr_vco2 <= 9220)) K = 9;
-	}
-	else if (fr_vco2 < 10530) {
-		K = 9;
-		if ((fr_vco2 >= 9390) && (fr_vco2 <= 9393)) K = 8;
-		if ((fr_vco2 >= 9435) && (fr_vco2 <= 9464)) K = 8;
-		if ((fr_vco2 >= 10315) && (fr_vco2 <= 10360)) K = 10;
-		if ((fr_vco2 >= 10366) && (fr_vco2 <= 10370)) K = 10;
-	}
-	else if (fr_vco2 < 11700) {
-		K = 10;
-		if ((fr_vco2 >= 11019) && (fr_vco2 <= 11022)) K = 11;
-		if ((fr_vco2 >= 11038) && (fr_vco2 <= 11042)) K = 11;
-		if ((fr_vco2 >= 11057) && (fr_vco2 <= 11060)) K = 11;
-		if ((fr_vco2 >= 11465) && (fr_vco2 <= 11469)) K = 11;
-		if ((fr_vco2 >= 11476) && (fr_vco2 <= 11480)) K = 11;
-		if ((fr_vco2 >= 11485) && (fr_vco2 <= 11512)) K = 11;
-		if ((fr_vco2 >= 11519) && (fr_vco2 <= 11521)) K = 11;
-		if ((fr_vco2 >= 11528) && (fr_vco2 <= 11531)) K = 11;
-		if ((fr_vco2 >= 11545) && (fr_vco2 <= 11549)) K = 11;
-		if ((fr_vco2 >= 11650) && (fr_vco2 <= 11687)) K = 11;
-	}
-	else if (fr_vco2 < 12870) {
-		K = 11;
-		if ((fr_vco2 >= 12050) && (fr_vco2 <= 12096)) K = 12;
-		if ((fr_vco2 >= 12098) && (fr_vco2 <= 12124)) K = 12;
-		if ((fr_vco2 >= 12142) && (fr_vco2 <= 12187)) K = 12;
-		if ((fr_vco2 >= 12372) && (fr_vco2 <= 12378)) K = 12;
-		if ((fr_vco2 >= 12584) && (fr_vco2 <= 12588)) K = 12;
-		if ((fr_vco2 >= 12612) && (fr_vco2 <= 12615)) K = 12;
-		if ((fr_vco2 >= 12635) && (fr_vco2 <= 12665)) K = 12;
-		if ((fr_vco2 >= 12670) && (fr_vco2 <= 12684)) K = 12;
-		if ((fr_vco2 >= 12700) && (fr_vco2 <= 12703)) K = 12;
-		if ((fr_vco2 >= 12812) && (fr_vco2 <= 12856)) K = 12;
-	}
-	else {
-		K = 12;
-		if ((fr_vco2 >= 12958)&&(fr_vco2 <= 12856)) K = 11;
-	}
-        
-	return K;
-}
-//Заполнение массива данными
-static void FillingUnoData_0(uint32_t ftw)
-{
-	UnoData_0[0] = 0x10;
-	UnoData_0[1] = 0x0B;
-	UnoData_0[2] = (uint8_t)(ftw >> 24);
-	UnoData_0[3] = (uint8_t)(ftw >> 16);
-	UnoData_0[4] = (uint8_t)(ftw >> 8);
-	UnoData_0[5] = (uint8_t)(ftw);
-}
-static void FillingUnoData_1(uint8_t n_pow)
-{
-	UnoData_1[0] = 0x03;
-	UnoData_1[1] = (0x00 | n_pow);
-}
-static void FillingUnoData_2(uint8_t gain)
-{
-	UnoData_2[0] = 0x04;
-	UnoData_2[1] = gain;
-}
-static void FillingUnoData_3(uint8_t K)
-{
-	UnoData_3[0] = 0x62;
-	UnoData_3[1] = 0;
-	UnoData_3[2] = 0;
-	UnoData_3[3] = 0;
-	UnoData_3[4] = K;
-}
-/*=============================================================================================================*/
-/*!  \brief
-freq, - желаемая частота на выходе синтезатора
-gain - желаемое усиление или амплитуда на выходе синтезатора
 
-\return int
-\retval UNO_OK
-\sa
-*/
-/*=============================================================================================================*/
-void calculate_uno(float freq, uint8_t gain)
-{
-	uint8_t n_pow = func_n_pow(freq);
-	float fr_vco2 = freq * powf(2, n_pow);
-	uint8_t K = Search_K(fr_vco2);
-	float fr_dds = 1200 - fr_vco2 / K;
-	uint32_t ftw = (uint32_t)(roundf(fr_dds*powf(2, 32) / 2400));
-	FillingUnoData_0(ftw);
-	FillingUnoData_1(n_pow);
-	FillingUnoData_2(gain);
-	FillingUnoData_3(K);
-}
-/*=============================================================================================================*/
-/*!  \brief
-uno_index, - переменная идентификатор конкретного синтезатора 1 или 2
-
-\return int
-\retval UNO_OK
-\sa
-*/
-/*=============================================================================================================*/
-void transmit_uno(uint8_t uno_index, uint8_t* UnoData_0, uint8_t* UnoData_1, uint8_t* UnoData_2, uint8_t* UnoData_3)
-{
-	UNOindex(uno_index);
-	SPI_UNO_Transmit(UnoData_0, 6);
-	SPI_UNO_Transmit(UnoData_1, 2);
-	SPI_UNO_Transmit(UnoData_2, 2);
-	SPI_UNO_Transmit(UnoData_3, 5);
-}
 /*=============================================================================================================*/
 /*!  \brief 
 	uno_index, - переменная идентификатор конкретного синтезатора 1 или 2
@@ -596,7 +601,7 @@ void transmit_uno(uint8_t uno_index, uint8_t* UnoData_0, uint8_t* UnoData_1, uin
      \sa 
 */
 /*=============================================================================================================*/
-int uno_write (uint8_t uno_index, float freq, uint8_t gain)
+int fast_freq(uint8_t uno_index, float freq, uint8_t gain)
 {
 	float fr_out = freq;
 	uint8_t dB = gain;
@@ -743,17 +748,7 @@ int uno_read_profile_fast(uint8_t uno_index, uint8_t dds_profile)
 \sa
 */
 /*=============================================================================================================*/
-uint64_t gcd(uint64_t a_gcd, uint64_t b_gcd) {
-	uint64_t c;
-	while (b_gcd) {
-		c = a_gcd % b_gcd;
-		a_gcd = b_gcd;
-		b_gcd = c;
-	}
-	return fabs(a_gcd); //fabs(a);
-}
-/*=============================================================================================================*/
-uint64_t gcd_r(uint64_t a, uint64_t b) {
+uint64_t static gcd_r(uint64_t a, uint64_t b) {
 	uint64_t r = 1;
 	if(a>b)
 	while (r != 0) {
@@ -764,36 +759,6 @@ uint64_t gcd_r(uint64_t a, uint64_t b) {
 	}
 	return a; //fabs(a);
 }
-
-uint32_t Nod_f(uint64_t a, uint64_t b)
-{
-	uint64_t t;
-	if(a<b) 
-	{ t = a; a = b; b = t; }
-	while (b != 0) {
-		t = b;
-		b = a%b;
-		a = t;
-	}
-	return a;
-}
-uint64_t NOD_f1(uint64_t n1, uint64_t n2)
-{
-	uint64_t div;
-	if (n1 == n2)   // если числа равны, НОД найден
-		return n1;
-	uint64_t d = n1 - n2; // Находим разность чисел
-	if (d < 0) // если разность отрицательная,
-	{
-		d = -d;     // меняем знак
-		div = NOD_f1(n1, d); // вызываем функцию NOD() для двух наименьших чисел
-	}
-	else      // если разность n1-n2 положительная
-	{
-		div = NOD_f1(n2, d); // вызываем функцию NOD() для двух наименьших чисел
-	}
-	return div;
-}
 /*=============================================================================================================*/
 /*!  \brief
 Нормальный режим работы синтезатора
@@ -802,21 +767,22 @@ uint64_t NOD_f1(uint64_t n1, uint64_t n2)
 \sa
 */
 /*=============================================================================================================*/
-void usual_freq(float freq, uint8_t gain)
+void normal_freq(uint8_t uno_index, float freq, uint8_t gain)
 {
+	UNOindex(uno_index);
 	uint64_t Nod;
 	uint8_t n_pow = func_n_pow(freq);
 	float fr_vco2 = freq * powf(2, n_pow);
 	uint8_t K = Search_K(fr_vco2);
-	uint32_t fr_dds = 1200 - fr_vco2 / K;
+	float fr_dds = 1200 - (fr_vco2 / K);
 
 	uint64_t dds_a, dds_b;
-	uint64_t a = 24000000000000;
-	uint64_t b = fr_dds *1e10;
-	Nod = NOD_f1(a, b);
+	uint64_t a = 2400000000000;
+	uint64_t b = roundf(fr_dds *1e9);
+	Nod = gcd_r(a, b);
 	uint64_t N = a / Nod;
 	uint64_t M = b / Nod;
-	uint64_t ftw = M * 4294967296 / N;
+	uint64_t ftw = roundf( M * 4294967296 / N);
 	uint64_t Y = 4294967296* M - ftw*N;
 	if (Y == 0)
 	{
@@ -825,12 +791,10 @@ void usual_freq(float freq, uint8_t gain)
 	}
 	else
 	{
-		Nod = NOD_f1(N, Y);
+		Nod = gcd_r(N, Y);
 		dds_a = Y / Nod;
 		dds_b = N / Nod;
 	}
-	float fr_dds_1 =  (ftw + dds_a/dds_b)*2400;
-	fr_dds_1 = fr_dds_1 / 4294967296;
 	uint8_t data_ftw[6]   = { 0x10, 0x04, (uint8_t)(ftw >> 24), (uint8_t)(ftw >> 16),
 						    (uint8_t)(ftw >> 8), (uint8_t)ftw };
 	uint8_t data_dds_b[6] = {0x10,0x05,(uint8_t)(dds_b >> 24), (uint8_t)(dds_b >> 16),
@@ -838,7 +802,7 @@ void usual_freq(float freq, uint8_t gain)
 	uint8_t data_dds_a[6] = {0x10, 0x06,(uint8_t)(dds_a >> 24), (uint8_t)(dds_a >> 16),
 							(uint8_t)(dds_a >> 8), (uint8_t)dds_a };
 	uint8_t data_npow[2]  = { 0x03, (0x00 | n_pow) };
-	//uint8_t data_dB[2]    = { 0x04, gain };
+	uint8_t data_dB[2]    = { 0x04, gain };
 	uint8_t data_K[5]     = { 0x62,0,0,0, K };
 	SPI_UNO_Transmit(data_ftw, 6);
 	HAL_Delay(1);
@@ -848,165 +812,162 @@ void usual_freq(float freq, uint8_t gain)
 	HAL_Delay(1);
 	SPI_UNO_Transmit(data_npow, 2);
 	HAL_Delay(1);
-	//SPI_UNO_Transmit(data_dB, 2);
+	SPI_UNO_Transmit(data_dB, 2);
 	SPI_UNO_Transmit(data_K, 5);
 }
-
 /*=============================================================================================================*/
 /*!  \brief
-       Быстрый режим с профилями частоты
+* статическая внутренняя функция
 \return int
-\retval  ERR_UNO_Pow = -1 синтезатор не включен; UNO_OK = 0;
+\retval n_pow
 \sa
 */
 /*=============================================================================================================*/
-//int uno_open(uint8_t uno_index)
-//{
-//	/*выбор синтезатора*/
-//	if (uno_index == 0)
-//	{
-//		SPI_5_open();
-//		hspix = hspi5;
-//		GPIO_X = GPIOF;
-//		GPIO_PIN = GPIO_PIN_6;
-//		Initial_Chip_Select_SPI_5();
-//	}
-//	if (uno_index == 1)
-//	{
-//		SPI_6_open();
-//		hspix = hspi6;
-//		GPIO_X = GPIOG;
-//		GPIO_PIN = GPIO_PIN_15;
-//		Initial_Chip_Select_SPI_6();
-//	}
-//
-//	SPI_UNO_Transmit(initial_mass_0, 2);
-//	HAL_Delay(100);
-//	SPI_UNO_Transmit(initial_mass_1, 2);
-//	SPI_UNO_Transmit(&initial_mass_1[2], 2);
-//	SPI_UNO_Transmit(&initial_mass_1[4], 2);
-//	SPI_UNO_Transmit(&initial_mass_1[6], 4);
-//	SPI_UNO_Transmit(&initial_mass_1[10], 4);
-//	SPI_UNO_Transmit(&initial_mass_1[14], 4);
-//	SPI_UNO_Transmit(&initial_mass_1[18], 4);
-//	SPI_UNO_Transmit(&initial_mass_1[22], 2);
-//	SPI_UNO_Transmit(&initial_mass_1[24], 2);
-//	HAL_Delay(100);
-//	SPI_UNO_Transmit(initial_mass_2, 2);
-//	SPI_UNO_Transmit(&initial_mass_2[2], 2);
-//	HAL_Delay(10);
-//	SPI_UNO_Transmit(initial_mass_3, 2);
-//	SPI_UNO_Transmit(&initial_mass_3[2], 2);
-//	HAL_Delay(10);
-//	SPI_UNO_Transmit(initial_mass_4, 2);
-//
-//
-//	/*20-24 пункт в настройках*/
-//	static uint8_t adder_0[2] = { 0x15, 0 };
-//	SPI_UNO_Transmit(adder_0, 2);
-//	HAL_Delay(10);
-//	static uint8_t adder_1[2] = { 0x05, 0x01 };
-//	SPI_UNO_Transmit(adder_1, 2);
-//	static uint8_t adder_2[2] = { 0x15, 0x00 };
-//	SPI_UNO_Transmit(adder_2, 2);
-//	HAL_Delay(10);
-//
-//	SPI_UNO_Transmit(&initial_mass_4[2], 6);
-//	SPI_UNO_Transmit(&initial_mass_4[8], 2);
-//	SPI_UNO_Transmit(&initial_mass_4[10], 2);
-//	SPI_UNO_Transmit(&initial_mass_4[12], 2);
-//	HAL_Delay(10);
-//	SPI_UNO_Transmit(initial_mass_5, 2);
-//	SPI_UNO_Transmit(&initial_mass_5[2], 2);
-//	HAL_Delay(100);
-//	SPI_UNO_Transmit(initial_mass_6, 6);
-//	SPI_UNO_Transmit(&initial_mass_6[6], 2);
-//	SPI_UNO_Transmit(&initial_mass_6[8], 6);
-//	SPI_UNO_Transmit(&initial_mass_6[14], 2);
-//	SPI_UNO_Transmit(&initial_mass_6[16], 6);
-//	SPI_UNO_Transmit(&initial_mass_6[22], 2);
-//	HAL_Delay(100);
-//	SPI_UNO_Transmit(initial_mass_7, 6);
-//	SPI_UNO_Transmit(&initial_mass_7[6], 2);
-//	SPI_UNO_Transmit(&initial_mass_7[8], 6);
-//	SPI_UNO_Transmit(&initial_mass_7[14], 6);
-//	SPI_UNO_Transmit(&initial_mass_7[20], 6);
-//	SPI_UNO_Transmit(&initial_mass_7[26], 6);
-//	SPI_UNO_Transmit(&initial_mass_7[32], 6);
-//	SPI_UNO_Transmit(&initial_mass_7[38], 6);
-//	SPI_UNO_Transmit(&initial_mass_7[44], 6);
-//	SPI_UNO_Transmit(&initial_mass_7[50], 6);
-//	/*SPI_UNO_Transmit( &initial_mass_7[56], 2);
-//	SPI_UNO_Transmit( &initial_mass_7[58], 6);
-//	SPI_UNO_Transmit( &initial_mass_7[64], 6);
-//	SPI_UNO_Transmit( &initial_mass_7[70], 6);*/
-//	uint8_t mass[6] = { 0x10, 0x0B, 0x0B, 0xA2, 0xE8, 0xBA };
-//	SPI_UNO_Transmit(mass, 6);
-//	SPI_UNO_Transmit(&initial_mass_7[76], 2);
-//	SPI_UNO_Transmit(&initial_mass_7[78], 5);
-//	HAL_Delay(10);
-//	Chip_Select_Down
-//		HAL_SPI_Transmit(&hspix, &Read_reg_POW, 1, 1);
-//	HAL_SPI_Receive(&hspix, &uno_answer, 1, 1);
-//	Chip_Select_Up
-//		uno_answer *= 0x01;
-//	if (uno_answer != 0x01)
-//		return ERR_UNO_Pow;
-//	return UNO_OK;
-//}
+static uint8_t func_n_pow(float fr_out)
+{
+	uint8_t n_pow;
+	/*поиск n_pow показатель степени делител§; fr_out частота на выходе uno*/
+	if (fr_out > 6070) n_pow = 0;
+	else if (fr_out > 3035) n_pow = 1;
+	else if (fr_out > 1517.5) n_pow = 2;
+	else if (fr_out > 758.75) n_pow = 3;
+	else if (fr_out > 379.375) n_pow = 4;
+	else if (fr_out > 189.6875) n_pow = 5;
+	else  n_pow = 6;
+	return n_pow;
+}
+/*=============================================================================================================*/
+/*!  \brief
+* статическая внутренняя функция, возвращает коэф. усиления
+\return int
+\retval K
+\sa
+*/
+/*=============================================================================================================*/
+static uint8_t Search_K(float fr_vco2)
+{
+	uint8_t K;
+	if (fr_vco2 < 7020) K = 6;
+	else if (fr_vco2 < 8190) {
+		K = 7;
+		if ((fr_vco2 >= 7068) && (fr_vco2 <= 7080)) K = 6;
+		if ((fr_vco2 >= 8030) && (fr_vco2 <= 8062)) K = 8;
+	}
+	else if (fr_vco2 < 9360) {
+		K = 8;
+		if ((fr_vco2 >= 9172) && (fr_vco2 <= 9175)) K = 9;
+		if ((fr_vco2 >= 9181) && (fr_vco2 <= 9184)) K = 9;
+		if ((fr_vco2 >= 9190) && (fr_vco2 <= 9220)) K = 9;
+	}
+	else if (fr_vco2 < 10530) {
+		K = 9;
+		if ((fr_vco2 >= 9390) && (fr_vco2 <= 9393)) K = 8;
+		if ((fr_vco2 >= 9435) && (fr_vco2 <= 9464)) K = 8;
+		if ((fr_vco2 >= 10315) && (fr_vco2 <= 10360)) K = 10;
+		if ((fr_vco2 >= 10366) && (fr_vco2 <= 10370)) K = 10;
+	}
+	else if (fr_vco2 < 11700) {
+		K = 10;
+		if ((fr_vco2 >= 11019) && (fr_vco2 <= 11022)) K = 11;
+		if ((fr_vco2 >= 11038) && (fr_vco2 <= 11042)) K = 11;
+		if ((fr_vco2 >= 11057) && (fr_vco2 <= 11060)) K = 11;
+		if ((fr_vco2 >= 11465) && (fr_vco2 <= 11469)) K = 11;
+		if ((fr_vco2 >= 11476) && (fr_vco2 <= 11480)) K = 11;
+		if ((fr_vco2 >= 11485) && (fr_vco2 <= 11512)) K = 11;
+		if ((fr_vco2 >= 11519) && (fr_vco2 <= 11521)) K = 11;
+		if ((fr_vco2 >= 11528) && (fr_vco2 <= 11531)) K = 11;
+		if ((fr_vco2 >= 11545) && (fr_vco2 <= 11549)) K = 11;
+		if ((fr_vco2 >= 11650) && (fr_vco2 <= 11687)) K = 11;
+	}
+	else if (fr_vco2 < 12870) {
+		K = 11;
+		if ((fr_vco2 >= 12050) && (fr_vco2 <= 12096)) K = 12;
+		if ((fr_vco2 >= 12098) && (fr_vco2 <= 12124)) K = 12;
+		if ((fr_vco2 >= 12142) && (fr_vco2 <= 12187)) K = 12;
+		if ((fr_vco2 >= 12372) && (fr_vco2 <= 12378)) K = 12;
+		if ((fr_vco2 >= 12584) && (fr_vco2 <= 12588)) K = 12;
+		if ((fr_vco2 >= 12612) && (fr_vco2 <= 12615)) K = 12;
+		if ((fr_vco2 >= 12635) && (fr_vco2 <= 12665)) K = 12;
+		if ((fr_vco2 >= 12670) && (fr_vco2 <= 12684)) K = 12;
+		if ((fr_vco2 >= 12700) && (fr_vco2 <= 12703)) K = 12;
+		if ((fr_vco2 >= 12812) && (fr_vco2 <= 12856)) K = 12;
+	}
+	else {
+		K = 12;
+		if ((fr_vco2 >= 12958) && (fr_vco2 <= 12856)) K = 11;
+	}
+
+	return K;
+}
+//Заполнение массива данными
+static void FillingUnoData_0(uint32_t ftw)
+{
+	UnoData_0[0] = 0x10;
+	UnoData_0[1] = 0x0B;
+	UnoData_0[2] = (uint8_t)(ftw >> 24);
+	UnoData_0[3] = (uint8_t)(ftw >> 16);
+	UnoData_0[4] = (uint8_t)(ftw >> 8);
+	UnoData_0[5] = (uint8_t)(ftw);
+}
+static void FillingUnoData_1(uint8_t n_pow)
+{
+	UnoData_1[0] = 0x03;
+	UnoData_1[1] = (0x00 | n_pow);
+}
+static void FillingUnoData_2(uint8_t gain)
+{
+	UnoData_2[0] = 0x04;
+	UnoData_2[1] = gain;
+}
+static void FillingUnoData_3(uint8_t K)
+{
+	UnoData_3[0] = 0x62;
+	UnoData_3[1] = 0;
+	UnoData_3[2] = 0;
+	UnoData_3[3] = 0;
+	UnoData_3[4] = K;
+}
+/*=============================================================================================================*/
+/*!  \brief
+freq, - желаемая частота на выходе синтезатора
+gain - желаемое усиление или амплитуда на выходе синтезатора
+
+\return int
+\retval UNO_OK
+\sa
+*/
+/*=============================================================================================================*/
+void  calculate_uno(float freq, uint8_t gain)
+{
+	uint8_t n_pow = func_n_pow(freq);
+	float fr_vco2 = freq * powf(2, n_pow);
+	uint8_t K = Search_K(fr_vco2);
+	float fr_dds = 1200 - fr_vco2 / K;
+	uint32_t ftw = (uint32_t)(roundf(fr_dds*powf(2, 32) / 2400));
+	FillingUnoData_0(ftw);
+	FillingUnoData_1(n_pow);
+	FillingUnoData_2(gain);
+	FillingUnoData_3(K);
+}
+/*=============================================================================================================*/
+/*!  \brief
+uno_index, - переменная идентификатор конкретного синтезатора 1 или 2
+
+\return int
+\retval UNO_OK
+\sa
+*/
+/*=============================================================================================================*/
+void transmit_uno(uint8_t uno_index, uint8_t* UnoData_0, uint8_t* UnoData_1, uint8_t* UnoData_2, uint8_t* UnoData_3)
+{
+	UNOindex(uno_index);
+	SPI_UNO_Transmit(UnoData_0, 6);
+	SPI_UNO_Transmit(UnoData_1, 2);
+	SPI_UNO_Transmit(UnoData_2, 2);
+	SPI_UNO_Transmit(UnoData_3, 5);
+}
 
 
 
-//
-///*константные массивы настройки синтезатора - для записей значений в постоянную память*/
-//static const uint8_t initial_mass_0[2] = {
-//	/*1*/ 0x01, 0x01
-//};
-////2 // HAL_Delay( 100 );
-//static	const uint8_t initial_mass_1[26] = {
-//	/*3*/ 0x02, 0x07,/*4*/ 0x03, 0x00 ,/*5*/ 0x04, 0x00, /*6*/ 0x60, 0x03, 0x80, 0x13,
-//	/*7*/ 0x60, 0x03, 0x80, 0x12,/*8*/ 0x60, 0x00, 0x00,0x00, /*9*/0x60, 0x00, 0x00,0x01,
-//	/*10*/ 0x05, 0x01, /*11*/ 0x15, 0x00
-//};
-//
-////12 //	HAL_Delay( 100 );
-//
-//static const uint8_t initial_mass_2[4] = {
-//	/*13*/ 0x05, 0x03, 	/*14*/ 0x15, 0x00
-//};
-////15 //	HAL_Delay( 10 );
-//
-//static const uint8_t initial_mass_3[4] = {
-//	/*16*/ 0x05, 0x01, 	/*17*/ 0x15, 0x00
-//};
-////18 //	HAL_Delay( 10 );
-//
-//static const uint8_t initial_mass_4[14] = {
-//	/*19*/ 0x05, 0x05, /*20-24; 25*/ 0x10, 0x00, 0x00, 0x01, 0x01, 0x02,/*26*/ 0x11, 0x00,
-//	/*27*/0x05, 0x00,/*28*/ 0x15, 0x00 };
-////29 //	HAL_Delay( 10 );
-//
-//static const uint8_t initial_mass_5[4] = {
-//	/*30*/ 0x05, 0x01, 	/*31*/ 0x15, 0x00
-//};
-////32 //	HAL_Delay( 100 );
-//
-//static const uint8_t initial_mass_6[24] = {
-//	/*33*/ 0x10, 0x01, 0x00, 0x80, 0xB0, 0x00,/*34*/ 0x11, 0x00,/*35*/ 0x10, 0x02, 0x00,
-//	0x00,0x00,0x00, /*36*/0x11, 0x00,/*37*/ 0x10, 0x03, 0x01, 0x05, 0x21, 0x20,
-//	/*38*/ 0x11, 0x00
-//};
-////39 //	HAL_Delay( 100 );
-//
-//static const uint8_t initial_mass_7[83] = {
-//	/*40*/ 0x10, 0x03, 0x00,0x05,0x21,0x20,/*41*/ 0x11, 0x00,/*42 profile 0*/ 0x10, 0x0C,0x0F,0xFF,	0x00,  0x00,
-//	/*43 profile 1*/ 0x10, 0x0E, 0x0F, 0xFF, 0x00, 0x00,
-//	/*44 profile 2*/ 0x10, 0x10, 0x0F, 0xFF, 0x00, 0x00,
-//	/*45 profile 3*/ 0x10, 0x12, 0x0F, 0xFF, 0x00, 0x00,
-//	/*46 profile 4*/ 0x10, 0x14, 0x0F, 0xFF, 0x00, 0x00,
-//	/*47 profile 5*/ 0x10, 0x16, 0x0F, 0xFF, 0x00, 0x00,
-//	/*48 profile 6*/ 0x10, 0x18, 0x0F, 0xFF, 0x00, 0x00,
-//	/*49 profile 7*/ 0x10, 0x1A, 0x0F, 0xFF, 0x00, 0x00,
-//	/*50*/0x11, 0x00,/*51*/ 0x10, 0x04, 0x0B, 0xA2, 0xE8,0xBA,	/*52*/0x10,0x06, 0xC6,0x6F, 0x5E,0x22,
-//	/*53*/0x10, 0x05, 0x43,0x64,0xC5,0xBB,/*54*/ 0x11, 0x00,/*55*/ 0x62, 0x00,0x00,0x00,0x0B
-//};
+
+

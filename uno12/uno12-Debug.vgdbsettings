@@ -120,6 +120,10 @@
           <Key>com.sysprogs.jlink.commands.afterload</Key>
           <Value />
         </KeyValue>
+        <KeyValue>
+          <Key>SYS:DESIGN_MODE</Key>
+          <Value>1</Value>
+        </KeyValue>
       </Entries>
     </DebugMethodProperties>
     <AutoDetectRTOS>true</AutoDetectRTOS>
@@ -130,6 +134,7 @@
     <StopAtEntryPoint>false</StopAtEntryPoint>
     <DynamicAnalysisSettings />
     <EndOfStackSymbol>_estack</EndOfStackSymbol>
+    <SemihostingOutputLog>D:\new\printf.log</SemihostingOutputLog>
   </Debug>
   <CustomBuild>
     <PreSyncActions />

@@ -67,9 +67,7 @@ void setdata(uint8_t* data)
 	/*Очистка сектора*/
 	Sector_Erase_SE4B((sector * SectorDataSize));
 	Sector_write(sector_data, data, sector);
-	/*Проверка*/
-	Read_sector_bytes(sector_data, sector);
-	
+	/////////////
 }
 /*Считываем данные с сектора*/
 static void Read_sector_bytes(uint8_t* sector_data, uint16_t sector) 
@@ -93,6 +91,7 @@ static uint8_t Sector_is_Full(uint8_t* sector_data)
 /*===---Посекторная запись---===*/
 static void Sector_write(uint8_t* sector_data, uint8_t* data_in, uint16_t sector)
 {
+	uint8_t inspection_sector_data[SectorDataSize];
 	int i;
 	uint16_t sector_data_inc = 0;	/*Для заполнения массива sector data*/
 	uint32_t sector_adder_locate = sector * SectorDataSize;
@@ -100,14 +99,54 @@ static void Sector_write(uint8_t* sector_data, uint8_t* data_in, uint16_t sector
 	uint8_t quantity_data_sector = (sector_data[0] * 22)+1;
 	/*		Заполнение данных		*/
 	memcpy(&sector_data[quantity_data_sector], data_in, 22);
+	/*Счетчик данных*/
 	sector_data[0] = sector_data[0]+1;
-	/*		Запись данных во флэш	*/
+	/*		Копирование данных		*/
+	memcpy(inspection_sector_data,sector_data, SectorDataSize);
+	/*		Вычисление адреса сектора	*/
 	sector_adder_locate = sector * SectorDataSize;
+	/*		Запись данных во флэш		*/
 	for (i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
 	{
 		FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
 	}
+	
+	uint8_t inspection_sector_data_test[SectorDataSize];
+	Read_DAta_Bytes_READ4B(0, inspection_sector_data_test, 4096);
+	if (memcmp(inspection_sector_data, inspection_sector_data_test, 4096))
+	{
+		//для подсчета ошибочных влетов
+		static int i = 0;
+		i++;
+	}
+	/*while (memcmp(inspection_sector_data, sector_data, 4096))
+	{
+		Sector_Erase_SE4B((sector * SectorDataSize));
+		sector_adder_locate = sector * SectorDataSize;
+		sector_data_inc = 0;
+		for (i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
+		{
+			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
+		}
+		Read_DAta_Bytes_READ4B(0, sector_data, 4096);
+	}*/
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
