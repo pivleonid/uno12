@@ -44,26 +44,27 @@ extern "C" {
 		//Initial_Led();
 
 
-		//FLASH_SPI_close();
-		//FLASH_SPI_open();
-		//
+		FLASH_SPI_close();
+		FLASH_SPI_open();
+		
 
-		//while (Flash_ID_Check()) //while (0)  ЛОЖь
-		//	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);	
-		//HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
-		//LED_GREEN_ON
-		//	uint8_t data_flash[512];
-		//uint8_t sector_data[4096];
-		//for (int i = 0; i < 512; i++)
-		//	data_flash[i] = i;
+		while (Flash_ID_Check()) //while (0)  ЛОЖь
+			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);	
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+		LED_GREEN_ON
+			uint8_t data_flash[512];
+		uint8_t sector_data[4096];
+		for (int i = 0; i < 512; i++)
+			data_flash[i] = i;
 
-		//Sector_Erase_SE4B(0);
+		Sector_Erase_SE4B(0);
 
-		//for(int i = 0; i<200; i++)
-		//	setdata(data_flash);
-		///*Проверка*/
-		//Read_DAta_Bytes_READ4B(0, sector_data, 4096);
-		//HAL_Delay(1);
+		for(int i = 0; i<20; i++)
+			setdata(data_flash);
+		/*Проверка*/
+		setdata(data_flash);
+		Read_DAta_Bytes_READ4B(0, sector_data, 4096);
+		HAL_Delay(1);
  		for (;;)
 		{
 			 
