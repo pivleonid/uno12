@@ -59,11 +59,14 @@ extern "C" {
 
 		Sector_Erase_SE4B(0);
 
-		for(int i = 0; i<20; i++)
+
+		
+		for (int i = 0; i<400; i++)
 			setdata(data_flash);
 		/*Проверка*/
-		setdata(data_flash);
 		Read_DAta_Bytes_READ4B(0, sector_data, 4096);
+		HAL_Delay(1);
+		Read_DAta_Bytes_READ4B(1, sector_data, 4096);
 		HAL_Delay(1);
  		for (;;)
 		{
