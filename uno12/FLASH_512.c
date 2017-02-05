@@ -54,7 +54,7 @@ void FLASH_SPI_open(void)
 	hspi5.Init.CLKPolarity = SPI_POLARITY_LOW;
 	hspi5.Init.CLKPhase = SPI_PHASE_1EDGE;
 	hspi5.Init.NSS = SPI_NSS_SOFT;
-	hspi5.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8; //2
+	hspi5.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2; //2
 	hspi5.Init.FirstBit = SPI_FIRSTBIT_MSB;
 	hspi5.Init.TIMode = SPI_TIMODE_DISABLE;
 	hspi5.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -136,7 +136,7 @@ static void Write_Enable_WREN(void)
 */
 /*=============================================================================================================*/
 static void Write_Erase_Complete(void) {
-	while ((FLASH_Read_Status_Register_RDSR() & 0x01)); //WIP = 0 выход из while
+	while ((FLASH_Read_Status_Register_RDSR() & 0x01) ); //WIP = 0 выход из while
 }
 /*=============================================================================================================*/
 /*!  \brief «апись страницы
@@ -160,6 +160,15 @@ void FLASH_Page_Programm_PP(uint32_t address, uint8_t flash_data_in[256])
 	HAL_SPI_Transmit(&hspi5, flash_data_in, 256, 1);
 	Chip_Select_Up
 	Write_Erase_Complete();
+	HAL_Delay(5);
+	/*
+	uint8_t adder = 0x04;
+	uint8_t a;
+	while ((FLASH_Read_Status_Register_RDSR() & 0x02)) {
+		HAL_SPI_Transmit(&hspi5, &adder, 1, 1);
+		a = FLASH_Read_Status_Register_RDSR();
+		HAL_Delay(1);*/
+	//}
 }
 /*=============================================================================================================*/
 /*!  \brief „тение size байт (max 65535), начина€ с указанного адреса address

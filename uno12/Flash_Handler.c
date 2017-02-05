@@ -14,7 +14,7 @@
 #define MaxSectorSize				 16383
 #define SectorDataSize				 4096
 /* 22 * 186 = 4092; max = 4095 => 1 байт = quantity_data_sector; посылка окончания 0x44, 0x44 уместится*/
-#define MaXSectorCommand 186
+#define MaXSectorCommand 185
 #ifndef NULL
 #define NULL  0
 #endif
@@ -93,7 +93,6 @@ static uint8_t Sector_is_Full(uint8_t* sector_data)
 static void Sector_write(uint8_t* sector_data, uint8_t* data_in, uint16_t sector)
 {
 	uint8_t inspection_sector_data[SectorDataSize];
-	uint8_t sector_data_test[SectorDataSize];
 	int i;
 	uint16_t sector_data_inc = 0;	/*Для заполнения массива sector data*/
 	uint32_t sector_adder_locate = sector * SectorDataSize;
@@ -105,25 +104,31 @@ static void Sector_write(uint8_t* sector_data, uint8_t* data_in, uint16_t sector
 	sector_data[0] = sector_data[0]+1;
 	/*		Копирование данных		*/
 	memcpy(inspection_sector_data,sector_data, SectorDataSize);
-	memcpy(sector_data_test, sector_data, SectorDataSize);
+	//memcpy(sector_data_test, sector_data, SectorDataSize);
 	/*		Вычисление адреса сектора	*/
 	sector_adder_locate = sector * SectorDataSize;
 	/*		Запись данных во флэш		*/
 	for (i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
 	{
-		FLASH_Page_Programm_PP(sector_adder_locate, &sector_data_test[sector_data_inc]);
+		FLASH_Page_Programm_PP(sector_adder_locate, &inspection_sector_data[sector_data_inc]);
 	}
 	uint8_t inspection_sector_data_test[SectorDataSize];
 	Read_sector_bytes(inspection_sector_data_test, sector);
 	//Read_DAta_Bytes_READ4B(0, inspection_sector_data_test, 4096);
-		while (memcmp(inspection_sector_data, inspection_sector_data_test, 4096) != 0) {
+	uint16_t count = (sector_data[0] * 22) + 1;
+	/*Обработчик ошибок*/
+			while (memcmp(inspection_sector_data, inspection_sector_data_test, count) != 0) {
 			sector_adder_locate = sector * SectorDataSize;
 			sector_data_inc = 0;
+			Sector_Erase_SE4B((sector_adder_locate));
 			for (i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
-				FLASH_Page_Programm_PP(sector_adder_locate, &sector_data_test[sector_data_inc]);
+				FLASH_Page_Programm_PP(sector_adder_locate, &inspection_sector_data[sector_data_inc]);
 			Read_sector_bytes(inspection_sector_data_test, sector);
 			//Read_DAta_Bytes_READ4B(0, inspection_sector_data_test, 4096);
 			error++;// отследим сколько раз 
+			
+			if (error > 2000)
+				error--;
 		}
 //		Read_DAta_Bytes_READ4B(0, inspection_sector_data_test, 4096);
 //		error++;
