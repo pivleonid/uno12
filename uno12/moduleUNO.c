@@ -56,13 +56,11 @@ extern "C" {
 		uint8_t data[4096];
 		for (int i = 0; i < 22; i++)
 			data_flash[i] = i;
-
 		Sector_Erase_SE4B(0);
 		Sector_Erase_SE4B(1);
 
-
 		
-		for (uint8_t i = 0; i<186	; i++)
+		for (uint8_t i = 0; i<250	; i++)
 			setdata(data_flash);
 		/*Проверка*/
 		Read_DAta_Bytes_READ4B(0, data, 4096);
@@ -112,8 +110,8 @@ extern "C" {
 			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
 		RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 		RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-		RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-		RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+		RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4; //RCC_HCLK_DIV4 = 36 MHz
+		RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2; //RCC_HCLK_DIV2 = 72 MHz
 
 		if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
 		{

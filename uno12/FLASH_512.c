@@ -160,7 +160,7 @@ void FLASH_Page_Programm_PP(uint32_t address, uint8_t flash_data_in[256])
 	HAL_SPI_Transmit(&hspi5, flash_data_in, 256, 1);
 	Chip_Select_Up
 	Write_Erase_Complete();
-	HAL_Delay(5);
+	//HAL_Delay(5);
 	/*
 	uint8_t adder = 0x04;
 	uint8_t a;
@@ -213,7 +213,6 @@ void Sector_Erase_SE4B(uint32_t SectorAddr)
 	Chip_Select_Down
 	HAL_SPI_Transmit(&hspi5, data, 5, 1);
 	Chip_Select_Up
-	//	HAL_Delay(45);
 	Write_Erase_Complete();
 	FLASH_Read_Status_Register_RDSR();
 }
