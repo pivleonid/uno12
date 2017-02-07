@@ -80,7 +80,9 @@ void Read_DAta_Bytes_READ4B(
 							uint16_t size
 							);
 /*--- очистка сектора = 16 страниц время операции 43 - 200 мс----------*/
-void Sector_Erase_SE4B(uint32_t SectorAddr);
+void Sector_Erase_SE4B(
+						uint32_t SectorAddr /*Номер сектора*/
+						);
 /*Запись в память FLASH*/
 void FLASH_Page_Programm_PP(
 							uint32_t address,			/*!< [in] Запись по сектору */

@@ -53,20 +53,23 @@ extern "C" {
 		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
 		LED_GREEN_ON
 			uint8_t data_flash[22];
+			uint8_t data_flash_1[256];
 		uint8_t data[4096];
 		for (int i = 0; i < 22; i++)
 			data_flash[i] = i;
+		
 		Sector_Erase_SE4B(0);
 		Sector_Erase_SE4B(1);
-
-		
-		for (uint8_t i = 0; i<250	; i++)
+		Sector_Erase_SE4B(2);
+		Sector_Erase_SE4B(3);
+	//	Chip_Erase_CE();
+		for (uint16_t i = 0; i < 300	; i++)
 			setdata(data_flash);
 		/*Проверка*/
+		memset(data, 0, sizeof(data));
 		Read_DAta_Bytes_READ4B(0, data, 4096);
 		HAL_Delay(1);
-		memset(data, 0, sizeof(data));
-		Read_DAta_Bytes_READ4B(1, data, 4096);
+		Read_DAta_Bytes_READ4B(4096, data, 4096);
 		HAL_Delay(1);
  		for (;;)
 		{
