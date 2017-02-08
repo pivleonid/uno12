@@ -44,33 +44,36 @@ extern "C" {
 		//Initial_Led();
 
 
-		FLASH_SPI_close();
-		FLASH_SPI_open();
+	/*	FLASH_SPI_close();
+		FLASH_SPI_open();*/
 		
 
-		while (Flash_ID_Check()) //while (0)  ЛОЖь
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);	
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
-		LED_GREEN_ON
-			uint8_t data_flash[22];
-			uint8_t data_flash_1[256];
-		uint8_t data[4096];
-		for (int i = 0; i < 22; i++)
-			data_flash[i] = i;
-		
-		Sector_Erase_SE4B(0);
-		Sector_Erase_SE4B(1);
-		Sector_Erase_SE4B(2);
-		Sector_Erase_SE4B(3);
-	//	Chip_Erase_CE();
-		for (uint16_t i = 0; i < 300	; i++)
-			setdata(data_flash);
-		/*Проверка*/
-		memset(data, 0, sizeof(data));
-		Read_DAta_Bytes_READ4B(0, data, 4096);
-		HAL_Delay(1);
-		Read_DAta_Bytes_READ4B(4096, data, 4096);
-		HAL_Delay(1);
+		//while (Flash_ID_Check()) //while (0)  ЛОЖь
+		//	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);	
+		//HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+		//LED_GREEN_ON
+	//		uint8_t data_flash[22];
+	//		uint8_t data_flash_1[256];
+	//	uint8_t data[4096];
+	//	for (int i = 0; i < 22; i++)
+	//		data_flash[i] = i;
+	//	
+	//	Sector_Erase_SE4B(0);
+	//	Sector_Erase_SE4B(1);
+	//	Sector_Erase_SE4B(2);
+	//	Sector_Erase_SE4B(3);
+	////	Chip_Erase_CE();
+	//	for (uint16_t i = 0; i < 300	; i++)
+	//		setdata(data_flash);
+	//	/*Проверка*/
+	//	memset(data, 0, sizeof(data));
+	//	Read_DAta_Bytes_READ4B(0, data, 4096);
+	//	HAL_Delay(1);
+	//	Read_DAta_Bytes_READ4B(4096, data, 4096);
+	//	HAL_Delay(1);
+
+		uno_open_normal(1);
+		normal_freq(1, 1000, 10);
  		for (;;)
 		{
 			 
