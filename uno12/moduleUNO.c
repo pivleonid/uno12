@@ -41,39 +41,77 @@ extern "C" {
 		HAL_Init();
 		SystemClock_Config();
 	
-		//Initial_Led();
+		Initial_Led();
 
 
-	/*	FLASH_SPI_close();
-		FLASH_SPI_open();*/
+		FLASH_SPI_close();
+		FLASH_SPI_open();
 		
 
-		//while (Flash_ID_Check()) //while (0)  ЛОЖь
-		//	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);	
-		//HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+		while (Flash_ID_Check()) //while (0)  ЛОЖь
+			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);	
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
 		//LED_GREEN_ON
-	//		uint8_t data_flash[22];
-	//		uint8_t data_flash_1[256];
-	//	uint8_t data[4096];
-	//	for (int i = 0; i < 22; i++)
-	//		data_flash[i] = i;
-	//	
-	//	Sector_Erase_SE4B(0);
-	//	Sector_Erase_SE4B(1);
-	//	Sector_Erase_SE4B(2);
-	//	Sector_Erase_SE4B(3);
-	////	Chip_Erase_CE();
-	//	for (uint16_t i = 0; i < 300	; i++)
-	//		setdata(data_flash);
-	//	/*Проверка*/
-	//	memset(data, 0, sizeof(data));
-	//	Read_DAta_Bytes_READ4B(0, data, 4096);
-	//	HAL_Delay(1);
-	//	Read_DAta_Bytes_READ4B(4096, data, 4096);
-	//	HAL_Delay(1);
+			uint8_t data_flash[22];
+			uint8_t data_flash_1[256];
+		uint8_t data[4096];
+		for (int i = 0; i < 22; i++)
+			data_flash[i] = i;
+		Sector_Erase_SE4B(0);
+		Sector_Erase_SE4B(1);
+		Sector_Erase_SE4B(2);
+		Sector_Erase_SE4B(3);
+		Sector_Erase_SE4B(4);
+	//	Chip_Erase_CE();
+		uint8_t sector_data[256];
+		for (uint16_t i = 0; i < 256; i++)
+			sector_data[i] = i;
+		sector_data[0] = 200;
+		uint16_t sector_data_inc = 0;	/*Для заполнения массива sector data*/
+		uint16_t sector = 0;
+		uint32_t sector_adder_locate = sector * 4096;
+		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
+		{
+			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
+		}
+		sector_data_inc = 0;	/*Для заполнения массива sector data*/
+		sector = 1;
+		sector_adder_locate = sector * 4096;
+		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
+		{
+			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
+		}
+		sector_data_inc = 0;	/*Для заполнения массива sector data*/
+		sector = 2;
+		sector_adder_locate = sector * 4096;
+		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
+		{
+			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
+		}
+		sector_data_inc = 0;	/*Для заполнения массива sector data*/
+		sector = 3;
+		sector_adder_locate = sector * 4096;
+		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
+		{
+			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
+		}
+		sector_data_inc = 0;	/*Для заполнения массива sector data*/
+		sector = 4;
+		sector_adder_locate = sector * 4096;
+		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
+		{
+			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
+		}
+		uint32_t a = Getdatasize();
+		//for (uint16_t i = 0; i < 300	; i++)
+		//	setdata(data_flash);
+		///*Проверка*/
+		//memset(data, 0, sizeof(data));
+		//Read_DAta_Bytes_READ4B(0, data, 4096);
+		//HAL_Delay(1);
+		//Read_DAta_Bytes_READ4B(4096, data, 4096);
+		//HAL_Delay(1);
 
-		uno_open_normal(1);
-		normal_freq(1, 1000, 10);
  		for (;;)
 		{
 			 

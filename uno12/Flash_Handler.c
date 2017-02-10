@@ -18,9 +18,14 @@
 #ifndef NULL
 #define NULL  0
 #endif
+
+
+#include "stm32f4xx_hal.h"
 /*types=============================================================================================================*/
 /*prototypes========================================================================================================*/
-int16_t save_page_data(uint8_t *data_in);
+
+uint32_t Getdatasize(void);
+void setdata(uint8_t* data);
 
 static void Read_sector_bytes(uint8_t* sector_data, uint16_t sector);
 static uint8_t Sector_is_Full(uint8_t* sector_data);
@@ -116,6 +121,7 @@ static void Sector_write(uint8_t* sector_data, uint8_t* data_in, uint16_t sector
 	uint16_t count = (sector_data[0] * 22) + 1;
 			/*Обработчик ошибок*/
 			while (memcmp(inspection_sector_data, inspection_sector_data_test, count) != 0) {
+				HAL_GPIO_WritePin(GPIOE, GPIO_PIN_9, GPIO_PIN_SET);
 			sector_adder_locate = sector * SectorDataSize;
 			sector_data_inc = 0;
 			Sector_Erase_SE4B(sector);
@@ -125,14 +131,26 @@ static void Sector_write(uint8_t* sector_data, uint8_t* data_in, uint16_t sector
 			Read_sector_bytes(inspection_sector_data_test, sector);
 			error++;// отследим сколько раз 
 			
-			if (error > 2000)
+			if (error > 50)
 				error--;
 		}
 
 }
 
-
-
+uint32_t Getdatasize(void) {
+	static uint16_t sector = 0;
+	uint8_t sector_data[SectorDataSize];
+	uint32_t data_size;
+	memset(sector_data, 0, sizeof(sector_data));
+	Read_sector_bytes(sector_data, sector);
+	data_size = sector_data[0];
+	while (Sector_is_Full(sector_data) == sector_full) {
+		Read_sector_bytes(sector_data, ++sector);
+		data_size += sector_data[0];
+	}
+	data_size -= 255;
+	return data_size;
+}
 
 
 
