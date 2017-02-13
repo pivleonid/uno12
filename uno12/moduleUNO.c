@@ -66,51 +66,17 @@ extern "C" {
 		uint8_t sector_data[256];
 		for (uint16_t i = 0; i < 256; i++)
 			sector_data[i] = i;
-		sector_data[0] = 200;
-		uint16_t sector_data_inc = 0;	/*Для заполнения массива sector data*/
-		uint16_t sector = 0;
-		uint32_t sector_adder_locate = sector * 4096;
-		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
-		{
-			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
-		}
-		sector_data_inc = 0;	/*Для заполнения массива sector data*/
-		sector = 1;
-		sector_adder_locate = sector * 4096;
-		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
-		{
-			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
-		}
-		sector_data_inc = 0;	/*Для заполнения массива sector data*/
-		sector = 2;
-		sector_adder_locate = sector * 4096;
-		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
-		{
-			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
-		}
-		sector_data_inc = 0;	/*Для заполнения массива sector data*/
-		sector = 3;
-		sector_adder_locate = sector * 4096;
-		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
-		{
-			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
-		}
-		sector_data_inc = 0;	/*Для заполнения массива sector data*/
-		sector = 4;
-		sector_adder_locate = sector * 4096;
-		for (uint8_t i = 0; i < 16; i++, sector_adder_locate += 256, sector_data_inc += 256)
-		{
-			FLASH_Page_Programm_PP(sector_adder_locate, &sector_data[sector_data_inc]);
-		}
-		uint32_t a = Getdatasize();
-		//for (uint16_t i = 0; i < 300	; i++)
-		//	setdata(data_flash);
+		for (uint16_t i = 0; i < 300	; i++)
+	
+			setdata(data_flash);
+		uint8_t key_1[1303];
+		Getdatanames_sector(key_1, 0);
 		///*Проверка*/
-		//memset(data, 0, sizeof(data));
-		//Read_DAta_Bytes_READ4B(0, data, 4096);
-		//HAL_Delay(1);
-		//Read_DAta_Bytes_READ4B(4096, data, 4096);
-		//HAL_Delay(1);
+		memset(data, 0, sizeof(data));
+		Read_DAta_Bytes_READ4B(0, data, 4096);
+		/*HAL_Delay(1);
+		Read_DAta_Bytes_READ4B(4096, data, 4096);
+		HAL_Delay(1);*/
 
  		for (;;)
 		{

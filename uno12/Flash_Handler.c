@@ -152,6 +152,22 @@ uint32_t Getdatasize(void) {
 	return data_size;
 }
 
+// Последовательное считывание ключей с сектора
+// key = 7 * 186 = 1302 записи
+// if key[0] > 186 => записей больше нет
+
+int8_t Getdatanames_sector(uint8_t key[1302], uint16_t sector ) {
+	uint8_t sector_data[SectorDataSize];
+	memset(sector_data, 0, sizeof(sector_data));
+	Read_sector_bytes(sector_data, sector);
+	if (sector_data[0] > 186)
+		return error_data;
+	for (int i = 1, j = 1; i < 1303; i += 7, j += 22)
+		memcpy(&key[i], &sector_data[j], 7);
+	key[0] = sector_data[0];
+}
+
+
 
 
 
