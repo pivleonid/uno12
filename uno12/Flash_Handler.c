@@ -156,7 +156,7 @@ uint32_t Getdatasize(void) {
 // key = 7 * 186 = 1302 записи
 // if key[0] > 186 => записей больше нет
 
-int8_t Getdatanames_sector(uint8_t key[1302], uint16_t sector ) {
+int8_t Getdatanames_sector(uint8_t key[1303], uint16_t sector ) {
 	uint8_t sector_data[SectorDataSize];
 	memset(sector_data, 0, sizeof(sector_data));
 	Read_sector_bytes(sector_data, sector);
@@ -165,6 +165,42 @@ int8_t Getdatanames_sector(uint8_t key[1302], uint16_t sector ) {
 	for (int i = 1, j = 1; i < 1303; i += 7, j += 22)
 		memcpy(&key[i], &sector_data[j], 7);
 	key[0] = sector_data[0];
+}
+/*
+1) Считываю ключи с 0 сектора, хранимые в key_data[1303] с 1 элемента и проверяю их на совпадение
+1.1) поиск совпадения сопровлождается инкрементом key_count -> который потребуется для поиска значения
+2) ежели совпадение не найдено попадаем в цикл while. ежели 0 байт > 186 return error_data-> совпадения не найдены
+3) В цикле инкрементируется сектор. При совпадении значения перепрыгиваем на метку pass
+4) Зная номер сектора- вычитываею данные с него
+5) зная номер ключа key_count-> копирую данные в data[15]
+*/
+int8_t GetData(uint8_t key[7], uint8_t data[15]) {
+	uint8_t sector_data[SectorDataSize];
+	static uint16_t sector = 0;
+	uint8_t key_count_index = 8; // первый элемент с данными
+	uint8_t key_data[1303];
+	uint8_t key_count = 0; // счетчик положения дынных
+	Getdatanames_sector(key_data, sector);
+	for (int i = 1; i < 1303; i += 7) {
+		key_count++;
+		if (memcmp(key, &key_data[i], 7) == 0)
+			goto pass; //выход из цикла с сохранением key_count
+	}
+	/*Если больше 186 и значения не найдено в 0 секторе*/
+	while (key_data[0] > 186) {
+		key_count = 0;
+		Getdatanames_sector(key_data, ++sector);
+		for (int i = 1; i < 1303; i += 7) {
+			key_count++;
+			if (memcmp(key, &key_data[i], 7) == 0)
+				goto pass;
+		}
+	}
+	return error_data;
+	//работа поиска значения  с использованием key_count'a и sector
+pass:
+	Read_sector_bytes(sector_data, sector);
+	memcpy(data, &sector_data[key_count_index*key_count], 15);
 }
 
 

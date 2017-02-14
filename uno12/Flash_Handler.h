@@ -24,6 +24,8 @@ extern "C" {
 /*Запись сектора 12 сек*/
 	void setdata(uint8_t* data);
 	uint32_t Getdatasize(void);
+	int8_t Getdatanames_sector(uint8_t key[1303], uint16_t sector);
+	int8_t GetData(uint8_t key[7], uint8_t data[15]);
 
 #ifdef __cplusplus
 }

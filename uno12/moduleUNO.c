@@ -74,6 +74,12 @@ extern "C" {
 		///*Проверка*/
 		memset(data, 0, sizeof(data));
 		Read_DAta_Bytes_READ4B(0, data, 4096);
+		uint8_t key_data_1[7];
+		for (uint8_t i = 0; i < 7; i++)
+			key_data_1[i] = i;
+		uint8_t data_data[15];
+
+		GetData(key_data_1, data_data);
 		/*HAL_Delay(1);
 		Read_DAta_Bytes_READ4B(4096, data, 4096);
 		HAL_Delay(1);*/
