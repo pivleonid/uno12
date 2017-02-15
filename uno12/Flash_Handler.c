@@ -59,7 +59,7 @@ typedef struct  _PRES_PACK
 	_PRES_BODY_t	key;
 	_PRES_BODY_t	body;
 }preselector_pack_t;
-
+/*Функция принимает 22 байта и записывает в свободное место*/
 void setdata(uint8_t* data)
 {
 	static uint16_t sector = 0;
@@ -136,7 +136,7 @@ static void Sector_write(uint8_t* sector_data, uint8_t* data_in, uint16_t sector
 		}
 
 }
-
+/* Считывание общего количества записей*/
 uint32_t Getdatasize(void) {
 	static uint16_t sector = 0;
 	uint8_t sector_data[SectorDataSize];
@@ -152,10 +152,11 @@ uint32_t Getdatasize(void) {
 	return data_size;
 }
 
-// Последовательное считывание ключей с сектора
-// key = 7 * 186 = 1302 записи
-// if key[0] > 186 => записей больше нет
-
+/*
+	Последовательное считывание ключей с сектора
+	key = 7 * 186 = 1302 записи. 1303 записей т.к. 0 байт решил оставить для количества записей в секторе
+	if key[0] > 186 => записей больше нет
+*/
 int8_t Getdatanames_sector(uint8_t key[1303], uint16_t sector ) {
 	uint8_t sector_data[SectorDataSize];
 	memset(sector_data, 0, sizeof(sector_data));
@@ -179,7 +180,7 @@ int8_t GetData(uint8_t key[7], uint8_t data[15]) {
 	static uint16_t sector = 0;
 	uint8_t key_count_index = 8; // первый элемент с данными
 	uint8_t key_data[1303];
-	uint8_t key_count = 0; // счетчик положения дынных
+	uint8_t key_count = 0; // счетчик положения данных
 	Getdatanames_sector(key_data, sector);
 	for (int i = 1; i < 1303; i += 7) {
 		key_count++;
@@ -203,6 +204,38 @@ pass:
 	memcpy(data, &sector_data[key_count_index*key_count], 15);
 }
 
+/*
+Считывание количества записей с определенными координатами
+*/
+uint32_t Getdatasizemask(uint8_t key[7], uint8_t mask_key[7]) {
+	for (uint8_t i = 0; i < 7; i++)
+		key[i] = key[i] & mask_key[i];
+	uint8_t key_data[1303];
+	static uint16_t sector = 0;
+	uint8_t sector_data[SectorDataSize];
+	uint32_t data_key_size = 0; 
+	Getdatanames_sector(key_data, sector);
+	/* видоизменяю массив ключей под "маску"*/
+	for (int i = 1; i < 1303; ) {
+		for (uint8_t j = 0; j < 7; j++, i++)
+			key_data[i] = key_data[i] & mask_key[j];
+		if (memcmp(key, &key_data[i - 7],7) == 0)
+			data_key_size++;
+	}
+
+
+	while (Sector_is_Full(sector_data) == sector_full) {
+		Getdatanames_sector(key_data, ++sector);
+		/* видоизменяю массив ключей под "маску"*/
+		for (int i = 1; i < 1303; ) {
+			for (uint8_t j = 0; j < 7; j++, i++)
+				key_data[i] = key_data[i] & mask_key[j];
+			if (memcmp(key, &key_data[i - 7], 7) == 0)
+				data_key_size++;
+		}
+	}
+	return data_key_size;
+}
 
 
 

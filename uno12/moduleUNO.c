@@ -67,23 +67,11 @@ extern "C" {
 		for (uint16_t i = 0; i < 256; i++)
 			sector_data[i] = i;
 		for (uint16_t i = 0; i < 300	; i++)
-	
 			setdata(data_flash);
-		uint8_t key_1[1303];
-		Getdatanames_sector(key_1, 0);
-		///*Проверка*/
 		memset(data, 0, sizeof(data));
 		Read_DAta_Bytes_READ4B(0, data, 4096);
-		uint8_t key_data_1[7];
-		for (uint8_t i = 0; i < 7; i++)
-			key_data_1[i] = i;
-		uint8_t data_data[15];
-
-		GetData(key_data_1, data_data);
-		/*HAL_Delay(1);
-		Read_DAta_Bytes_READ4B(4096, data, 4096);
-		HAL_Delay(1);*/
-
+		uint8_t key_s[7] = {0,1,2,3,4,5,6}, mask_key_s[7] = { 0,0,0,3,4,0,0 };
+		uint32_t m = Getdatasizemask(key_s, mask_key_s);
  		for (;;)
 		{
 			 
