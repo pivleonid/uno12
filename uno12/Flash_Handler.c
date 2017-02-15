@@ -216,7 +216,7 @@ uint32_t Getdatasizemask(uint8_t key[7], uint8_t mask_key[7]) {
 	uint32_t data_key_size = 0; 
 	Getdatanames_sector(key_data, sector);
 	/* видоизменяю массив ключей под "маску"*/
-	for (int i = 1; i < 1303; ) {
+	for (int i = 1; i < (key_data[0]*7) + 1; ) {	/*1303*/
 		for (uint8_t j = 0; j < 7; j++, i++)
 			key_data[i] = key_data[i] & mask_key[j];
 		if (memcmp(key, &key_data[i - 7],7) == 0)
@@ -224,10 +224,10 @@ uint32_t Getdatasizemask(uint8_t key[7], uint8_t mask_key[7]) {
 	}
 
 
-	while (Sector_is_Full(sector_data) == sector_full) {
+	while (key_data[0] >= 186) {
 		Getdatanames_sector(key_data, ++sector);
 		/* видоизменяю массив ключей под "маску"*/
-		for (int i = 1; i < 1303; ) {
+		for (int i = 1; i < (key_data[0] * 7) + 1; ) {  /*1303*/
 			for (uint8_t j = 0; j < 7; j++, i++)
 				key_data[i] = key_data[i] & mask_key[j];
 			if (memcmp(key, &key_data[i - 7], 7) == 0)

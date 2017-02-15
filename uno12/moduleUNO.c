@@ -62,14 +62,13 @@ extern "C" {
 		Sector_Erase_SE4B(2);
 		Sector_Erase_SE4B(3);
 		Sector_Erase_SE4B(4);
-	//	Chip_Erase_CE();
-		uint8_t sector_data[256];
-		for (uint16_t i = 0; i < 256; i++)
-			sector_data[i] = i;
+
 		for (uint16_t i = 0; i < 300	; i++)
 			setdata(data_flash);
 		memset(data, 0, sizeof(data));
 		Read_DAta_Bytes_READ4B(0, data, 4096);
+		memset(data, 0, sizeof(data));
+		Read_DAta_Bytes_READ4B(4096, data, 4096);
 		uint8_t key_s[7] = {0,1,2,3,4,5,6}, mask_key_s[7] = { 0,0,0,3,4,0,0 };
 		uint32_t m = Getdatasizemask(key_s, mask_key_s);
  		for (;;)
