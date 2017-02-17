@@ -27,6 +27,7 @@ extern "C" {
 	int8_t Getdatanames_sector(uint8_t key[1303], uint16_t sector);
 	int8_t GetData(uint8_t key[7], uint8_t data[15]);
 	uint32_t Getdatasizemask(uint8_t key[7], uint8_t mask_key[7]);
+	void getdatanamesmask_sector(uint8_t data_mask[2790], uint8_t key[7], uint8_t mask_key[7], uint16_t sector);
 
 #ifdef __cplusplus
 }

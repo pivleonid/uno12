@@ -70,7 +70,9 @@ extern "C" {
 		memset(data, 0, sizeof(data));
 		Read_DAta_Bytes_READ4B(4096, data, 4096);
 		uint8_t key_s[7] = {0,1,2,3,4,5,6}, mask_key_s[7] = { 0,0,0,3,4,0,0 };
-		uint32_t m = Getdatasizemask(key_s, mask_key_s);
+		uint8_t data_mask_1[2790];
+		memset(data_mask_1, 0, sizeof(data_mask_1));
+		getdatanamesmask_sector(data_mask_1, key_s, mask_key_s, 1);
  		for (;;)
 		{
 			 

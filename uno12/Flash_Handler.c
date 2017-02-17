@@ -216,7 +216,7 @@ uint32_t Getdatasizemask(uint8_t key[7], uint8_t mask_key[7]) {
 	uint32_t data_key_size = 0; 
 	Getdatanames_sector(key_data, sector);
 	/* видоизменяю массив ключей под "маску"*/
-	for (int i = 1; i < (key_data[0]*7) + 1; ) {	/*1303*/
+	for (int i = 1; i < (key_data[0]*7) + 1; ) {	/*1303 -max. */
 		for (uint8_t j = 0; j < 7; j++, i++)
 			key_data[i] = key_data[i] & mask_key[j];
 		if (memcmp(key, &key_data[i - 7],7) == 0)
@@ -237,7 +237,34 @@ uint32_t Getdatasizemask(uint8_t key[7], uint8_t mask_key[7]) {
 	return data_key_size;
 }
 
-
+/*
+Считывание количества записей с определенными координатами
+*/
+void getdatanamesmask_sector(uint8_t data_mask[2790], uint8_t key[7], uint8_t mask_key[7], uint16_t sector) {
+	for (uint8_t i = 0; i < 7; i++)
+		key[i] = key[i] & mask_key[i];
+	uint8_t key_data[1303];
+	uint8_t sector_data[SectorDataSize];
+	uint16_t key_count = 0, quantity_mask = 0;
+	uint16_t data_count = 1;
+	Getdatanames_sector(key_data, sector);
+	Read_sector_bytes(sector_data, sector);
+	/* видоизменяю массив ключей под "маску"*/
+	for (int i = 1; i < (key_data[0] * 7) + 1; ) {	/*1303 -max. */
+		for (uint8_t j = 0; j < 7; j++, i++)
+			key_data[i] = key_data[i] & mask_key[j]; 
+		/*надо сравнить ключ заполненного массива*/ 
+		if (memcmp(key, &key_data[i - 7], 7) == 0){
+			/*Ежели ключ совпал, надо записакть данные, считанные из сектора*/
+			memcpy(&data_mask[data_count], &sector_data[22*key_count+8], 15);
+			data_count += 15;
+			quantity_mask++;
+		}
+		/*Номер ключа в секторе*/
+		key_count++;
+	}
+	data_mask[0] = quantity_mask;
+}
 
 
 
