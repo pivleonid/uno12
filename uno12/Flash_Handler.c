@@ -239,7 +239,7 @@ uint32_t Getdatasizemask(uint8_t key[7], uint8_t mask_key[7]) {
 
 /*
 Считывание количества записей с определенными координатами
-*/
+*/  //Идея -выводить результат как массив структур
 void getdatanamesmask_sector(uint8_t data_mask[2790], uint8_t key[7], uint8_t mask_key[7], uint16_t sector) {
 	for (uint8_t i = 0; i < 7; i++)
 		key[i] = key[i] & mask_key[i];
@@ -265,7 +265,6 @@ void getdatanamesmask_sector(uint8_t data_mask[2790], uint8_t key[7], uint8_t ma
 	}
 	data_mask[0] = quantity_mask;
 }
-
 
 
 

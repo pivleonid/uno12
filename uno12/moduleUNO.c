@@ -44,38 +44,41 @@ extern "C" {
 		Initial_Led();
 
 
-		FLASH_SPI_close();
-		FLASH_SPI_open();
-		
+		//FLASH_SPI_close();
+		//FLASH_SPI_open();
+		//
 
-		while (Flash_ID_Check()) //while (0)  ЛОЖь
-			HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);	
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
-		//LED_GREEN_ON
-			uint8_t data_flash[22];
-			uint8_t data_flash_1[256];
-		uint8_t data[4096];
-		for (int i = 0; i < 22; i++)
-			data_flash[i] = i;
-		Sector_Erase_SE4B(0);
-		Sector_Erase_SE4B(1);
-		Sector_Erase_SE4B(2);
-		Sector_Erase_SE4B(3);
-		Sector_Erase_SE4B(4);
+		//while (Flash_ID_Check()) //while (0)  ЛОЖь
+		//	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_SET);	
+		//HAL_GPIO_WritePin(GPIOE, GPIO_PIN_1, GPIO_PIN_RESET);
+		////LED_GREEN_ON
+		//	uint8_t data_flash[22];
+		//	uint8_t data_flash_1[256];
+		//uint8_t data[4096];
+		//for (int i = 0; i < 22; i++)
+		//	data_flash[i] = i;
+		//Sector_Erase_SE4B(0);
+		//Sector_Erase_SE4B(1);
+		//Sector_Erase_SE4B(2);
+		//Sector_Erase_SE4B(3);
+		//Sector_Erase_SE4B(4);
 
-		for (uint16_t i = 0; i < 300	; i++)
-			setdata(data_flash);
-		memset(data, 0, sizeof(data));
-		Read_DAta_Bytes_READ4B(0, data, 4096);
-		memset(data, 0, sizeof(data));
-		Read_DAta_Bytes_READ4B(4096, data, 4096);
-		uint8_t key_s[7] = {0,1,2,3,4,5,6}, mask_key_s[7] = { 0,0,0,3,4,0,0 };
-		uint8_t data_mask_1[2790];
-		memset(data_mask_1, 0, sizeof(data_mask_1));
-		getdatanamesmask_sector(data_mask_1, key_s, mask_key_s, 1);
+		//for (uint16_t i = 0; i < 300	; i++)
+		//	setdata(data_flash);
+		//memset(data, 0, sizeof(data));
+		//Read_DAta_Bytes_READ4B(0, data, 4096);
+		//memset(data, 0, sizeof(data));
+		//Read_DAta_Bytes_READ4B(4096, data, 4096);
+		//uint8_t key_s[7] = {0,1,2,3,4,5,6}, mask_key_s[7] = { 0,0,0,3,4,0,0 };
+		//uint8_t data_mask_1[2790];
+		//memset(data_mask_1, 0, sizeof(data_mask_1));
+		//getdatanamesmask_sector(data_mask_1, key_s, mask_key_s, 1);
+
+		uno_open_normal(0);
+
  		for (;;)
 		{
-			 
+			normal_freq(0, 6000, 0x3F);
 		}
 
 	}
