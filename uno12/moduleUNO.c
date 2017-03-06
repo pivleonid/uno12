@@ -73,12 +73,18 @@ extern "C" {
 		//uint8_t data_mask_1[2790];
 		//memset(data_mask_1, 0, sizeof(data_mask_1));
 		//getdatanamesmask_sector(data_mask_1, key_s, mask_key_s, 1);
-
-		uno_open_normal(0);
-
+		
+		if (uno_open_normal(0) != 0)
+		{
+			uno_close(0);
+			uno_open_normal(0);
+		}
+		LED_GREEN_ON
+		normal_freq(0, 4700, 0x3F);
+		
  		for (;;)
 		{
-			normal_freq(0, 6000, 0x3F);
+
 		}
 
 	}

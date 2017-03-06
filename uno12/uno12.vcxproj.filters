@@ -27,6 +27,12 @@
     <Filter Include="Header files\Device-specific files">
       <UniqueIdentifier>{0e93ce7f-f45a-4601-93d2-c8a296d72af0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source files\Rem_x">
+      <UniqueIdentifier>{5929a422-41c0-44ad-bebb-43e694b2bb72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\Rem_x">
+      <UniqueIdentifier>{45adddb2-e2ef-4b32-bad4-1f1756e21ba3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="system_stm32f4xx.c">
@@ -247,6 +253,24 @@
     </ClCompile>
     <ClCompile Include="Flash_Handler.c">
       <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="rem_x\rem_x.c">
+      <Filter>Source files\Rem_x</Filter>
+    </ClCompile>
+    <ClCompile Include="rem_x\rem_x_initialize.c">
+      <Filter>Source files\Rem_x</Filter>
+    </ClCompile>
+    <ClCompile Include="rem_x\rem_x_terminate.c">
+      <Filter>Source files\Rem_x</Filter>
+    </ClCompile>
+    <ClCompile Include="rem_x\rt_nonfinite.c">
+      <Filter>Source files\Rem_x</Filter>
+    </ClCompile>
+    <ClCompile Include="rem_x\rtGetInf.c">
+      <Filter>Source files\Rem_x</Filter>
+    </ClCompile>
+    <ClCompile Include="rem_x\rtGetNaN.c">
+      <Filter>Source files\Rem_x</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -567,6 +591,30 @@
     </ClInclude>
     <ClInclude Include="Flash_Handler.h">
       <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="rem_x\rtGetNaN.h">
+      <Filter>Header files\Rem_x</Filter>
+    </ClInclude>
+    <ClInclude Include="rem_x\rtwtypes.h">
+      <Filter>Header files\Rem_x</Filter>
+    </ClInclude>
+    <ClInclude Include="rem_x\rem_x.h">
+      <Filter>Header files\Rem_x</Filter>
+    </ClInclude>
+    <ClInclude Include="rem_x\rem_x_initialize.h">
+      <Filter>Header files\Rem_x</Filter>
+    </ClInclude>
+    <ClInclude Include="rem_x\rem_x_terminate.h">
+      <Filter>Header files\Rem_x</Filter>
+    </ClInclude>
+    <ClInclude Include="rem_x\rem_x_types.h">
+      <Filter>Header files\Rem_x</Filter>
+    </ClInclude>
+    <ClInclude Include="rem_x\rt_nonfinite.h">
+      <Filter>Header files\Rem_x</Filter>
+    </ClInclude>
+    <ClInclude Include="rem_x\rtGetInf.h">
+      <Filter>Header files\Rem_x</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

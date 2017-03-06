@@ -136,6 +136,12 @@
     <ClCompile Include="Flash_Handler.c" />
     <ClCompile Include="InitializationUNO_v1.c" />
     <ClCompile Include="moduleUNO.c" />
+    <ClCompile Include="rem_x\rem_x.c" />
+    <ClCompile Include="rem_x\rem_x_initialize.c" />
+    <ClCompile Include="rem_x\rem_x_terminate.c" />
+    <ClCompile Include="rem_x\rtGetInf.c" />
+    <ClCompile Include="rem_x\rtGetNaN.c" />
+    <ClCompile Include="rem_x\rt_nonfinite.c" />
     <ClCompile Include="system_stm32f4xx.c" />
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +250,14 @@
     <ClInclude Include="FLASH_512.h" />
     <ClInclude Include="Flash_Handler.h" />
     <ClInclude Include="InitializationUNO_v1.h" />
+    <ClInclude Include="rem_x\rem_x.h" />
+    <ClInclude Include="rem_x\rem_x_initialize.h" />
+    <ClInclude Include="rem_x\rem_x_terminate.h" />
+    <ClInclude Include="rem_x\rem_x_types.h" />
+    <ClInclude Include="rem_x\rtGetInf.h" />
+    <ClInclude Include="rem_x\rtGetNaN.h" />
+    <ClInclude Include="rem_x\rtwtypes.h" />
+    <ClInclude Include="rem_x\rt_nonfinite.h" />
     <ClInclude Include="stm32f4xx_hal_conf.h" />
   </ItemGroup>
   <ItemGroup>

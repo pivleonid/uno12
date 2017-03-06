@@ -9,6 +9,14 @@
 #include "InitializationUNO_v1.h"
 #include "stm32f4xx_hal.h"
 #include "stm32f427xx.h"
+#include <float.h>
+#include <math.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include "rem_x\rt_nonfinite.h"
+#include "rem_x\rtwtypes.h"
+#include "rem_x\rem_x_types.h"
+#include "rem_x\rem_x.h"
 
 /*defines===========================================================================================================*/
 
@@ -32,6 +40,9 @@ GPIO_InitTypeDef GPIO_InitStruct;
 GPIO_TypeDef* GPIO_X;
 uint16_t GPIO_PIN;
 
+//#pragma pack(push, 1)
+
+//#pragma pack(pop)
 /*prototypes========================================================================================================*/
 static void UNOindex(uint8_t uno_index);
 static int SPI_UNO_Transmit(uint8_t* data, uint16_t size);
@@ -769,81 +780,48 @@ uint64_t static gcd_r(uint64_t a, uint64_t b) {
 /*=============================================================================================================*/
 void normal_freq(uint8_t uno_index, float freq, uint8_t gain)
 {
-	/*UNOindex(uno_index);
-	uint64_t Nod;
-	uint8_t n_pow = func_n_pow(freq);
-	float fr_vco2 = freq * powf(2, n_pow);
-	uint8_t K = Search_K(fr_vco2);
-	float fr_dds = 1200 - (fr_vco2 / K);
-
-	uint64_t dds_a, dds_b;
-	uint64_t a = 2400000000000;
-	uint64_t b = roundf(fr_dds *1e9);
-	Nod = gcd_r(a, b);
-	uint64_t N = a / Nod;
-	uint64_t M = b / Nod;
-	uint64_t ftw = roundf( M * 4294967296 / N);
-	uint64_t Y = 4294967296* M - ftw*N;
-	if (Y == 0)
-	{
-		dds_a = N;
-		dds_b = 0;
-	}
-	else
-	{
-		Nod = gcd_r(N, Y);
-		dds_a = Y / Nod;
-		dds_b = N / Nod;
-	}
-	uint8_t data_ftw[6]   = { 0x10, 0x04, (uint8_t)(ftw >> 24), (uint8_t)(ftw >> 16),
-						    (uint8_t)(ftw >> 8), (uint8_t)ftw };
-	uint8_t data_dds_b[6] = {0x10,0x05,(uint8_t)(dds_b >> 24), (uint8_t)(dds_b >> 16),
-							(uint8_t)(dds_b >> 8), (uint8_t)dds_b };
-	uint8_t data_dds_a[6] = {0x10, 0x06,(uint8_t)(dds_a >> 24), (uint8_t)(dds_a >> 16),
-							(uint8_t)(dds_a >> 8), (uint8_t)dds_a };
-	uint8_t data_npow[2]  = { 0x03, (0x00 | n_pow) };
-	uint8_t data_dB[2]    = { 0x04, gain };
-	uint8_t data_K[5]     = { 0x62,0,0,0, K };
-	SPI_UNO_Transmit(data_ftw, 6);
-	HAL_Delay(1);
-	SPI_UNO_Transmit(data_dds_b, 6);
-	HAL_Delay(1);
-	SPI_UNO_Transmit(data_dds_a, 6);
-	HAL_Delay(1);
-	SPI_UNO_Transmit(data_npow, 2);
-	HAL_Delay(1);
-	SPI_UNO_Transmit(data_dB, 2);
-	SPI_UNO_Transmit(data_K, 5);*/
-
 	UNOindex(uno_index);
 	uint64_t Nod;
 	uint8_t n_pow = func_n_pow(freq);
 	double fr_vco2 = freq * powf(2, n_pow);
 	uint8_t K = Search_K(fr_vco2);
 	double fr_dds = 1200 - (fr_vco2 / K);
-
+	if (fr_vco2 < 6070) {
+		n_pow++;
+		K = 11;
+		fr_vco2 = fr_vco2 * 2;
+		fr_dds = 1200 - (fr_vco2 / K);
+	}
 	uint64_t dds_a = 0, dds_b = 0;
 	uint64_t a = 24000000000000;
 	uint64_t b = (fr_dds *1e10);
 	Nod = gcd_r(a, b);
 	uint64_t N = a / Nod;
 	uint64_t M = b / Nod;
-	double ftw_1 = (double)M / (double) N;
-	ftw_1 = round(4294967296 * ftw_1);
-	uint32_t ftw = (uint32_t)ftw_1;
-	uint64_t Y = 4294967296 * M - ftw*N;
-	if (Y == 0)
-	{
+	double_t ftw_1 = (double_t)M / (double_t) N;
+	ftw_1 = (4294967296 * ftw_1);
+	//double Y_1 = modf(ftw_1, &ftw_1);
+	double N_1 = N;
+	double M_1 = M;
+	int64m_T Y_2;
+	Y_2 = rem_x(M_1, N_1);
+	uint64_t Y_answer = (4294967296 * Y_2.chunks[1]) + Y_2.chunks[0];
+	//Y_1 = floor(Y_1* 1000000000000);//4294967296
+	//Y_1 = floor( Y_1 );
+	uint64_t Y = Y_answer;
+	if (Y == 0){
 		dds_a = N;
 		dds_b = 0;
 	}
-	else
-	{
-		//195225786,18180191300266666666667
+	else{
+		//32768
 		Nod = gcd_r(N, Y);
+		//135619117 
 		dds_a = Y / Nod;
+		//244140625 
 		dds_b = N / Nod;
 	}
+	uint32_t ftw = (uint32_t)round(ftw_1);
 	uint8_t data_ftw[6] = { 0x10, 0x04, (uint8_t)(ftw >> 24), (uint8_t)(ftw >> 16),
 		(uint8_t)(ftw >> 8), (uint8_t)ftw };
 	uint8_t data_dds_b[6] = { 0x10,0x05,(uint8_t)(dds_b >> 24), (uint8_t)(dds_b >> 16),
